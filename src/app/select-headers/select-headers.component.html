@@ -1,0 +1,44 @@
+<h4>Select Headers that you want to display on the table!</h4>
+
+
+
+<div class="roww">
+  <div class="col1">
+    <h2 mat-dialog-title>Student Details</h2>
+    <div mat-dialog-content>
+      <!-- <h4>Students Data Headers</h4> -->
+      <form [formGroup]="form">
+        <div *ngFor="let studentHeader of data.studentsDataHeaders">
+          <mat-checkbox [formControlName]="studentHeader" (change)="onStudentCheckboxChange(studentHeader, $event.checked)">{{ studentHeader }}</mat-checkbox>
+        </div>
+      </form>
+    </div>
+
+  </div>
+     
+  
+  <div class="col2">
+    <h2 mat-dialog-title>OMR Response</h2>
+    <div mat-dialog-content>
+      <!-- <h4>OMR Response Data Headers</h4> -->
+      <form [formGroup]="form">
+        <div *ngFor="let omrHeader of data.omrResponseHeaders">
+          <mat-checkbox [formControlName]="omrHeader" (change)="onOMRCheckboxChange(omrHeader, $event.checked)">{{ omrHeader }}</mat-checkbox>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+    <!-- <div class="col2">
+        <h5>OMR Response</h5>
+        <mat-checkbox *ngFor="let header of data.omrResponseHeaders" [(ngModel)]="selectedHeaders[header]">{{ header }}</mat-checkbox>
+    </div> -->
+
+    
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Close</button>
+  <button mat-button color="primary" (click)="onSave()">Save</button>
+</div>

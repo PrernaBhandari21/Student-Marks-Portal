@@ -1,0 +1,30 @@
+<!-- Header -->
+<app-header></app-header>
+
+
+
+
+<!-- Main Content -->
+
+
+
+
+<mat-sidenav-container class="example-container" style="height: 90vh;">
+  <mat-sidenav #sidenav mode="side" opened="true" class="example-sidenav" >
+    <div style="height: 90vh;">
+      <app-sidemenu>
+      </app-sidemenu>
+    </div>
+   </mat-sidenav>
+  
+  <mat-sidenav-content perfectScrollbar>
+    <div style="height: 100%;padding-top: 60px; padding-bottom: 30px; padding-inline: 30px;">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+
+
+
+

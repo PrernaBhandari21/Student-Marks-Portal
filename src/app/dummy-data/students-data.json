@@ -1,0 +1,85 @@
+[
+    {
+      "S No": "1",
+      "Roll No": "120001",
+      "Student Name": "Rahul",
+      "Fathers Name": "Pradeep",
+      "Gender": "M",
+      "Category": "GEN"
+    },
+    {
+      "S No": "2",
+      "Roll No": "120002",
+      "Student Name": "Mohan Kumar",
+      "Fathers Name": "Tushar",
+      "Gender": "M",
+      "Category": "GEN"
+    },
+    {
+      "S No": "3",
+      "Roll No": "120003",
+      "Student Name": "Pradeep Singh",
+      "Fathers Name": "kishore",
+      "Gender": "M",
+      "Category": "SC"
+    },
+    {
+      "S No": "4",
+      "Roll No": "120004",
+      "Student Name": "Pandey Tushar",
+      "Fathers Name": "Kaushik Jha",
+      "Gender": "M",
+      "Category": "SC"
+    },
+    {
+      "S No": "5",
+      "Roll No": "120005",
+      "Student Name": "Pooja",
+      "Fathers Name": "Rakesh",
+      "Gender": "F",
+      "Category": "ST"
+    },
+    {
+      "S No": "6",
+      "Roll No": "120006",
+      "Student Name": "Manisha Kumari",
+      "Fathers Name": "Ankush",
+      "Gender": "F",
+      "Category": "ST"
+    },
+    {
+      "S No": "7",
+      "Roll No": "120007",
+      "Student Name": "Tanisha Jha",
+      "Fathers Name": "Ankur",
+      "Gender": "F",
+      "Category": "OBC"
+    },
+    {
+      "S No": "8",
+      "Roll No": "120008",
+      "Student Name": "Mohit Ranjan",
+      "Fathers Name": "Pratap Singh Ranjan",
+      "Gender": "M",
+      "Category": "EWS"
+    },
+    {
+      "S No": "9",
+      "Roll No": "120009",
+      "Student Name": "Ashutosh Singh ",
+      "Fathers Name": "Kulvinder Singh",
+      "Gender": "M",
+      "Category": "EWS"
+    },
+    {
+      "S No": "10",
+      "Roll No": "120010",
+      "Student Name": "Purshotam",
+      "Fathers Name": "Mohan",
+      "Gender": "M",
+      "Category": "GEN"
+    }
+  ]
+  
+  
+ 

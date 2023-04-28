@@ -1,0 +1,15 @@
+<mat-table [dataSource]="dataSource">
+
+    <!-- Dynamically generate the table columns based on the incoming JSON data -->
+    <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+      <mat-header-cell *matHeaderCellDef>{{ column | titlecase }}</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element[column] }}</mat-cell>
+    </ng-container>
+  
+    <!-- Define the table header row -->
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  
+    <!-- Define the table content rows -->
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  
+  </mat-table>

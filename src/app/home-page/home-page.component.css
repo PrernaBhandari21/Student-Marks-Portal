@@ -1,0 +1,63 @@
+
+
+.main__content{
+    display: flex;
+    /* align-items: center; */
+    flex-direction: column;
+    }
+    
+    .heading{
+        text-align:left;
+        font-size: 24px;
+    }
+    
+    .form{
+        /* border: 2px dotted lightgray; */
+        width: 100%;
+        margin-top: 35px;
+        padding: 20px;
+    }
+
+    .buttons-row{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;  
+        padding-bottom: 60px; 
+    }
+    
+    .form h3{
+            padding-top: 30px;
+            padding-left: 10px;
+            padding-bottom: 20px;
+            color: #1976d2;    
+    }
+    
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .form-row {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+      
+      .form-field {
+        width: 300px;
+        display:flex;
+        justify-content: space-between;
+        margin-left: -60px;
+      }
+      
+      .import-button {
+        margin-left: 16px;
+
+      }
+      
+      button{
+        width: 300px;
+        height: 150px;
+        font-size: 32px;
+      }

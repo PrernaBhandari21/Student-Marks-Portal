@@ -1,0 +1,202 @@
+[
+    {
+      "S No": 1,
+      "QuestionNo": 1,
+      "Type": "MCQ",
+      "AnswerKey": "A",
+      "Subject": "ENG",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 2,
+      "QuestionNo": 2,
+      "Type": "MCQ",
+      "AnswerKey": "B",
+      "Subject": "ENG",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 3,
+      "QuestionNo": 3,
+      "Type": "MCQ",
+      "AnswerKey": "B",
+      "Subject": "ENG",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 4,
+      "QuestionNo": 4,
+      "Type": "MCQ",
+      "AnswerKey": "B",
+      "Subject": "ENG",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 5,
+      "QuestionNo": 5,
+      "Type": "MCQ",
+      "AnswerKey": "C",
+      "Subject": "ENG",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 6,
+      "QuestionNo": 6,
+      "Type": "MCQ",
+      "AnswerKey": "D",
+      "Subject": "ENG",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 7,
+      "QuestionNo": 7,
+      "Type": "MCQ",
+      "AnswerKey": "D",
+      "Subject": "ENG",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 8,
+      "QuestionNo": 8,
+      "Type": "MCQ",
+      "AnswerKey": "D",
+      "Subject": "ENG",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 9,
+      "QuestionNo": 9,
+      "Type": "MCQ",
+      "AnswerKey": "C",
+      "Subject": "ENG",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 10,
+      "QuestionNo": 10,
+      "Type": "MCQ",
+      "AnswerKey": "C",
+      "Subject": "ENG",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 11,
+      "QuestionNo": 11,
+      "Type": "MCQ",
+      "AnswerKey": "A",
+      "Subject": "MATHS",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 12,
+      "QuestionNo": 12,
+      "Type": "MCQ",
+      "AnswerKey": "A",
+      "Subject": "MATHS",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 13,
+      "QuestionNo": 13,
+      "Type": "MCQ",
+      "AnswerKey": "A",
+      "Subject": "MATHS",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 14,
+      "QuestionNo": 14,
+      "Type": "MCQ",
+      "AnswerKey": "D",
+      "Subject": "MATHS",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 15,
+      "QuestionNo": 15,
+      "Type": "MCQ",
+      "AnswerKey": "C",
+      "Subject": "MATHS",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 16,
+      "QuestionNo": 16,
+      "Type": "MCQ",
+      "AnswerKey": "B",
+      "Subject": "SCIENCE",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 17,
+      "QuestionNo": 17,
+      "Type": "MCQ",
+      "AnswerKey": "C",
+      "Subject": "SCIENCE",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 18,
+      "QuestionNo": 18,
+      "Type": "MCQ",
+      "AnswerKey": "D",
+      "Subject": "SCIENCE",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 19,
+      "QuestionNo": 19,
+      "Type": "MCQ",
+      "AnswerKey": "C",
+      "Subject": "SCIENCE",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    },
+    {
+      "S No": 20,
+      "QuestionNo": 20,
+      "Type": "MCQ",
+      "AnswerKey": "D",
+      "Subject": "SCIENCE",
+      "FullMarks": 2,
+      "Partial Marks": 0,
+      "Negative Marks": 0.5
+    }
+  ]

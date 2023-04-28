@@ -1,0 +1,6 @@
+.sidemenu{
+    height: 100%;
+    width: 200px;
+    background-color: rgb(227, 221, 247);
+    border-right: 2px solid blue;
+}

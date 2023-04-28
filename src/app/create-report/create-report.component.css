@@ -1,0 +1,55 @@
+
+
+.main__content{
+    display: flex;
+    /* align-items: center; */
+    flex-direction: column;
+    }
+    
+    .heading{
+        text-align: left !important;
+        font-size: 25px;
+    }
+    
+    .form{
+        border: 2px dotted lightgray;
+        width: 100%;
+        margin-top: 35px;
+        padding: 25px;
+    }
+    
+    .form h5{
+            padding-top: 15px;
+            padding-left: 10px;
+            padding-bottom: 15px;
+            color: #1976d2;    
+    }
+
+    .form span{
+      font-size: 18px;
+      font-weight: 500;
+    }
+    
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .form-row {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+      
+      .form-field {
+        width: 750px;
+        display:flex;
+        justify-content: space-between;
+        /* margin-left: -60px; */
+      }
+      
+      .import-button {
+        margin-left: 16px;
+      }
+      
