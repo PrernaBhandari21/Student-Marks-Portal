@@ -114,7 +114,9 @@ console.log(filteredData);
         studentsData: this.students_data,
         omrResponseHeaders: Object.keys(filteredData[0]),
         answerKeyHeaders: Object.keys(this.answer_key[0]),
-        studentsDataHeaders: Object.keys(this.students_data[0])
+        studentsDataHeaders: Object.keys(this.students_data[0]),
+        resultData : this.results,
+        resultDataHeaders : Object.keys(this.results[0]),
       }
     });
 
