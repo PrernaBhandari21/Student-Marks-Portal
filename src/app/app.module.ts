@@ -23,6 +23,8 @@ import { SelectHeadersComponent } from './select-headers/select-headers.componen
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatRadioModule} from '@angular/material/radio';
+
 
 
 @NgModule({
@@ -49,7 +51,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     NgMaterialMultilevelMenuModule,
     MatTableModule,
     ReactiveFormsModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatRadioModule
 
   ],
   providers: [ MultilevelMenuService,

@@ -162,7 +162,7 @@ console.log("this.fieldsDataResultant", this.fieldsDataResultant);
     console.log("studentDataResultant", this.studentDataResultant);
 
     // Merge multiple objects
-    this.resultant = Object.assign({}, this.omrDataResultant, this.studentDataResultant, this.fieldsDataResultant);
+    this.resultant = Object.assign({}, this.omrDataResultant, this.studentDataResultant, this.onFieldsCheckboxChange);
 
     console.log(this.resultant);
 

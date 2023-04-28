@@ -17,3 +17,12 @@
   .link{
     color: blue;
   }
+
+  .downloadBtns{
+    text-align: right;
+  }
+
+  .downloadBtns button{
+    margin-right: 20px;
+    margin: 10px;
+  }

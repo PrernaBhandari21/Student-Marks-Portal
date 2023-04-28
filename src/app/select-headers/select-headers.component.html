@@ -34,12 +34,15 @@
         <!-- <h4>Students Data Headers</h4> -->
         <form [formGroup]="form">
           <div>
-            <mat-checkbox (change)="onFieldsCheckboxChange('Total Marks', $event.checked)">Total Marks</mat-checkbox>
-            <mat-checkbox (change)="onFieldsCheckboxChange('Subject Wise Marks', $event.checked)">Subject Wise Marks</mat-checkbox>
-            <mat-checkbox (change)="onFieldsCheckboxChange('Right Wrong Marks', $event.checked)">Right Wrong Marks</mat-checkbox>
-            <mat-checkbox (change)="onFieldsCheckboxChange('Subject Wise Right Wrong Marks', $event.checked)">Subject Wise Right Wrong Marks</mat-checkbox>
+            <!-- <mat-radio-group formControlName="selectedField">
+              <mat-radio-button (change)="onFieldsRadioButtonChange('Total Marks')" value="Total Marks">Total Marks</mat-radio-button>
+              <mat-radio-button (change)="onFieldsRadioButtonChange('Subject Wise Marks')" value="Subject Wise Marks">Subject Wise Marks</mat-radio-button>
+              <mat-radio-button (change)="onFieldsRadioButtonChange('Right Wrong Marks')" value="Right Wrong Marks">Right Wrong Marks</mat-radio-button>
+              <mat-radio-button (change)="onFieldsRadioButtonChange('Subject Wise Right Wrong Marks')" value="Subject Wise Right Wrong Marks">Subject Wise Right Wrong Marks</mat-radio-button>
+            </mat-radio-group> -->
           </div>
         </form>
+        
       </div>
     </div>
   </div>
