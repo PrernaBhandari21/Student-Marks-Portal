@@ -151,21 +151,114 @@ export class ResultCalculationComponent implements OnInit {
 
 
 
+  // calcuateResult() {
+  //   for (let i = 0; i < this.omr_response.length; i++) {
+  //     console.log(this.omr_response[i]["Roll No"]);
+  //     let obj: any = {};
+  //     let subject_wise_marks: any = {};
+  //     let total_right_marks = 0;
+  //     let total_wrong_marks = 0;
+  //     let total_marks = 0;
+  //     let total_right_count = 0;
+  //     let total_wrong_count = 0;
+  //     let total_blank_count = 0;
+
+  //     //Adding Roll No in results array
+  //     obj["Roll No"] = this.omr_response[i]["Roll No"];
+
+  //     for (let j = 0; j < this.answer_key.length; j++) {
+  //       let question = "Q" + (j + 1);
+  //       let answer = this.omr_response[i][question];
+  //       let correct_answer = this.answer_key[j].AnswerKey;
+  //       let full_marks = this.answer_key[j].FullMarks;
+  //       let partial_marks = this.answer_key[j]["Partial Marks"];
+  //       let negative_marks = this.answer_key[j]["Negative Marks"];
+  //       let subject = this.answer_key[j].Subject;
+
+  //       // Adding values for headers like Q1, Q2....so on
+  //       if (answer == correct_answer) {
+  //         obj[question] = full_marks;
+  //         total_right_marks += full_marks;
+  //         total_marks += full_marks;
+  //         total_right_count +=1;
+  //       } else if (answer) {
+  //         obj[question] = - negative_marks;
+  //         total_wrong_marks -= negative_marks;
+  //         total_marks -= negative_marks;
+  //         total_wrong_count +=1;
+  //       } else {
+  //         obj[question] = 0;
+  //         total_blank_count += 1;
+  //       }
+
+  //       //Adding values for subject-wise headers
+  //       if (subject) {
+  //         if (!subject_wise_marks[subject]) {
+  //           subject_wise_marks[subject] = {};
+  //           subject_wise_marks[subject]['Right'] = 0;
+  //           subject_wise_marks[subject]['Wrong'] = 0;
+  //           subject_wise_marks[subject]['Blank'] = 0;
+  //           subject_wise_marks[subject]['Total'] = 0;
+  //         }
+
+  //         if (answer == correct_answer) {
+  //           subject_wise_marks[subject]['Right'] += full_marks;
+  //         } else if (answer) {
+  //           subject_wise_marks[subject]['Wrong'] -= negative_marks;
+  //         } else {
+  //           subject_wise_marks[subject]['Blank'] += 1;
+  //         }
+
+  //         subject_wise_marks[subject]['Total'] = subject_wise_marks[subject]['Right'] + subject_wise_marks[subject]['Wrong'] + subject_wise_marks[subject]['Blank'];
+  //       }
+  //     }
+
+  //     //Adding subject-wise marks to the object
+  //     for (let subject in subject_wise_marks) {
+  //       obj['Subject ' + subject + ' Right'] = subject_wise_marks[subject]['Right'];
+  //       obj['Subject ' + subject + ' Wrong'] = subject_wise_marks[subject]['Wrong'];
+  //       obj['Subject ' + subject + ' Blank'] = subject_wise_marks[subject]['Blank'];
+  //       obj['Subject ' + subject + ' Total Marks'] = subject_wise_marks[subject]['Total'];
+  //     }
+
+  //     //Adding total right, wrong, and blank marks to the object
+  //     obj['Total Right Marks'] = total_right_marks;
+  //     obj['Total Wrong Marks'] = total_wrong_marks;
+  //     obj['Total Marks'] = total_marks;
+
+
+  //     //Putting total count of right, wrong and blank
+  //     obj['Total Right Count'] = total_right_count;
+  //     obj['Total Wrong Count'] = total_wrong_count;
+  //     obj['Total Blank Count'] = total_blank_count;
+
+  //     console.log("Ek bache ka hogya............ab next");
+  //     this.results.push(obj);
+  //   }
+
+  //   console.log("FINAL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.results);
+
+  //   this.calculateRankAndPercentage();
+
+  // }
+
+
   calcuateResult() {
     for (let i = 0; i < this.omr_response.length; i++) {
       console.log(this.omr_response[i]["Roll No"]);
       let obj: any = {};
       let subject_wise_marks: any = {};
+      let subject_wise_count: any = {}; // Add subject_wise_count object
       let total_right_marks = 0;
       let total_wrong_marks = 0;
       let total_marks = 0;
       let total_right_count = 0;
       let total_wrong_count = 0;
       let total_blank_count = 0;
-
+  
       //Adding Roll No in results array
       obj["Roll No"] = this.omr_response[i]["Roll No"];
-
+  
       for (let j = 0; j < this.answer_key.length; j++) {
         let question = "Q" + (j + 1);
         let answer = this.omr_response[i][question];
@@ -174,23 +267,23 @@ export class ResultCalculationComponent implements OnInit {
         let partial_marks = this.answer_key[j]["Partial Marks"];
         let negative_marks = this.answer_key[j]["Negative Marks"];
         let subject = this.answer_key[j].Subject;
-
+  
         // Adding values for headers like Q1, Q2....so on
         if (answer == correct_answer) {
           obj[question] = full_marks;
           total_right_marks += full_marks;
           total_marks += full_marks;
-          total_right_count +=1;
+          total_right_count += 1;
         } else if (answer) {
-          obj[question] = - negative_marks;
+          obj[question] = -negative_marks;
           total_wrong_marks -= negative_marks;
           total_marks -= negative_marks;
-          total_wrong_count +=1;
+          total_wrong_count += 1;
         } else {
           obj[question] = 0;
           total_blank_count += 1;
         }
-
+  
         //Adding values for subject-wise headers
         if (subject) {
           if (!subject_wise_marks[subject]) {
@@ -199,49 +292,58 @@ export class ResultCalculationComponent implements OnInit {
             subject_wise_marks[subject]['Wrong'] = 0;
             subject_wise_marks[subject]['Blank'] = 0;
             subject_wise_marks[subject]['Total'] = 0;
+            subject_wise_count[subject] = {}; // Initialize subject_wise_count object
+            subject_wise_count[subject]['Right'] = 0;
+            subject_wise_count[subject]['Wrong'] = 0;
+            subject_wise_count[subject]['Blank'] = 0;
           }
-
+  
           if (answer == correct_answer) {
             subject_wise_marks[subject]['Right'] += full_marks;
+            subject_wise_count[subject]['Right'] += 1; // Increment right count
           } else if (answer) {
             subject_wise_marks[subject]['Wrong'] -= negative_marks;
+            subject_wise_count[subject]['Wrong'] += 1; // Increment wrong count
           } else {
             subject_wise_marks[subject]['Blank'] += 1;
+            subject_wise_count[subject]['Blank'] += 1; // Increment blank count
           }
-
+  
           subject_wise_marks[subject]['Total'] = subject_wise_marks[subject]['Right'] + subject_wise_marks[subject]['Wrong'] + subject_wise_marks[subject]['Blank'];
         }
       }
-
-      //Adding subject-wise marks to the object
+  
+      //Adding subject-wise marks and count to the object
       for (let subject in subject_wise_marks) {
-        obj['Subject ' + subject + ' Right'] = subject_wise_marks[subject]['Right'];
-        obj['Subject ' + subject + ' Wrong'] = subject_wise_marks[subject]['Wrong'];
-        obj['Subject ' + subject + ' Blank'] = subject_wise_marks[subject]['Blank'];
-        obj['Subject ' + subject + ' Total Marks'] = subject_wise_marks[subject]['Total'];
+        obj['Subject ' + subject + ' Right Count'] = subject_wise_count[subject]['Right']; // Subject-wise right count
+        obj['Subject ' + subject + ' Wrong Count'] = subject_wise_count[subject]['Wrong']; // Subject-wise wrong count
+        obj['Subject ' + subject + ' Blank Count'] = subject_wise_count[subject]['Blank']; // Subject-wise blank count
+  
+        obj['Subject ' + subject + ' Right'] = subject_wise_marks[subject]['Right']; // Subject-wise right marks
+        obj['Subject ' + subject + ' Wrong'] = subject_wise_marks[subject]['Wrong']; // Subject-wise wrong marks
+        obj['Subject ' + subject + ' Blank'] = subject_wise_marks[subject]['Blank']; // Subject-wise blank marks
+        obj['Subject ' + subject + ' Total Marks'] = subject_wise_marks[subject]['Total']; // Subject-wise total marks
       }
-
+  
       //Adding total right, wrong, and blank marks to the object
       obj['Total Right Marks'] = total_right_marks;
       obj['Total Wrong Marks'] = total_wrong_marks;
       obj['Total Marks'] = total_marks;
-
-
-      //Putting total count of right, wrong and blank
+  
+      //Putting total count of right, wrong, and blank
       obj['Total Right Count'] = total_right_count;
       obj['Total Wrong Count'] = total_wrong_count;
       obj['Total Blank Count'] = total_blank_count;
-
+  
       console.log("Ek bache ka hogya............ab next");
       this.results.push(obj);
     }
-
+  
     console.log("FINAL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.results);
-
+  
     this.calculateRankAndPercentage();
-
   }
-
+    
 
 
 

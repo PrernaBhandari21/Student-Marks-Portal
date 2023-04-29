@@ -90,7 +90,7 @@ export class SelectHeadersComponent implements OnInit {
     } else if (header === 'Subject Wise Right Wrong Blank Count') {
       console.log("Object.values(this.data.resultData)", Object.values(this.data.resultDataHeaders));
       const subjectTotalHeaders = Object.values(this.data.resultDataHeaders)
-        .filter((header: any) => header.includes('Subject') && ((header.includes('Right') || header.includes('Wrong')) || header.includes('Blank') || header.includes('Total')));
+        .filter((header: any) => header.includes('Subject') && ((header.includes('Right Count') || header.includes('Wrong Count')) || header.includes('Blank Count') || header.includes('Total')));
       console.log("subjectTotalHeaders", subjectTotalHeaders);
 
       // Do something with the fetched headers
