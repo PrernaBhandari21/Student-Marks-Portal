@@ -25,6 +25,7 @@ export class ResultCalculationComponent implements OnInit {
   displayedColumns!: string[];
   dataSource: any;
   totalMarksTopperList: any[]=[];
+  maximumTotalMarks: any;
 
 
 
@@ -158,6 +159,9 @@ export class ResultCalculationComponent implements OnInit {
       let total_right_marks = 0;
       let total_wrong_marks = 0;
       let total_marks = 0;
+      let total_right_count = 0;
+      let total_wrong_count = 0;
+      let total_blank_count = 0;
 
       //Adding Roll No in results array
       obj["Roll No"] = this.omr_response[i]["Roll No"];
@@ -176,12 +180,15 @@ export class ResultCalculationComponent implements OnInit {
           obj[question] = full_marks;
           total_right_marks += full_marks;
           total_marks += full_marks;
+          total_right_count +=1;
         } else if (answer) {
           obj[question] = - negative_marks;
           total_wrong_marks -= negative_marks;
           total_marks -= negative_marks;
+          total_wrong_count +=1;
         } else {
           obj[question] = 0;
+          total_blank_count += 1;
         }
 
         //Adding values for subject-wise headers
@@ -214,10 +221,16 @@ export class ResultCalculationComponent implements OnInit {
         obj['Subject ' + subject + ' Total Marks'] = subject_wise_marks[subject]['Total'];
       }
 
-      //Adding total right, wrong, and marks to the object
+      //Adding total right, wrong, and blank marks to the object
       obj['Total Right Marks'] = total_right_marks;
       obj['Total Wrong Marks'] = total_wrong_marks;
       obj['Total Marks'] = total_marks;
+
+
+      //Putting total count of right, wrong and blank
+      obj['Total Right Count'] = total_right_count;
+      obj['Total Wrong Count'] = total_wrong_count;
+      obj['Total Blank Count'] = total_blank_count;
 
       console.log("Ek bache ka hogya............ab next");
       this.results.push(obj);
@@ -225,6 +238,7 @@ export class ResultCalculationComponent implements OnInit {
 
     console.log("FINAL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.results);
 
+    this.calculateRankAndPercentage();
 
   }
 
@@ -330,6 +344,39 @@ export class ResultCalculationComponent implements OnInit {
 
     this.initializeChart();
 
+  }
+
+  calculateMaximumTotalMarks() {
+    this.maximumTotalMarks = this.answer_key.reduce((totalMarks : number, question: any) => {
+      console.log('question["FullMarks"] : ',question["FullMarks"]);
+      return totalMarks + question["FullMarks"];
+    }, 0);
+  }
+
+  calculateRankAndPercentage() {
+    this.calculateMaximumTotalMarks();
+
+    console.log(" this.maximumTotalMarks : ", this.maximumTotalMarks);
+
+    // Sort the students based on total marks in descending order
+    this.results.sort((a, b) => b["Total Marks"] - a["Total Marks"]);
+
+    // Calculate the rank and percentage for each student
+    const totalStudents = this.results.length;
+    for (let i = 0; i < totalStudents; i++) {
+      const student = this.results[i];
+      student["Rank"] = i + 1;
+
+      if(student["Total Marks"] < 0){
+        student["Percentage"] =  0;
+      }else{
+        student["Percentage"] = (student["Total Marks"] / this.maximumTotalMarks) * 100;
+      }
+
+
+    }
+
+    console.log("this.results : ",this.results);
   }
 
 

@@ -21,7 +21,9 @@ export class SelectHeadersComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder: FormBuilder
   ) {
-    this.form = this.formBuilder.group({});
+    this.form = this.formBuilder.group({
+      selectedField: new FormControl('')
+    });
     this.createFormControls();
   }
 
@@ -60,10 +62,11 @@ export class SelectHeadersComponent implements OnInit {
     }
   }
 
-  onFieldsCheckboxChange(header: string, isChecked: boolean): void {
+  onFieldsRadioButtonChange(header: string): void {
     console.log("header", header);
+    let common_data: any;
 
-
+    this.fieldsDataResultant = {};
 
     if (header === 'Subject Wise Marks') {
       console.log("Object.values(this.data.resultData)", Object.values(this.data.resultDataHeaders));
@@ -71,83 +74,84 @@ export class SelectHeadersComponent implements OnInit {
         .filter((header: any) => header.includes('Subject') && header.includes('Total'));
       console.log("subjectTotalHeaders", subjectTotalHeaders);
 
-      if (isChecked) {
-        // Do something with the fetched headers
-        for (let i = 0; i < subjectTotalHeaders.length; i++) {
-          let headerVal: any = subjectTotalHeaders[i]
-          console.log("headerVal", headerVal);
-          const headerData = this.data.resultData.map((omr: any) => omr[headerVal]);
-          console.log("headerData", headerData);
-          this.fieldsDataResultant[headerVal] = headerData;
+      // Do something with the fetched headers
+      for (let i = 0; i < subjectTotalHeaders.length; i++) {
+        let headerVal: any = subjectTotalHeaders[i]
+        console.log("headerVal", headerVal);
+        const headerData = this.data.resultData.map((omr: any) => omr[headerVal]);
+        console.log("headerData", headerData);
+        this.fieldsDataResultant[headerVal] = headerData;
 
-        }
 
-      } else {
-        // Handle other checkbox cases if needed
-
-        for (let i = 0; i < subjectTotalHeaders.length; i++) {
-          let headerVal: any = subjectTotalHeaders[i]
-          console.log("headerVal", headerVal);
-          delete this.fieldsDataResultant[headerVal];
-        }
       }
+      this.totalMarksCommonData();
+
       console.log("this.fieldsDataResultant....................", this.fieldsDataResultant);
-    } else if(header === 'Subject Wise Right Wrong Marks'){
+    } else if (header === 'Subject Wise Right Wrong Blank Count') {
       console.log("Object.values(this.data.resultData)", Object.values(this.data.resultDataHeaders));
       const subjectTotalHeaders = Object.values(this.data.resultDataHeaders)
-        .filter((header: any) => header.includes('Subject') && (header.includes('Right') || header.includes('Wrong')));
+        .filter((header: any) => header.includes('Subject') && ((header.includes('Right') || header.includes('Wrong')) || header.includes('Blank') || header.includes('Total')));
       console.log("subjectTotalHeaders", subjectTotalHeaders);
 
-      if (isChecked) {
-        // Do something with the fetched headers
-        for (let i = 0; i < subjectTotalHeaders.length; i++) {
-          let headerVal: any = subjectTotalHeaders[i]
-          console.log("headerVal", headerVal);
-          const headerData = this.data.resultData.map((omr: any) => omr[headerVal]);
-          console.log("headerData", headerData);
-          this.fieldsDataResultant[headerVal] = headerData;
+      // Do something with the fetched headers
+      for (let i = 0; i < subjectTotalHeaders.length; i++) {
+        let headerVal: any = subjectTotalHeaders[i]
+        console.log("headerVal", headerVal);
+        const headerData = this.data.resultData.map((omr: any) => omr[headerVal]);
+        console.log("headerData", headerData);
+        this.fieldsDataResultant[headerVal] = headerData;
 
-        }
 
-      } else {
-        // Handle other checkbox cases if needed
 
-        for (let i = 0; i < subjectTotalHeaders.length; i++) {
-          let headerVal: any = subjectTotalHeaders[i]
-          console.log("headerVal", headerVal);
-          delete this.fieldsDataResultant[headerVal];
-        }
       }
+
+      this.totalRWBCount();
+
+      this.totalMarksCommonData();
+
       console.log("this.fieldsDataResultant....................", this.fieldsDataResultant);
-    } else if (header === 'Right Wrong Marks') {
-      if (isChecked) {
-        const totalRightHeader = "Total Right Marks";
-        const totalWrongHeader = "Total Wrong Marks";
-    
-        const totalRightMarks = this.data.resultData.map((omr: any) => omr[totalRightHeader]);
-        const totalWrongMarks = this.data.resultData.map((omr: any) => omr[totalWrongHeader]);
-    
-        this.fieldsDataResultant[totalRightHeader] = totalRightMarks;
-        this.fieldsDataResultant[totalWrongHeader] = totalWrongMarks;
-      } else {
-        delete this.fieldsDataResultant["Total Right Marks"];
-        delete this.fieldsDataResultant["Total Wrong Marks"];
-      }
-    }else if(header =='Total Marks'){
-      if (isChecked) {
-        const totalMarksHeader = "Total Marks";
-    
-        const totalMarks = this.data.resultData.map((omr: any) => omr[totalMarksHeader]);
-    
-        this.fieldsDataResultant[totalMarksHeader] = totalMarks;
-      } else {
-        delete this.fieldsDataResultant["Total Marks"];
-      }
+    } else if (header === 'Right Wrong Blank Count') {
+      this.totalRWBCount();
+      this.totalMarksCommonData();
+      console.log("Now fieldsDataResultant", this.fieldsDataResultant);
+    } else if (header == 'Total Marks') {
+      this.totalMarksCommonData();
     }
+    console.log("this.fieldsDataResultant", this.fieldsDataResultant);
 
-console.log("this.fieldsDataResultant", this.fieldsDataResultant);
+
+  }
 
 
+  totalMarksCommonData() {
+    const totalMarksHeader = "Total Marks";
+    const rank = "Rank";
+    const percentage = "Percentage"
+
+    const totalMarks = this.data.resultData.map((omr: any) => omr[totalMarksHeader]);
+    const allRank = this.data.resultData.map((omr: any) => omr[rank]);
+    const allPercentage = this.data.resultData.map((omr: any) => omr[percentage]);
+
+
+
+    this.fieldsDataResultant[totalMarksHeader] = totalMarks;
+    this.fieldsDataResultant[rank] = allRank
+    this.fieldsDataResultant[percentage] = allPercentage
+  }
+
+
+  totalRWBCount() {
+    const totalRightHeader = "Total Right Count";
+    const totalWrongHeader = "Total Wrong Count";
+    const totalBlankHeader = "Total Blank Count";
+
+    const totalRightCount = this.data.resultData.map((omr: any) => omr[totalRightHeader]);
+    const totalWrongCount = this.data.resultData.map((omr: any) => omr[totalWrongHeader]);
+    const totalBlankCount = this.data.resultData.map((omr: any) => omr[totalBlankHeader]);
+
+    this.fieldsDataResultant[totalRightHeader] = totalRightCount;
+    this.fieldsDataResultant[totalWrongHeader] = totalWrongCount;
+    this.fieldsDataResultant[totalBlankHeader] = totalBlankCount;
   }
 
 
@@ -162,9 +166,9 @@ console.log("this.fieldsDataResultant", this.fieldsDataResultant);
     console.log("studentDataResultant", this.studentDataResultant);
 
     // Merge multiple objects
-    this.resultant = Object.assign({}, this.omrDataResultant, this.studentDataResultant, this.onFieldsCheckboxChange);
+    this.resultant = Object.assign({}, this.omrDataResultant, this.studentDataResultant, this.fieldsDataResultant);
 
-    console.log(this.resultant);
+    console.log("this.resultant", this.resultant);
 
     // Perform further actions with the resultant data
     this.dialogRef.close(this.resultant);
