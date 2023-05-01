@@ -4,6 +4,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { CreateReportComponent } from './create-report/create-report.component';
 import { MarksListComponent } from './marks-list/marks-list.component';
 import { ResultCalculationComponent } from './result-calculation/result-calculation.component';
+import { StudentPersonalReportComponent } from './student-personal-report/student-personal-report.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
     path: 'result-calculation',
     component: ResultCalculationComponent
   },
+  {
+    path : "student-personal-report",
+    component: StudentPersonalReportComponent
+  }
 ];
 
 @NgModule({

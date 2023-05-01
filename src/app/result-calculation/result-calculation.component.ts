@@ -1,9 +1,12 @@
-import { Component,  OnInit } from '@angular/core';
+import { Component,  ElementRef,  OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectHeadersComponent } from '../select-headers/select-headers.component';
 import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 import autoTable from 'jspdf-autotable';
 import * as ApexCharts from 'apexcharts';
+import { Router } from '@angular/router';
+import { DataService } from '../services/data.service';
 
 
 @Component({
@@ -16,7 +19,7 @@ export class ResultCalculationComponent implements OnInit {
 
   omr_response = require("../dummy-data/omr_response.json");
   answer_key = require("../dummy-data/answer_key.json");
-  students_data = require("../dummy-data/students-data.json");
+  students_all_data = require("../dummy-data/students-data.json");
   results: any[] = [];
   tableResultant: any;
   tableHeaders: string[] = [];
@@ -26,25 +29,38 @@ export class ResultCalculationComponent implements OnInit {
   dataSource: any;
   totalMarksTopperList: any[]=[];
   maximumTotalMarks: any;
+  students_data : any;
 
+  constructor(private dialog: MatDialog,
+    private elementRef: ElementRef,
+    private router : Router,
+    private dataService : DataService) { }
 
+ async ngOnInit() {
+    this.removeSNo();
 
-
-
-  constructor(private dialog: MatDialog) { }
-
-  ngOnInit(): void {
     console.log("omr_response ", this.omr_response);
     console.log("answer_key", this.answer_key);
     console.log("students_data", this.students_data);
 
     this.calcuateResult();
+  }
 
-
-
-
-  
-
+  removeSNo(){
+    const filteredData = this.students_all_data.map((item: { [x: string]: any; hasOwnProperty: (arg0: string) => any; }) => {
+      const filteredItem :any= {};
+      for (const key in item) {
+        if (item.hasOwnProperty(key)) {
+          const formattedKey = key.toLowerCase().replace(/\s|\.|_/g, '');
+          if (formattedKey !== 'sno' && formattedKey !== 'sno') {
+            filteredItem[key] = item[key];
+          }
+        }
+      }
+      return filteredItem;
+    });
+    this.students_data = filteredData;
+    
   }
 
   initializeChart() {
@@ -70,7 +86,7 @@ export class ResultCalculationComponent implements OnInit {
 
 
   openPopup(): void {
-    console.log("this.omr_response : ", this.omr_response);
+    // console.log("this.omr_response : ", this.omr_response);
 
     // Filter out headers starting with "Q" followed by a numerical value
     const filteredData = this.omr_response.map((dataObj: { [x: string]: any; }) => {
@@ -83,7 +99,7 @@ export class ResultCalculationComponent implements OnInit {
       return filteredObj;
     });
 
-    console.log(filteredData);
+    // console.log(filteredData);
 
 
     const dialogRef = this.dialog.open(SelectHeadersComponent, {
@@ -105,7 +121,7 @@ export class ResultCalculationComponent implements OnInit {
 
       this.tableResultant = result;
 
-      console.log("this.tableResultant : ", this.tableResultant);
+      // console.log("this.tableResultant : ", this.tableResultant);
 
 
       this.headers = Object.keys(this.tableResultant);
@@ -144,108 +160,12 @@ export class ResultCalculationComponent implements OnInit {
 
 
 
-  // getObjectKeys(obj: any): string[] {
-  //   return Object.keys(obj);
-  // }
 
-
-
-
-  // calcuateResult() {
-  //   for (let i = 0; i < this.omr_response.length; i++) {
-  //     console.log(this.omr_response[i]["Roll No"]);
-  //     let obj: any = {};
-  //     let subject_wise_marks: any = {};
-  //     let total_right_marks = 0;
-  //     let total_wrong_marks = 0;
-  //     let total_marks = 0;
-  //     let total_right_count = 0;
-  //     let total_wrong_count = 0;
-  //     let total_blank_count = 0;
-
-  //     //Adding Roll No in results array
-  //     obj["Roll No"] = this.omr_response[i]["Roll No"];
-
-  //     for (let j = 0; j < this.answer_key.length; j++) {
-  //       let question = "Q" + (j + 1);
-  //       let answer = this.omr_response[i][question];
-  //       let correct_answer = this.answer_key[j].AnswerKey;
-  //       let full_marks = this.answer_key[j].FullMarks;
-  //       let partial_marks = this.answer_key[j]["Partial Marks"];
-  //       let negative_marks = this.answer_key[j]["Negative Marks"];
-  //       let subject = this.answer_key[j].Subject;
-
-  //       // Adding values for headers like Q1, Q2....so on
-  //       if (answer == correct_answer) {
-  //         obj[question] = full_marks;
-  //         total_right_marks += full_marks;
-  //         total_marks += full_marks;
-  //         total_right_count +=1;
-  //       } else if (answer) {
-  //         obj[question] = - negative_marks;
-  //         total_wrong_marks -= negative_marks;
-  //         total_marks -= negative_marks;
-  //         total_wrong_count +=1;
-  //       } else {
-  //         obj[question] = 0;
-  //         total_blank_count += 1;
-  //       }
-
-  //       //Adding values for subject-wise headers
-  //       if (subject) {
-  //         if (!subject_wise_marks[subject]) {
-  //           subject_wise_marks[subject] = {};
-  //           subject_wise_marks[subject]['Right'] = 0;
-  //           subject_wise_marks[subject]['Wrong'] = 0;
-  //           subject_wise_marks[subject]['Blank'] = 0;
-  //           subject_wise_marks[subject]['Total'] = 0;
-  //         }
-
-  //         if (answer == correct_answer) {
-  //           subject_wise_marks[subject]['Right'] += full_marks;
-  //         } else if (answer) {
-  //           subject_wise_marks[subject]['Wrong'] -= negative_marks;
-  //         } else {
-  //           subject_wise_marks[subject]['Blank'] += 1;
-  //         }
-
-  //         subject_wise_marks[subject]['Total'] = subject_wise_marks[subject]['Right'] + subject_wise_marks[subject]['Wrong'] + subject_wise_marks[subject]['Blank'];
-  //       }
-  //     }
-
-  //     //Adding subject-wise marks to the object
-  //     for (let subject in subject_wise_marks) {
-  //       obj['Subject ' + subject + ' Right'] = subject_wise_marks[subject]['Right'];
-  //       obj['Subject ' + subject + ' Wrong'] = subject_wise_marks[subject]['Wrong'];
-  //       obj['Subject ' + subject + ' Blank'] = subject_wise_marks[subject]['Blank'];
-  //       obj['Subject ' + subject + ' Total Marks'] = subject_wise_marks[subject]['Total'];
-  //     }
-
-  //     //Adding total right, wrong, and blank marks to the object
-  //     obj['Total Right Marks'] = total_right_marks;
-  //     obj['Total Wrong Marks'] = total_wrong_marks;
-  //     obj['Total Marks'] = total_marks;
-
-
-  //     //Putting total count of right, wrong and blank
-  //     obj['Total Right Count'] = total_right_count;
-  //     obj['Total Wrong Count'] = total_wrong_count;
-  //     obj['Total Blank Count'] = total_blank_count;
-
-  //     console.log("Ek bache ka hogya............ab next");
-  //     this.results.push(obj);
-  //   }
-
-  //   console.log("FINAL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.results);
-
-  //   this.calculateRankAndPercentage();
-
-  // }
 
 
   calcuateResult() {
     for (let i = 0; i < this.omr_response.length; i++) {
-      console.log(this.omr_response[i]["Roll No"]);
+      // console.log(this.omr_response[i]["Roll No"]);
       let obj: any = {};
       let subject_wise_marks: any = {};
       let subject_wise_count: any = {}; // Add subject_wise_count object
@@ -335,7 +255,7 @@ export class ResultCalculationComponent implements OnInit {
       obj['Total Wrong Count'] = total_wrong_count;
       obj['Total Blank Count'] = total_blank_count;
   
-      console.log("Ek bache ka hogya............ab next");
+      // console.log("Ek bache ka hogya............ab next");
       this.results.push(obj);
     }
   
@@ -349,7 +269,7 @@ export class ResultCalculationComponent implements OnInit {
 
 
   exportToPdf(): void {
-    console.log("exportt..");
+    // console.log("exportt..");
     const doc = new jsPDF();
 
     const tableData = [];
@@ -442,7 +362,7 @@ export class ResultCalculationComponent implements OnInit {
     // Retrieve the top 5 students from the sorted array
     this.totalMarksTopperList = students.slice(0, 5);
 
-    console.log("totalMarksTopperList", this.totalMarksTopperList);
+    // console.log("totalMarksTopperList", this.totalMarksTopperList);
 
     this.initializeChart();
 
@@ -450,7 +370,7 @@ export class ResultCalculationComponent implements OnInit {
 
   calculateMaximumTotalMarks() {
     this.maximumTotalMarks = this.answer_key.reduce((totalMarks : number, question: any) => {
-      console.log('question["FullMarks"] : ',question["FullMarks"]);
+      // console.log('question["FullMarks"] : ',question["FullMarks"]);
       return totalMarks + question["FullMarks"];
     }, 0);
   }
@@ -458,7 +378,7 @@ export class ResultCalculationComponent implements OnInit {
   calculateRankAndPercentage() {
     this.calculateMaximumTotalMarks();
 
-    console.log(" this.maximumTotalMarks : ", this.maximumTotalMarks);
+    // console.log(" this.maximumTotalMarks : ", this.maximumTotalMarks);
 
     // Sort the students based on total marks in descending order
     this.results.sort((a, b) => b["Total Marks"] - a["Total Marks"]);
@@ -478,13 +398,70 @@ export class ResultCalculationComponent implements OnInit {
 
     }
 
-    console.log("this.results : ",this.results);
+    // console.log("this.results : ",this.results);
   }
+
+
+
+
+
+
+//Adding S No manually !
+  getHeaderRowDef(): string[] {
+    return ['sno', ...this.headers];
+  }
+
+  getRowDef(): string[] {
+    return ['sno', ...this.headers];
+  }
+
+
 
 
   // personal student report 
   onRowClick(row: any) {
     console.log('Clicked row:', row);
+
+      // Find the result for the clicked roll number
+      const clickedRollNo = parseInt(row["Roll No"]); // Convert the roll number to a number
+      const rollNoResult = this.results.find(result => result["Roll No"] === clickedRollNo);
+
+      if (rollNoResult) {
+        // Result found
+        console.log("Result:", rollNoResult);
+
+        this.dataService.setClickedRow(rollNoResult);
+        this.router.navigate(['/student-personal-report']);
+      } else {
+        // Result not found
+        alert("Report Not Found. Make sure you have selected Student's Roll No. !")
+      }
+
+
+    }
+
+  //Download whole page !
+  downloadPage() {
+    const doc = new jsPDF();
+
+    const elementToCapture = this.elementRef.nativeElement.querySelector('.component-to-download');
+
+    html2canvas(elementToCapture, { useCORS: true }).then(canvas => {
+      const imageData = canvas.toDataURL('image/png');
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 4;
+
+      const imgWidth = pageWidth - (2 * margin);
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      const xPos = margin;
+      const yPos = margin;
+
+      doc.addImage(imageData, 'PNG', xPos, yPos, imgWidth, imgHeight);
+      doc.save('component.pdf');
+    });
   }
 
 

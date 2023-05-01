@@ -24,6 +24,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
+import { StudentPersonalReportComponent } from './student-personal-report/student-personal-report.component';
 
 
 
@@ -36,7 +37,8 @@ import {MatRadioModule} from '@angular/material/radio';
     CreateReportComponent,
     MarksListComponent,
     ResultCalculationComponent,
-    SelectHeadersComponent
+    SelectHeadersComponent,
+    StudentPersonalReportComponent
   ],
   imports: [
     BrowserModule,
