@@ -30,6 +30,7 @@ export class ResultCalculationComponent implements OnInit {
   totalMarksTopperList: any[]=[];
   maximumTotalMarks: any;
   students_data : any;
+  percentagesValues: any;
 
   constructor(private dialog: MatDialog,
     private elementRef: ElementRef,
@@ -263,7 +264,49 @@ export class ResultCalculationComponent implements OnInit {
   
     this.calculateRankAndPercentage();
   }
+
+  calculateRankAndPercentage() {
+    this.calculateMaximumTotalMarks();
+  
+    // Sort the students based on total marks in descending order
+    this.results.sort((a, b) => b["Total Marks"] - a["Total Marks"]);
+  
+    // Calculate the rank and percentage for each student
+    const totalStudents = this.results.length;
+    let totalPercentage = 0;
+    let lowestPercentage = Infinity;
+    let highestPercentage = -Infinity;
+  
+    for (let i = 0; i < totalStudents; i++) {
+      const student = this.results[i];
+      student["Rank"] = i + 1;
+  
+      if (student["Total Marks"] < 0) {
+        student["Percentage"] = 0;
+      } else {
+        student["Percentage"] = (student["Total Marks"] / this.maximumTotalMarks) * 100;
+        totalPercentage += student["Percentage"];
+        lowestPercentage = Math.min(lowestPercentage, student["Percentage"]);
+        highestPercentage = Math.max(highestPercentage, student["Percentage"]);
+      }
+    }
+  
+    const averagePercentage = totalPercentage / totalStudents;
+    this.percentagesValues = {
+      lowestPercentage : lowestPercentage,
+      highestPercentage : highestPercentage,
+      averagePercentage : averagePercentage
+    }
+    console.log("Lowest Percentage:", lowestPercentage);
+    console.log("Highest Percentage:", highestPercentage);
+    console.log("Average Percentage:", averagePercentage);
+  }
     
+
+
+  
+
+  
 
 
 
@@ -375,31 +418,8 @@ export class ResultCalculationComponent implements OnInit {
     }, 0);
   }
 
-  calculateRankAndPercentage() {
-    this.calculateMaximumTotalMarks();
 
-    // console.log(" this.maximumTotalMarks : ", this.maximumTotalMarks);
-
-    // Sort the students based on total marks in descending order
-    this.results.sort((a, b) => b["Total Marks"] - a["Total Marks"]);
-
-    // Calculate the rank and percentage for each student
-    const totalStudents = this.results.length;
-    for (let i = 0; i < totalStudents; i++) {
-      const student = this.results[i];
-      student["Rank"] = i + 1;
-
-      if(student["Total Marks"] < 0){
-        student["Percentage"] =  0;
-      }else{
-        student["Percentage"] = (student["Total Marks"] / this.maximumTotalMarks) * 100;
-      }
-
-
-    }
-
-    // console.log("this.results : ",this.results);
-  }
+  
 
 
 
@@ -423,21 +443,27 @@ export class ResultCalculationComponent implements OnInit {
     console.log('Clicked row:', row);
 
       // Find the result for the clicked roll number
-      const clickedRollNo = parseInt(row["Roll No"]); // Convert the roll number to a number
-      const rollNoResult = this.results.find(result => result["Roll No"] === clickedRollNo);
+      const clickedRollNo = row["Roll No"]; // Convert the roll number to a number
+      const rollNoResult = this.results.find(result => result["Roll No"] === parseInt(clickedRollNo));
+      const studentData = this.students_data.find((student: { [x: string]: number; }) => student["Roll No"]===clickedRollNo);
+
+
 
       if (rollNoResult) {
         // Result found
         console.log("Result:", rollNoResult);
-
-        this.dataService.setClickedRow(rollNoResult);
+        console.log("Student Data : ", studentData);
+        const studentReportData : any = {
+          resultData : rollNoResult,
+          studentPersonalInfo : studentData,
+          percentagesValue : this.percentagesValues
+        }
+        this.dataService.setClickedRow(studentReportData);
         this.router.navigate(['/student-personal-report']);
       } else {
         // Result not found
         alert("Report Not Found. Make sure you have selected Student's Roll No. !")
       }
-
-
     }
 
   //Download whole page !

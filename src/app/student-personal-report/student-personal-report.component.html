@@ -1,1 +1,87 @@
-<p>student-personal-report works!</p>
+<div class="downloadBtn">
+    <button (click)="downloadPage()" type="button" class="btn btn-primary">Download PDF</button>
+</div>
+
+
+
+<div class="component-to-download">
+    <h3 *ngIf='data?.studentPersonalInfo["Roll No"]'>Result Analysis - Roll No : {{data?.studentPersonalInfo["Roll No"]}}</h3>
+    <h3 *ngIf='!data?.studentPersonalInfo["Roll No"]'>Result Analysis - Roll No : 120001</h3>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title" *ngIf='data?.studentPersonalInfo["Student Name"]'>Student Name : {{data?.studentPersonalInfo["Student Name"] | uppercase}}</h5>
+              <h5 class="card-title" *ngIf='!data?.studentPersonalInfo["Student Name"]'>Student Name : {{"Prerna Bhandari" | uppercase}}</h5>
+              <div class="card-text">
+                    <p *ngIf='data?.studentPersonalInfo["Roll No"]'>
+                        Roll No. : {{data?.studentPersonalInfo["Roll No"]}}
+                    </p>
+
+                    <p *ngIf='data?.studentPersonalInfo["Fathers Name"]'>
+                        Father's Name : {{data?.studentPersonalInfo["Fathers Name"]}}
+                    </p>
+
+                    <p *ngIf='data?.studentPersonalInfo["Gender"]'>
+                        Gender : {{data?.studentPersonalInfo["Gender"]}}
+                    </p>
+
+                    <p *ngIf='data?.studentPersonalInfo["Category"]'>
+                        Category : {{data?.studentPersonalInfo["Category"]}}
+                    </p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Marks Analysis</h5>
+              <div class="card-text">
+
+                <p *ngIf="data?.resultData['Total Marks']" class="flexx">
+                    <span class="left bold">Total Marks</span> <span class="right bold">{{ data?.resultData['Total Marks'] }}</span>
+                  </p>
+                  <ng-container *ngIf="data?.resultData">
+                    <div *ngFor="let key of objectKeys(data?.resultData)">
+                      <div *ngIf="key.includes('Subject') && key.includes('Total Marks')" class="flexx">
+                        <span class="left">{{ key }}</span> <span class="right">{{ data?.resultData[key] }}</span>
+                      </div>
+                    </div>
+                  </ng-container>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div  *ngIf="data?.percentagesValue">
+       
+          <div >
+            <h5 >Percentage Analysis</h5>
+            <p>The following graph displays the analysis of percentage scores, including your score, highest score, lowest score, and average score.</p>
+              <div id="percentageChart"></div>
+        </div>
+      </div> -->
+      
+      
+
+<div class="col">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Percentage Analysis</h5>
+      <p class="card-text">The following graph displays the analysis of percentage scores, including your score, highest score, lowest score, and average score.</p>
+        <div id="percentageChart"></div>
+    </div>
+
+
+  </div>
+</div>
+
+
+
+</div>
+
+
