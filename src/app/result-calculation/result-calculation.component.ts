@@ -31,6 +31,7 @@ export class ResultCalculationComponent implements OnInit {
   maximumTotalMarks: any;
   students_data : any;
   percentagesValues: any;
+  peerAverageRightCount: any = {};
 
   constructor(private dialog: MatDialog,
     private elementRef: ElementRef,
@@ -244,6 +245,23 @@ export class ResultCalculationComponent implements OnInit {
         obj['Subject ' + subject + ' Wrong'] = subject_wise_marks[subject]['Wrong']; // Subject-wise wrong marks
         obj['Subject ' + subject + ' Blank'] = subject_wise_marks[subject]['Blank']; // Subject-wise blank marks
         obj['Subject ' + subject + ' Total Marks'] = subject_wise_marks[subject]['Total']; // Subject-wise total marks
+
+       // Calculate Subject Percentage
+        const subjectMaxMarks = this.answer_key.filter((item: { Subject: string; }) => item.Subject === subject)
+        .reduce((total: any, item: { FullMarks: any; }) => total + item.FullMarks, 0);
+      const subjectRightMarks = subject_wise_marks[subject]['Right'];
+      const subjectPercentage = (subjectRightMarks / subjectMaxMarks) * 100;
+      obj['Subject ' + subject + ' Percentage'] = subjectPercentage;
+
+      // Calculate Total Questions in Subject
+      const subjectTotalQuestions = this.answer_key.filter((item: { Subject: string; }) => item.Subject === subject).length;
+      obj['Subject ' + subject + ' Total Questions'] = subjectTotalQuestions;
+
+      // Calculate Subject Rank
+      const ranks = this.results.map((result: any) => result['Subject ' + subject + ' Percentage']);
+      const subjectRank = ranks.filter((rank: number) => rank >= subjectPercentage).length + 1;
+      obj['Subject ' + subject + ' Rank'] = subjectRank;
+
       }
   
       //Adding total right, wrong, and blank marks to the object
@@ -263,6 +281,7 @@ export class ResultCalculationComponent implements OnInit {
     console.log("FINAL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.results);
   
     this.calculateRankAndPercentage();
+    this.calculatePeerAverageRightCount();
   }
 
   calculateRankAndPercentage() {
@@ -301,6 +320,39 @@ export class ResultCalculationComponent implements OnInit {
     console.log("Highest Percentage:", highestPercentage);
     console.log("Average Percentage:", averagePercentage);
   }
+
+  calculatePeerAverageRightCount() {
+    const subjectWiseRightCount: any = {}; // Object to store subject-wise right count for all students
+  
+    // Iterate over all students' results
+    for (const student of this.results) {
+      // Iterate over each subject in the student's result
+      for (const subject in student) {
+        if (subject.startsWith("Subject ") && subject.endsWith(" Right Count")) {
+          const subjectName = subject.substring(8, subject.length - 12); // Extract subject name from the key
+          const rightCount = student[subject]; // Get the right count for the subject
+  
+          if (!subjectWiseRightCount[subjectName]) {
+            subjectWiseRightCount[subjectName] = [];
+          }
+  
+          subjectWiseRightCount[subjectName].push(rightCount); // Add the right count to the subject-wise array
+        }
+      }
+    }
+  
+  
+    // Calculate the average right count for each subject
+    for (const subject in subjectWiseRightCount) {
+      const rightCounts = subjectWiseRightCount[subject];
+      const totalRightCount = rightCounts.reduce((total: number, count: number) => total + count, 0);
+      const averageRightCount = totalRightCount / rightCounts.length;
+      this.peerAverageRightCount[subject] = averageRightCount;
+    }
+  
+    console.log("Peer Average Right Count:", this.peerAverageRightCount);
+  }
+  
     
 
 
@@ -456,7 +508,8 @@ export class ResultCalculationComponent implements OnInit {
         const studentReportData : any = {
           resultData : rollNoResult,
           studentPersonalInfo : studentData,
-          percentagesValue : this.percentagesValues
+          percentagesValue : this.percentagesValues,
+          peerAverageRightCount: this.peerAverageRightCount
         }
         this.dataService.setClickedRow(studentReportData);
         this.router.navigate(['/student-personal-report']);

@@ -24,7 +24,10 @@ export class StudentPersonalReportComponent implements OnInit {
 
   ngOnInit(): void {
     this.getStudentData();
-    this.createChart();
+    this.createPercentageChart();
+    this.createTotalQsDonutChart();
+    this.createRightCountDonutChart();
+    this.createPeerAvgDonutChart();
   }
 
   objectKeys(obj: any): string[] {
@@ -36,16 +39,16 @@ export class StudentPersonalReportComponent implements OnInit {
     console.log("FINALLY THE STUDENT DATA IS : ", this.data);    
   }
 
-  createChart() {
+  createPercentageChart() {
     this.chartOptions = {
       chart: {
         type: this.chartType,
-        height: 350,
+        height: 300,
         stacked: false,
         toolbar: {
           show: false
         },
-        width:550
+        width:500
       },
       dataLabels: {
         enabled: false
@@ -75,7 +78,7 @@ export class StudentPersonalReportComponent implements OnInit {
       plotOptions: {
         bar: {
           horizontal: false,
-          barWidth: "60%", // Adjust the width of the bars as needed
+          barWidth: "40%", // Adjust the width of the bars as needed
           distributed: true
         }
       },
@@ -84,6 +87,201 @@ export class StudentPersonalReportComponent implements OnInit {
     const chart = new ApexCharts(document.querySelector("#percentageChart"), this.chartOptions);
     chart.render();
   }
+
+  createTotalQsDonutChart() {
+    const subjectData = Object.entries(this.data.resultData)
+      .filter(([key, value]) => key.includes('Subject') && key.includes('Total Questions'));
+  
+    const totalQuestions = subjectData.map(([key, value]) => Number(value));
+  
+    this.chartOptions = {
+      chart: {
+        type: 'donut',
+        height: 300,
+        toolbar: {
+          show: false
+        },
+        width: 500
+      },
+      labels: subjectData.map(([key]) => key.replace('Subject', '').replace('Total Questions', '').trim()),
+      series: totalQuestions,
+      dataLabels: {
+        enabled: false
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '70%',
+          },
+        }
+      },
+      legend: {
+        show: true,
+        position: 'right',
+        offsetY: 0,
+        formatter: function (seriesName: string, opts: { w: { globals: { series: { [x: string]: string; }; }; }; seriesIndex: string | number; }) {
+          return opts.w.globals.series[opts.seriesIndex] + ': ' + seriesName;
+        },
+        markers: {
+          fillColors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0']
+        },
+        itemMargin: {
+          horizontal: 5,
+          vertical: 5
+        }
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }]
+    };
+  
+    const chart = new ApexCharts(document.querySelector("#totalQsdonutChart"), this.chartOptions);
+    chart.render();
+  }
+  
+  
+  
+  createRightCountDonutChart() {
+    const subjectData = Object.entries(this.data.resultData)
+      .filter(([key, value]) => key.includes('Subject') && key.includes('Right Count'));
+  
+
+
+    const labels = subjectData.map(([key]) => key.replace('Subject', '').replace('Right Count', '').trim());
+    const rightCounts = subjectData.map(([key, value]) => Number(value));
+
+    console.log("subjectData : ", subjectData);
+    console.log("labels : ", labels);
+    console.log("rightCounts : ",rightCounts);
+  
+    this.chartOptions = {
+      chart: {
+        type: 'donut',
+        height: 300,
+        toolbar: {
+          show: false
+        },
+        width: 500
+      },
+      labels: labels,
+      series: rightCounts,
+      dataLabels: {
+        enabled: false
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '70%',
+          },
+        }
+      },
+      legend: {
+        show: true,
+        position: 'right',
+        offsetY: 0,
+        formatter: function (seriesName: any, opts: { seriesIndex: any; }) {
+          const index = opts.seriesIndex;
+          return labels[index] + ' Right Count: ' + rightCounts[index];
+        },
+        markers: {
+          fillColors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0']
+        },
+        itemMargin: {
+          horizontal: 5,
+          vertical: 5
+        }
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }]
+    };
+  
+    const chart = new ApexCharts(document.querySelector("#rightCountDonutChart"), this.chartOptions);
+    chart.render();
+  }
+  
+
+  createPeerAvgDonutChart() {
+    const labels = Object.keys(this.data.peerAverageRightCount);
+    const rightCounts = Object.values(this.data.peerAverageRightCount);
+  
+    console.log("labels: ", labels);
+    console.log("rightCounts: ", rightCounts);
+  
+    this.chartOptions = {
+      chart: {
+        type: 'donut',
+        height: 300,
+        toolbar: {
+          show: false
+        },
+        width: 500
+      },
+      labels: labels,
+      series: rightCounts,
+      dataLabels: {
+        enabled: false
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '70%',
+          },
+        }
+      },
+      legend: {
+        show: true,
+        position: 'right',
+        offsetY: 0,
+        formatter: function (seriesName: any, opts: { seriesIndex: any; }) {
+          const index = opts.seriesIndex;
+          return labels[index] + ' Right Count: ' + rightCounts[index];
+        },
+        markers: {
+          fillColors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0']
+        },
+        itemMargin: {
+          horizontal: 5,
+          vertical: 5
+        }
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }]
+    };
+  
+    const chart = new ApexCharts(document.querySelector("#peerAvgDonutChart"), this.chartOptions);
+    chart.render();
+  }
+  
+  
+  
+  
+  
 
   // Download whole page !
   downloadPage() {
