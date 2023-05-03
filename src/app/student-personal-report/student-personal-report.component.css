@@ -19,4 +19,15 @@ span{
     font-weight: 500;
 }
 
+.rightAlign{
+    text-align: right;
+}
+
+
   
+  .card-content-one{
+    border: 1px solid lightblue;
+    border-radius: 5px;
+    width: 160px;
+    padding: 10px;
+  }

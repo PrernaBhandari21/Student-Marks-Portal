@@ -56,9 +56,7 @@
             </div>
           </div>
         </div>
-        
-        
-
+    
           <div class="col">
             <div class="card">
               <div class="card-body">
@@ -103,16 +101,112 @@
               </div>
             </div>
           </div>
-
-
   </div>
 
 
-  <div id="totalQsdonutChart"></div>
+  <div class="rightAlign mt-4 mb-2">
+    <h3 class="mt-4">Subject-Wise Analysis</h3>
+  </div>
 
-  <div id="rightCountDonutChart"></div>
+  <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Subject-wise Question Distribution</h5>
+          <div class="card-text">
+            <div id="totalQsdonutChart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Your Performance Distribution</h5>
+          <div class="card-text">
+            <div id="rightCountDonutChart"></div>           
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <div id="peerAvgDonutChart"></div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Peer Performance Distribution</h5>
+          <div id="peerAvgDonutChart"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+  <div *ngIf="data?.resultData" class="row row-cols-1 row-cols-md-1 g-4 mt-3">
+    <ng-container *ngFor="let subject of getSubjects(data?.resultData)">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ subject }}</h5>
+
+            <div class="flexx">
+
+              <div class="card-content-one">
+                <div class="flexx">
+                  <span class="left">Total Questions</span>
+                  <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Total Questions'] }}</span>
+                </div>
+                <div class="flexx">
+                  <span class="left">Your Marks</span>
+                  <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Right'] }}</span>
+                </div>
+                <div class="flexx">
+                  <span class="left">Correct</span>
+                  <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Right'] }}</span>
+                </div>
+                <div class="flexx">
+                  <span class="left">Incorrect</span>
+                  <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Wrong'] }}</span>
+                </div>
+                <div class="flexx">
+                  <span class="left">Unanswered</span>
+                  <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Blank'] }}</span>
+                </div>
+                <div class="flexx">
+                  <span class="left">Percentage</span>
+                  <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Percentage'] }}</span>
+                </div>
+                <div class="flexx">
+                  <span class="left">Rank</span>
+                  <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Rank'] }}</span>
+                </div>
+              </div>
+  
+              <div class="card-content-two">
+                <div #chartContainer></div>
+              </div>
+              
+              
+              
+            </div>
+
+            
+
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  
+
+
 
 </div>
+
+
+
+
+
+
+
 

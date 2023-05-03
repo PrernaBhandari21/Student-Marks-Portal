@@ -28,6 +28,7 @@ import { StudentPersonalReportComponent } from './student-personal-report/studen
 
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,7 +55,7 @@ import { StudentPersonalReportComponent } from './student-personal-report/studen
     MatTableModule,
     ReactiveFormsModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
 
   ],
   providers: [ MultilevelMenuService,

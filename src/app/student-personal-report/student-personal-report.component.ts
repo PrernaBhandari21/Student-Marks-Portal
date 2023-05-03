@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import {  AfterViewInit, Component, ElementRef,  OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -10,7 +10,9 @@ import * as ApexCharts from 'apexcharts';
   styleUrls: ['./student-personal-report.component.css']
 })
 
-export class StudentPersonalReportComponent implements OnInit {
+export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
+
+  @ViewChildren('chartContainer') chartContainers!: QueryList<ElementRef>;
 
   data: any;
   chartOptions: any;
@@ -20,7 +22,11 @@ export class StudentPersonalReportComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private elementRef: ElementRef,
+    private renderer: Renderer2
   ) { }
+ 
+
+  
 
   ngOnInit(): void {
     this.getStudentData();
@@ -28,7 +34,18 @@ export class StudentPersonalReportComponent implements OnInit {
     this.createTotalQsDonutChart();
     this.createRightCountDonutChart();
     this.createPeerAvgDonutChart();
+    
+
   }
+
+  ngAfterViewInit() {
+    this.chartContainers.forEach((container, index) => {
+      const subject = this.getSubjects(this.data?.resultData)[index];
+      this.generatePieChart(subject, container);
+    });
+  }
+
+  
 
   objectKeys(obj: any): string[] {
     return Object.keys(obj);
@@ -101,7 +118,7 @@ export class StudentPersonalReportComponent implements OnInit {
         toolbar: {
           show: false
         },
-        width: 500
+        width: 400
       },
       labels: subjectData.map(([key]) => key.replace('Subject', '').replace('Total Questions', '').trim()),
       series: totalQuestions,
@@ -145,9 +162,7 @@ export class StudentPersonalReportComponent implements OnInit {
   
     const chart = new ApexCharts(document.querySelector("#totalQsdonutChart"), this.chartOptions);
     chart.render();
-  }
-  
-  
+  } 
   
   createRightCountDonutChart() {
     const subjectData = Object.entries(this.data.resultData)
@@ -158,9 +173,9 @@ export class StudentPersonalReportComponent implements OnInit {
     const labels = subjectData.map(([key]) => key.replace('Subject', '').replace('Right Count', '').trim());
     const rightCounts = subjectData.map(([key, value]) => Number(value));
 
-    console.log("subjectData : ", subjectData);
-    console.log("labels : ", labels);
-    console.log("rightCounts : ",rightCounts);
+    // console.log("subjectData : ", subjectData);
+    // console.log("labels : ", labels);
+    // console.log("rightCounts : ",rightCounts);
   
     this.chartOptions = {
       chart: {
@@ -169,7 +184,7 @@ export class StudentPersonalReportComponent implements OnInit {
         toolbar: {
           show: false
         },
-        width: 500
+        width: 400
       },
       labels: labels,
       series: rightCounts,
@@ -187,9 +202,8 @@ export class StudentPersonalReportComponent implements OnInit {
         show: true,
         position: 'right',
         offsetY: 0,
-        formatter: function (seriesName: any, opts: { seriesIndex: any; }) {
-          const index = opts.seriesIndex;
-          return labels[index] + ' Right Count: ' + rightCounts[index];
+        formatter: function (seriesName: string, opts: { w: { globals: { series: { [x: string]: string; }; }; }; seriesIndex: string | number; }) {
+          return opts.w.globals.series[opts.seriesIndex] + ': ' + seriesName;
         },
         markers: {
           fillColors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0']
@@ -199,6 +213,22 @@ export class StudentPersonalReportComponent implements OnInit {
           vertical: 5
         }
       },
+      // legend: {
+      //   show: true,
+      //   position: 'right',
+      //   offsetY: 0,
+      //   formatter: function (seriesName: any, opts: { seriesIndex: any; }) {
+      //     const index = opts.seriesIndex;
+      //     return labels[index] + ' Right Count: ' + rightCounts[index];
+      //   },
+      //   markers: {
+      //     fillColors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0']
+      //   },
+      //   itemMargin: {
+      //     horizontal: 5,
+      //     vertical: 5
+      //   }
+      // },
       responsive: [{
         breakpoint: 480,
         options: {
@@ -215,14 +245,14 @@ export class StudentPersonalReportComponent implements OnInit {
     const chart = new ApexCharts(document.querySelector("#rightCountDonutChart"), this.chartOptions);
     chart.render();
   }
-  
+
 
   createPeerAvgDonutChart() {
     const labels = Object.keys(this.data.peerAverageRightCount);
     const rightCounts = Object.values(this.data.peerAverageRightCount);
   
-    console.log("labels: ", labels);
-    console.log("rightCounts: ", rightCounts);
+    // console.log("labels: ", labels);
+    // console.log("rightCounts: ", rightCounts);
   
     this.chartOptions = {
       chart: {
@@ -231,7 +261,7 @@ export class StudentPersonalReportComponent implements OnInit {
         toolbar: {
           show: false
         },
-        width: 500
+        width: 400
       },
       labels: labels,
       series: rightCounts,
@@ -249,9 +279,8 @@ export class StudentPersonalReportComponent implements OnInit {
         show: true,
         position: 'right',
         offsetY: 0,
-        formatter: function (seriesName: any, opts: { seriesIndex: any; }) {
-          const index = opts.seriesIndex;
-          return labels[index] + ' Right Count: ' + rightCounts[index];
+        formatter: function (seriesName: string, opts: { w: { globals: { series: { [x: string]: string; }; }; }; seriesIndex: string | number; }) {
+          return opts.w.globals.series[opts.seriesIndex] + ': ' + seriesName;
         },
         markers: {
           fillColors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0']
@@ -279,6 +308,41 @@ export class StudentPersonalReportComponent implements OnInit {
   }
   
   
+  generatePieChart(subject: string, container: any) {
+    const totalQuestionsKey = 'Subject ' + subject + ' Total Questions';
+    const rightKey = 'Subject ' + subject + ' Right';
+    const wrongKey = 'Subject ' + subject + ' Wrong';
+    const blankKey = 'Subject ' + subject + ' Blank';
+
+    const totalQuestions = this.data?.resultData[totalQuestionsKey];
+    const right = this.data?.resultData[rightKey];
+    const wrong = this.data?.resultData[wrongKey];
+    const blank = this.data?.resultData[blankKey];
+
+    if (totalQuestions && right !== undefined && wrong !== undefined && blank !== undefined) {
+      const percentageRight = (right / totalQuestions) * 100;
+      const percentageWrong = (wrong / totalQuestions) * 100;
+      const percentageBlank = (blank / totalQuestions) * 100;
+
+      const options = {
+        series: [percentageRight, percentageWrong, percentageBlank],
+        labels: ['Right', 'Wrong', 'Blank'],
+        chart: {
+          type: 'pie',
+        },
+        // Add other chart options as per your requirements
+      };
+
+      const chartContainer = this.renderer.createElement('div');
+      this.renderer.addClass(chartContainer, 'chart-container');
+      this.renderer.appendChild(container.nativeElement, chartContainer);
+
+      const chart = new ApexCharts(chartContainer, options);
+      chart.render();
+    }
+  }
+  
+
   
   
   
@@ -300,4 +364,28 @@ export class StudentPersonalReportComponent implements OnInit {
       doc.save('component.pdf');
     });
   }
+
+  getSubjects(resultData: any): string[] {
+    const subjects: string[] = [];
+    for (const key in resultData) {
+      if (key.includes('Subject') && !key.includes('Count') && key.includes('Total Questions')) {
+        const subject = key.split(' ')[1];
+        if (!subjects.includes(subject)) {
+          subjects.push(subject);
+        }
+      }
+    }
+    return subjects;
+  }
+ 
+ 
+  
+
+
+  
+  
+  
+  
 }
+
+
