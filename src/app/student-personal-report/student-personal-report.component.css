@@ -28,6 +28,12 @@ span{
   .card-content-one{
     border: 1px solid lightblue;
     border-radius: 5px;
-    width: 160px;
+    width: 180px;
     padding: 10px;
+  }
+
+  .card-content-two{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
   }

@@ -13,6 +13,9 @@ import * as ApexCharts from 'apexcharts';
 export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
 
   @ViewChildren('chartContainer') chartContainers!: QueryList<ElementRef>;
+  @ViewChildren('peerChartContainer') peerChartContainers!: QueryList<ElementRef>;
+
+
 
   data: any;
   chartOptions: any;
@@ -39,12 +42,24 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   }
 
   ngAfterViewInit() {
+    const subjects = this.getSubjects(this.data?.resultData);
+  
     this.chartContainers.forEach((container, index) => {
-      const subject = this.getSubjects(this.data?.resultData)[index];
+      const subject = subjects[index];
       this.generatePieChart(subject, container);
     });
-  }
 
+
+    this.peerChartContainers.forEach((container, index) => {
+      const subject = this.getSubjects(this.data?.resultData)[index];
+      this.generatePeerPieChart(subject, container);
+    });
+  
+    
+  }
+  
+
+  
   
 
   objectKeys(obj: any): string[] {
@@ -248,11 +263,25 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
 
 
   createPeerAvgDonutChart() {
-    const labels = Object.keys(this.data.peerAverageRightCount);
-    const rightCounts = Object.values(this.data.peerAverageRightCount);
+
+    const subjectData = Object.entries(this.data.peerAverageCounts)
+    .filter(([key, value]) => key.includes('Subject') && key.includes('Right Count'));
+
+
+
+  const labels = subjectData.map(([key]) => key.replace('Subject', '').replace('Peer Right Count', '').trim());
+  const rightCounts = subjectData.map(([key, value]) => Number(value));
+
+    // const labels = [];
+    // const rightCounts = [];
   
-    // console.log("labels: ", labels);
-    // console.log("rightCounts: ", rightCounts);
+    // for (const key in this.data.peerAverageCounts) {
+    //   if (key.includes("Right Count")) {
+    //     const subjectName = key.split(" ")[1];
+    //     labels.push(subjectName);
+    //     rightCounts.push(this.data.peerAverageCounts[key]);
+    //   }
+    // }
   
     this.chartOptions = {
       chart: {
@@ -308,11 +337,12 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   }
   
   
+  
   generatePieChart(subject: string, container: any) {
     const totalQuestionsKey = 'Subject ' + subject + ' Total Questions';
-    const rightKey = 'Subject ' + subject + ' Right';
-    const wrongKey = 'Subject ' + subject + ' Wrong';
-    const blankKey = 'Subject ' + subject + ' Blank';
+    const rightKey = 'Subject ' + subject + ' Right Count';
+    const wrongKey = 'Subject ' + subject + ' Wrong Count';
+    const blankKey = 'Subject ' + subject + ' Blank Count';
 
     const totalQuestions = this.data?.resultData[totalQuestionsKey];
     const right = this.data?.resultData[rightKey];
@@ -329,6 +359,28 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
         labels: ['Right', 'Wrong', 'Blank'],
         chart: {
           type: 'pie',
+          height: '300px', // Adjust the height as per your requirements
+        },
+        plotOptions: {
+          pie: {
+            startAngle: -90,
+            endAngle: 270,
+            offsetY: 0,
+            offsetX: 0,
+            customScale: 1,
+            expandOnClick: false,
+          },
+        },
+        dataLabels: {
+          formatter: function (val: number) {
+            return val.toFixed(2) + '%';
+          },
+          offset: -20, // Adjust the value as per your requirements
+          style: {
+            colors: ['#fff'],
+            fontSize: '14px',
+            fontFamily: 'Arial, sans-serif',
+          },
         },
         // Add other chart options as per your requirements
       };
@@ -337,6 +389,59 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
       this.renderer.addClass(chartContainer, 'chart-container');
       this.renderer.appendChild(container.nativeElement, chartContainer);
 
+      const chart = new ApexCharts(chartContainer, options);
+      chart.render();
+    }
+  }
+  
+
+  generatePeerPieChart(subject: string, container: any) {
+    const peerRightKey = 'Subject ' + subject + ' Peer Right Count';
+    const peerWrongKey = 'Subject ' + subject + ' Peer Wrong Count';
+    const peerBlankKey = 'Subject ' + subject + ' Peer Blank Count';
+  
+    const peerRight = this.data.peerAverageCounts[peerRightKey];
+    const peerWrong = this.data.peerAverageCounts[peerWrongKey];
+    const peerBlank = this.data.peerAverageCounts[peerBlankKey];
+
+    console.log(peerRight);
+  
+    if (peerRight !== undefined && peerWrong !== undefined && peerBlank !== undefined) {
+      const options = {
+        series: [peerRight, peerWrong, peerBlank],
+        labels: ['Right', 'Wrong', 'Blank'],
+        chart: {
+          type: 'pie',
+          height: '300px', // Adjust the height as per your requirements
+        },
+        plotOptions: {
+          pie: {
+            startAngle: -90,
+            endAngle: 270,
+            offsetY: 0,
+            offsetX: 0,
+            customScale: 1,
+            expandOnClick: false,
+          },
+        },
+        dataLabels: {
+          formatter: function (val: number) {
+            return val.toFixed(2) + '%';
+          },
+          offset: -20, // Adjust the value as per your requirements
+          style: {
+            colors: ['#fff'],
+            fontSize: '14px',
+            fontFamily: 'Arial, sans-serif',
+          },
+        },
+        // Add other chart options as per your requirements
+      };
+  
+      const chartContainer = this.renderer.createElement('div');
+      this.renderer.addClass(chartContainer, 'chart-container');
+      this.renderer.appendChild(container.nativeElement, chartContainer);
+  
       const chart = new ApexCharts(chartContainer, options);
       chart.render();
     }

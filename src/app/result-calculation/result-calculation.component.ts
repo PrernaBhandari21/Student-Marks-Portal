@@ -1,4 +1,4 @@
-import { Component,  ElementRef,  OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectHeadersComponent } from '../select-headers/select-headers.component';
 import { jsPDF } from 'jspdf';
@@ -27,18 +27,19 @@ export class ResultCalculationComponent implements OnInit {
   columnHeaders: string[] = [];
   displayedColumns!: string[];
   dataSource: any;
-  totalMarksTopperList: any[]=[];
+  totalMarksTopperList: any[] = [];
   maximumTotalMarks: any;
-  students_data : any;
+  students_data: any;
   percentagesValues: any;
   peerAverageRightCount: any = {};
+  peerAverageCounts: any = {};
 
   constructor(private dialog: MatDialog,
     private elementRef: ElementRef,
-    private router : Router,
-    private dataService : DataService) { }
+    private router: Router,
+    private dataService: DataService) { }
 
- async ngOnInit() {
+  async ngOnInit() {
     this.removeSNo();
 
     console.log("omr_response ", this.omr_response);
@@ -48,9 +49,9 @@ export class ResultCalculationComponent implements OnInit {
     this.calcuateResult();
   }
 
-  removeSNo(){
+  removeSNo() {
     const filteredData = this.students_all_data.map((item: { [x: string]: any; hasOwnProperty: (arg0: string) => any; }) => {
-      const filteredItem :any= {};
+      const filteredItem: any = {};
       for (const key in item) {
         if (item.hasOwnProperty(key)) {
           const formattedKey = key.toLowerCase().replace(/\s|\.|_/g, '');
@@ -62,7 +63,7 @@ export class ResultCalculationComponent implements OnInit {
       return filteredItem;
     });
     this.students_data = filteredData;
-    
+
   }
 
   initializeChart() {
@@ -130,10 +131,10 @@ export class ResultCalculationComponent implements OnInit {
 
       this.dataSource = this.convertToDataSource();
 
-      
+
       if (this.headers.includes('Total Marks')) {
-          this.getToppersWithHighTotalMarks();
-        }
+        this.getToppersWithHighTotalMarks();
+      }
 
 
     });
@@ -177,10 +178,10 @@ export class ResultCalculationComponent implements OnInit {
       let total_right_count = 0;
       let total_wrong_count = 0;
       let total_blank_count = 0;
-  
+
       //Adding Roll No in results array
       obj["Roll No"] = this.omr_response[i]["Roll No"];
-  
+
       for (let j = 0; j < this.answer_key.length; j++) {
         let question = "Q" + (j + 1);
         let answer = this.omr_response[i][question];
@@ -189,7 +190,7 @@ export class ResultCalculationComponent implements OnInit {
         let partial_marks = this.answer_key[j]["Partial Marks"];
         let negative_marks = this.answer_key[j]["Negative Marks"];
         let subject = this.answer_key[j].Subject;
-  
+
         // Adding values for headers like Q1, Q2....so on
         if (answer == correct_answer) {
           obj[question] = full_marks;
@@ -205,7 +206,7 @@ export class ResultCalculationComponent implements OnInit {
           obj[question] = 0;
           total_blank_count += 1;
         }
-  
+
         //Adding values for subject-wise headers
         if (subject) {
           if (!subject_wise_marks[subject]) {
@@ -219,7 +220,7 @@ export class ResultCalculationComponent implements OnInit {
             subject_wise_count[subject]['Wrong'] = 0;
             subject_wise_count[subject]['Blank'] = 0;
           }
-  
+
           if (answer == correct_answer) {
             subject_wise_marks[subject]['Right'] += full_marks;
             subject_wise_count[subject]['Right'] += 1; // Increment right count
@@ -230,76 +231,77 @@ export class ResultCalculationComponent implements OnInit {
             subject_wise_marks[subject]['Blank'] += 1;
             subject_wise_count[subject]['Blank'] += 1; // Increment blank count
           }
-  
+
           subject_wise_marks[subject]['Total'] = subject_wise_marks[subject]['Right'] + subject_wise_marks[subject]['Wrong'] + subject_wise_marks[subject]['Blank'];
         }
       }
-  
+
       //Adding subject-wise marks and count to the object
       for (let subject in subject_wise_marks) {
         obj['Subject ' + subject + ' Right Count'] = subject_wise_count[subject]['Right']; // Subject-wise right count
         obj['Subject ' + subject + ' Wrong Count'] = subject_wise_count[subject]['Wrong']; // Subject-wise wrong count
         obj['Subject ' + subject + ' Blank Count'] = subject_wise_count[subject]['Blank']; // Subject-wise blank count
-  
+
         obj['Subject ' + subject + ' Right'] = subject_wise_marks[subject]['Right']; // Subject-wise right marks
         obj['Subject ' + subject + ' Wrong'] = subject_wise_marks[subject]['Wrong']; // Subject-wise wrong marks
         obj['Subject ' + subject + ' Blank'] = subject_wise_marks[subject]['Blank']; // Subject-wise blank marks
         obj['Subject ' + subject + ' Total Marks'] = subject_wise_marks[subject]['Total']; // Subject-wise total marks
 
-       // Calculate Subject Percentage
+        // Calculate Subject Percentage
         const subjectMaxMarks = this.answer_key.filter((item: { Subject: string; }) => item.Subject === subject)
-        .reduce((total: any, item: { FullMarks: any; }) => total + item.FullMarks, 0);
-      const subjectRightMarks = subject_wise_marks[subject]['Right'];
-      const subjectPercentage = (subjectRightMarks / subjectMaxMarks) * 100;
-      obj['Subject ' + subject + ' Percentage'] = subjectPercentage;
+          .reduce((total: any, item: { FullMarks: any; }) => total + item.FullMarks, 0);
+        const subjectRightMarks = subject_wise_marks[subject]['Right'];
+        const subjectPercentage = (subjectRightMarks / subjectMaxMarks) * 100;
+        obj['Subject ' + subject + ' Percentage'] = subjectPercentage;
 
-      // Calculate Total Questions in Subject
-      const subjectTotalQuestions = this.answer_key.filter((item: { Subject: string; }) => item.Subject === subject).length;
-      obj['Subject ' + subject + ' Total Questions'] = subjectTotalQuestions;
+        // Calculate Total Questions in Subject
+        const subjectTotalQuestions = this.answer_key.filter((item: { Subject: string; }) => item.Subject === subject).length;
+        obj['Subject ' + subject + ' Total Questions'] = subjectTotalQuestions;
 
-      // Calculate Subject Rank
-      const ranks = this.results.map((result: any) => result['Subject ' + subject + ' Percentage']);
-      const subjectRank = ranks.filter((rank: number) => rank >= subjectPercentage).length + 1;
-      obj['Subject ' + subject + ' Rank'] = subjectRank;
+        // Calculate Subject Rank
+        const ranks = this.results.map((result: any) => result['Subject ' + subject + ' Percentage']);
+        const subjectRank = ranks.filter((rank: number) => rank >= subjectPercentage).length + 1;
+        obj['Subject ' + subject + ' Rank'] = subjectRank;
 
       }
-  
+
       //Adding total right, wrong, and blank marks to the object
       obj['Total Right Marks'] = total_right_marks;
       obj['Total Wrong Marks'] = total_wrong_marks;
       obj['Total Marks'] = total_marks;
-  
+
       //Putting total count of right, wrong, and blank
       obj['Total Right Count'] = total_right_count;
       obj['Total Wrong Count'] = total_wrong_count;
       obj['Total Blank Count'] = total_blank_count;
-  
+
       // console.log("Ek bache ka hogya............ab next");
       this.results.push(obj);
     }
-  
+
     console.log("FINAL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.results);
-  
+
     this.calculateRankAndPercentage();
-    this.calculatePeerAverageRightCount();
+    this.calculatePeerAverageCount();
+    // this.calculatePeerCountBySubject();
   }
 
   calculateRankAndPercentage() {
     this.calculateMaximumTotalMarks();
-  
+
     // Sort the students based on total marks in descending order
     this.results.sort((a, b) => b["Total Marks"] - a["Total Marks"]);
-  
+
     // Calculate the rank and percentage for each student
     const totalStudents = this.results.length;
     let totalPercentage = 0;
     let lowestPercentage = Infinity;
     let highestPercentage = -Infinity;
-  
+
     for (let i = 0; i < totalStudents; i++) {
       const student = this.results[i];
       student["Rank"] = i + 1;
-  
+
       if (student["Total Marks"] < 0) {
         student["Percentage"] = 0;
       } else {
@@ -309,56 +311,102 @@ export class ResultCalculationComponent implements OnInit {
         highestPercentage = Math.max(highestPercentage, student["Percentage"]);
       }
     }
-  
+
     const averagePercentage = totalPercentage / totalStudents;
     this.percentagesValues = {
-      lowestPercentage : lowestPercentage,
-      highestPercentage : highestPercentage,
-      averagePercentage : averagePercentage
+      lowestPercentage: lowestPercentage,
+      highestPercentage: highestPercentage,
+      averagePercentage: averagePercentage
     }
     console.log("Lowest Percentage:", lowestPercentage);
     console.log("Highest Percentage:", highestPercentage);
     console.log("Average Percentage:", averagePercentage);
   }
 
-  calculatePeerAverageRightCount() {
-    const subjectWiseRightCount: any = {}; // Object to store subject-wise right count for all students
-  
+  // calculatePeerAverageRightCount() {
+  //   const subjectWiseRightCount: any = {}; // Object to store subject-wise right count for all students
+
+  //   // Iterate over all students' results
+  //   for (const student of this.results) {
+  //     // Iterate over each subject in the student's result
+  //     for (const subject in student) {
+  //       if (subject.startsWith("Subject ") && subject.endsWith(" Right Count")) {
+  //         const subjectName = subject.substring(8, subject.length - 12); // Extract subject name from the key
+  //         const rightCount = student[subject]; // Get the right count for the subject
+
+  //         if (!subjectWiseRightCount[subjectName]) {
+  //           subjectWiseRightCount[subjectName] = [];
+  //         }
+
+  //         subjectWiseRightCount[subjectName].push(rightCount); // Add the right count to the subject-wise array
+  //       }
+  //     }
+  //   }
+
+
+  //   // Calculate the average right count for each subject
+  //   for (const subject in subjectWiseRightCount) {
+  //     const rightCounts = subjectWiseRightCount[subject];
+  //     const totalRightCount = rightCounts.reduce((total: number, count: number) => total + count, 0);
+  //     const averageRightCount = totalRightCount / rightCounts.length;
+  //     this.peerAverageRightCount[subject] = averageRightCount;
+  //   }
+
+  //   console.log("Peer Average Right Count:", this.peerAverageRightCount);
+  // }
+
+
+  calculatePeerAverageCount() {
+    this.peerAverageCounts; // Object to store the peer average counts
+
     // Iterate over all students' results
     for (const student of this.results) {
       // Iterate over each subject in the student's result
-      for (const subject in student) {
-        if (subject.startsWith("Subject ") && subject.endsWith(" Right Count")) {
-          const subjectName = subject.substring(8, subject.length - 12); // Extract subject name from the key
-          const rightCount = student[subject]; // Get the right count for the subject
-  
-          if (!subjectWiseRightCount[subjectName]) {
-            subjectWiseRightCount[subjectName] = [];
+      for (const key in student) {
+        if (key.startsWith("Subject") && key.endsWith("Right Count")) {
+          const subjectName = key.split(" ")[1]; // Extract subject name from the key
+          const rightCountKey = `Subject ${subjectName} Peer Right Count`;
+          const wrongCountKey = `Subject ${subjectName} Peer Wrong Count`;
+          const blankCountKey = `Subject ${subjectName} Peer Blank Count`;
+
+          if (!this.peerAverageCounts[rightCountKey]) {
+            this.peerAverageCounts[rightCountKey] = 0;
           }
-  
-          subjectWiseRightCount[subjectName].push(rightCount); // Add the right count to the subject-wise array
+
+          if (!this.peerAverageCounts[wrongCountKey]) {
+            this.peerAverageCounts[wrongCountKey] = 0;
+          }
+
+          if (!this.peerAverageCounts[blankCountKey]) {
+            this.peerAverageCounts[blankCountKey] = 0;
+          }
+
+          this.peerAverageCounts[rightCountKey] += student[key] || 0; // Add the right count to the subject-wise total
+          this.peerAverageCounts[wrongCountKey] += student[key.replace("Right", "Wrong")] || 0; // Add the wrong count to the subject-wise total
+          this.peerAverageCounts[blankCountKey] += student[key.replace("Right", "Blank")] || 0; // Add the blank count to the subject-wise total
         }
       }
     }
-  
-  
-    // Calculate the average right count for each subject
-    for (const subject in subjectWiseRightCount) {
-      const rightCounts = subjectWiseRightCount[subject];
-      const totalRightCount = rightCounts.reduce((total: number, count: number) => total + count, 0);
-      const averageRightCount = totalRightCount / rightCounts.length;
-      this.peerAverageRightCount[subject] = averageRightCount;
+
+    // Calculate the average counts
+    for (const key in this.peerAverageCounts) {
+      if (this.peerAverageCounts.hasOwnProperty(key)) {
+        this.peerAverageCounts[key] /= this.results.length;
+      }
     }
-  
-    console.log("Peer Average Right Count:", this.peerAverageRightCount);
+
+    console.log("Peer Average Count:", this.peerAverageCounts);
   }
-  
-    
 
 
-  
 
-  
+
+
+
+
+
+
+
 
 
 
@@ -464,21 +512,21 @@ export class ResultCalculationComponent implements OnInit {
   }
 
   calculateMaximumTotalMarks() {
-    this.maximumTotalMarks = this.answer_key.reduce((totalMarks : number, question: any) => {
+    this.maximumTotalMarks = this.answer_key.reduce((totalMarks: number, question: any) => {
       // console.log('question["FullMarks"] : ',question["FullMarks"]);
       return totalMarks + question["FullMarks"];
     }, 0);
   }
 
 
-  
 
 
 
 
 
 
-//Adding S No manually !
+
+  //Adding S No manually !
   getHeaderRowDef(): string[] {
     return ['sno', ...this.headers];
   }
@@ -494,30 +542,30 @@ export class ResultCalculationComponent implements OnInit {
   onRowClick(row: any) {
     console.log('Clicked row:', row);
 
-      // Find the result for the clicked roll number
-      const clickedRollNo = row["Roll No"]; // Convert the roll number to a number
-      const rollNoResult = this.results.find(result => result["Roll No"] === parseInt(clickedRollNo));
-      const studentData = this.students_data.find((student: { [x: string]: number; }) => student["Roll No"]===clickedRollNo);
+    // Find the result for the clicked roll number
+    const clickedRollNo = row["Roll No"]; // Convert the roll number to a number
+    const rollNoResult = this.results.find(result => result["Roll No"] === parseInt(clickedRollNo));
+    const studentData = this.students_data.find((student: { [x: string]: number; }) => student["Roll No"] === clickedRollNo);
 
 
 
-      if (rollNoResult) {
-        // Result found
-        console.log("Result:", rollNoResult);
-        console.log("Student Data : ", studentData);
-        const studentReportData : any = {
-          resultData : rollNoResult,
-          studentPersonalInfo : studentData,
-          percentagesValue : this.percentagesValues,
-          peerAverageRightCount: this.peerAverageRightCount
-        }
-        this.dataService.setClickedRow(studentReportData);
-        this.router.navigate(['/student-personal-report']);
-      } else {
-        // Result not found
-        alert("Report Not Found. Make sure you have selected Student's Roll No. !")
+    if (rollNoResult) {
+      // Result found
+      console.log("Result:", rollNoResult);
+      console.log("Student Data : ", studentData);
+      const studentReportData: any = {
+        resultData: rollNoResult,
+        studentPersonalInfo: studentData,
+        percentagesValue: this.percentagesValues,
+        peerAverageCounts: this.peerAverageCounts
       }
+      this.dataService.setClickedRow(studentReportData);
+      this.router.navigate(['/student-personal-report']);
+    } else {
+      // Result not found
+      alert("Report Not Found. Make sure you have selected Student's Roll No. !")
     }
+  }
 
   //Download whole page !
   downloadPage() {
