@@ -4,7 +4,6 @@ import { SelectHeadersComponent } from '../select-headers/select-headers.compone
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import autoTable from 'jspdf-autotable';
-import * as ApexCharts from 'apexcharts';
 import { Router } from '@angular/router';
 import { DataService } from '../services/data.service';
 
@@ -33,6 +32,7 @@ export class ResultCalculationComponent implements OnInit {
   percentagesValues: any;
   peerAverageRightCount: any = {};
   peerAverageCounts: any = {};
+  subjectWiseMarks: any = {};
 
   constructor(private dialog: MatDialog,
     private elementRef: ElementRef,
@@ -65,28 +65,6 @@ export class ResultCalculationComponent implements OnInit {
     this.students_data = filteredData;
 
   }
-
-  initializeChart() {
-    const chartOptions = {
-      chart: {
-        type: 'bar',
-        height: 400
-      },
-      series: [{
-        name: 'Sales',
-        data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
-      }],
-      xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
-      }
-    };
-
-    const chart = new ApexCharts(document.querySelector('#chart'), chartOptions);
-    chart.render();
-  }
-
-
-
 
   openPopup(): void {
     // console.log("this.omr_response : ", this.omr_response);
@@ -132,9 +110,7 @@ export class ResultCalculationComponent implements OnInit {
       this.dataSource = this.convertToDataSource();
 
 
-      if (this.headers.includes('Total Marks')) {
-        this.getToppersWithHighTotalMarks();
-      }
+    
 
 
     });
@@ -283,25 +259,37 @@ export class ResultCalculationComponent implements OnInit {
 
     this.calculateRankAndPercentage();
     this.calculatePeerAverageCount();
+    this.calculateSubjectWiseMarks();
     // this.calculatePeerCountBySubject();
   }
 
   calculateRankAndPercentage() {
     this.calculateMaximumTotalMarks();
-
+  
     // Sort the students based on total marks in descending order
     this.results.sort((a, b) => b["Total Marks"] - a["Total Marks"]);
-
+  
     // Calculate the rank and percentage for each student
     const totalStudents = this.results.length;
     let totalPercentage = 0;
     let lowestPercentage = Infinity;
     let highestPercentage = -Infinity;
-
+  
+    let previousTotalMarks = null;
+    let currentRank = 0;
+    let currentPercentageRank = 0;
+  
     for (let i = 0; i < totalStudents; i++) {
       const student = this.results[i];
-      student["Rank"] = i + 1;
-
+  
+      if (student["Total Marks"] !== previousTotalMarks) {
+        // Update the rank only if the total marks are different
+        currentRank = i + 1;
+        currentPercentageRank = i + 1;
+      }
+  
+      student["Rank"] = currentRank;
+  
       if (student["Total Marks"] < 0) {
         student["Percentage"] = 0;
       } else {
@@ -310,51 +298,22 @@ export class ResultCalculationComponent implements OnInit {
         lowestPercentage = Math.min(lowestPercentage, student["Percentage"]);
         highestPercentage = Math.max(highestPercentage, student["Percentage"]);
       }
+  
+      previousTotalMarks = student["Total Marks"];
     }
-
+  
     const averagePercentage = totalPercentage / totalStudents;
     this.percentagesValues = {
       lowestPercentage: lowestPercentage,
       highestPercentage: highestPercentage,
       averagePercentage: averagePercentage
-    }
+    };
+  
     console.log("Lowest Percentage:", lowestPercentage);
     console.log("Highest Percentage:", highestPercentage);
     console.log("Average Percentage:", averagePercentage);
   }
-
-  // calculatePeerAverageRightCount() {
-  //   const subjectWiseRightCount: any = {}; // Object to store subject-wise right count for all students
-
-  //   // Iterate over all students' results
-  //   for (const student of this.results) {
-  //     // Iterate over each subject in the student's result
-  //     for (const subject in student) {
-  //       if (subject.startsWith("Subject ") && subject.endsWith(" Right Count")) {
-  //         const subjectName = subject.substring(8, subject.length - 12); // Extract subject name from the key
-  //         const rightCount = student[subject]; // Get the right count for the subject
-
-  //         if (!subjectWiseRightCount[subjectName]) {
-  //           subjectWiseRightCount[subjectName] = [];
-  //         }
-
-  //         subjectWiseRightCount[subjectName].push(rightCount); // Add the right count to the subject-wise array
-  //       }
-  //     }
-  //   }
-
-
-  //   // Calculate the average right count for each subject
-  //   for (const subject in subjectWiseRightCount) {
-  //     const rightCounts = subjectWiseRightCount[subject];
-  //     const totalRightCount = rightCounts.reduce((total: number, count: number) => total + count, 0);
-  //     const averageRightCount = totalRightCount / rightCounts.length;
-  //     this.peerAverageRightCount[subject] = averageRightCount;
-  //   }
-
-  //   console.log("Peer Average Right Count:", this.peerAverageRightCount);
-  // }
-
+  
 
   calculatePeerAverageCount() {
     this.peerAverageCounts; // Object to store the peer average counts
@@ -397,6 +356,48 @@ export class ResultCalculationComponent implements OnInit {
 
     console.log("Peer Average Count:", this.peerAverageCounts);
   }
+
+  calculateSubjectWiseMarks() {
+  
+    // Iterate over all subjects in the answer key
+    for (const answer of this.answer_key) {
+      const subjectName = answer.Subject;
+      const subjectKey = `Subject ${subjectName}`;
+  
+      // Calculate the peer lowest, average, and highest total marks for the subject
+      let peerLowestTotalMarks = Infinity;
+      let peerHighestTotalMarks = -Infinity;
+      let peerTotalMarks = 0;
+      let peerCount = 0;
+  
+      for (const student of this.results) {
+        const totalMarks = student[`${subjectKey} Total Marks`] || 0;
+  
+        if (totalMarks < peerLowestTotalMarks) {
+          peerLowestTotalMarks = totalMarks;
+        }
+  
+        if (totalMarks > peerHighestTotalMarks) {
+          peerHighestTotalMarks = totalMarks;
+        }
+  
+        peerTotalMarks += totalMarks;
+        peerCount++;
+      }
+  
+      const peerAverageTotalMarks = peerTotalMarks / peerCount;
+  
+      // Store the subject-wise marks in the result object
+      this.subjectWiseMarks[`${subjectKey} Peer Lowest Total Marks`] = peerLowestTotalMarks;
+      this.subjectWiseMarks[`${subjectKey} Peer Average Total Marks`] = peerAverageTotalMarks;
+      this.subjectWiseMarks[`${subjectKey} Peer Highest Total Marks`] = peerHighestTotalMarks;
+    }
+  
+    console.log("Subject-wise Marks:", this.subjectWiseMarks);
+  }
+  
+  
+  
 
 
 
@@ -483,33 +484,7 @@ export class ResultCalculationComponent implements OnInit {
 
 
 
-  //Get Top 5 students who have higher Total Marks !
-  getToppersWithHighTotalMarks() {
-    // Select a random property name from tableResultant
-    const randomProperty = Object.keys(this.tableResultant)[Math.floor(Math.random() * Object.keys(this.tableResultant).length)];
 
-    // Convert the selected property into an array of objects
-    const students = this.tableResultant[randomProperty].map((value: any, index: any) => {
-      const student: any = {};
-      for (const key in this.tableResultant) {
-        if (Object.prototype.hasOwnProperty.call(this.tableResultant, key)) {
-          student[key] = this.tableResultant[key][index];
-        }
-      }
-      return student;
-    });
-
-    // Sort the students array based on the total marks in descending order
-    students.sort((a: any, b: any) => b['Total Marks'] - a['Total Marks']);
-
-    // Retrieve the top 5 students from the sorted array
-    this.totalMarksTopperList = students.slice(0, 5);
-
-    // console.log("totalMarksTopperList", this.totalMarksTopperList);
-
-    this.initializeChart();
-
-  }
 
   calculateMaximumTotalMarks() {
     this.maximumTotalMarks = this.answer_key.reduce((totalMarks: number, question: any) => {
@@ -547,9 +522,7 @@ export class ResultCalculationComponent implements OnInit {
     const rollNoResult = this.results.find(result => result["Roll No"] === parseInt(clickedRollNo));
     const studentData = this.students_data.find((student: { [x: string]: number; }) => student["Roll No"] === clickedRollNo);
 
-
-
-    if (rollNoResult) {
+    if (rollNoResult){
       // Result found
       console.log("Result:", rollNoResult);
       console.log("Student Data : ", studentData);
@@ -557,7 +530,9 @@ export class ResultCalculationComponent implements OnInit {
         resultData: rollNoResult,
         studentPersonalInfo: studentData,
         percentagesValue: this.percentagesValues,
-        peerAverageCounts: this.peerAverageCounts
+        peerAverageCounts: this.peerAverageCounts,
+        subjectWiseMarks : this.subjectWiseMarks,
+        answer_key : this.answer_key
       }
       this.dataService.setClickedRow(studentReportData);
       this.router.navigate(['/student-personal-report']);

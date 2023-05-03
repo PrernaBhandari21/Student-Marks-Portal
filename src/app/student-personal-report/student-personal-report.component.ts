@@ -1,9 +1,8 @@
 import {  AfterViewInit, Component, ElementRef,  OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { DataService } from '../services/data.service';
-import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import * as ApexCharts from 'apexcharts';
-
+import { jsPDF } from 'jspdf';
 @Component({
   selector: 'app-student-personal-report',
   templateUrl: './student-personal-report.component.html',
@@ -14,6 +13,8 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
 
   @ViewChildren('chartContainer') chartContainers!: QueryList<ElementRef>;
   @ViewChildren('peerChartContainer') peerChartContainers!: QueryList<ElementRef>;
+  @ViewChildren('subBarchartContainer') subBarchartContainers!: QueryList<ElementRef>;
+
 
 
 
@@ -21,6 +22,10 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   chartOptions: any;
   chartData: any;
   chartType: string = 'bar';
+  totalNoOfQues: any;
+  questionLogic: string[] = [];
+
+  
 
   constructor(
     private dataService: DataService,
@@ -33,10 +38,16 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
 
   ngOnInit(): void {
     this.getStudentData();
+
+    this.totalNoOfQues = this.data.answer_key.length;
+    // this.totalNoOfQues =23;
     this.createPercentageChart();
     this.createTotalQsDonutChart();
     this.createRightCountDonutChart();
     this.createPeerAvgDonutChart();
+    // this.showQuestions();
+    this.analyzeQues();
+
     
 
   }
@@ -54,10 +65,75 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
       const subject = this.getSubjects(this.data?.resultData)[index];
       this.generatePeerPieChart(subject, container);
     });
+
+
+    this.subBarchartContainers.forEach((container, index) => {
+      const subject = subjects[index];
+      this.generateBarChart(subject, container);
+    });
   
     
   }
   
+
+  analyzeQues() {
+    this.questionLogic = []; // Clear the array before analyzing questions
+  
+    for (let j = 0; j < this.data.answer_key.length; j++) {
+      let question = "Q" + (j + 1);
+      let answer = this.data.resultData[question];
+      let full_marks = this.data.answer_key[j].FullMarks;
+      let partial_marks = this.data.answer_key[j]["Partial Marks"];
+      let negative_marks = this.data.answer_key[j]["Negative Marks"];
+      let subject = this.data.answer_key[j].Subject;
+  
+      if (answer == full_marks) {
+        this.questionLogic.push('correct');
+      } else if (answer == -negative_marks) {
+        this.questionLogic.push('wrong');
+      } else if (answer == 0) {
+        this.questionLogic.push('blank');
+      }
+    }
+  }
+  
+  
+
+  getQuestionNumbers(): number[] {
+    return Array(this.totalNoOfQues).fill(0).map((_, i) => i + 1);
+  }
+  
+
+//   showQuestions(){
+//     const totalQuestions = this.data.answer_key.length;
+//     const questionsPerRow = 10;
+//     console.log("totalQuestion: ",totalQuestions);
+//     console.log("questionsPerRow : ",questionsPerRow);
+
+//     const questionContainer = this.elementRef.nativeElement.querySelector('#questionContainer');
+//     const numberOfRows = Math.ceil(totalQuestions / questionsPerRow);
+
+//     let html = '';
+//     for (let row = 0; row < numberOfRows; row++) {
+//       const startQuestionIndex = row * questionsPerRow;
+//       const endQuestionIndex = Math.min((row + 1) * questionsPerRow, totalQuestions);
+//       const questionsInRow = endQuestionIndex - startQuestionIndex;
+
+//       html += '<div class="question-row">';
+
+//       for (let i = 0; i < questionsInRow; i++) {
+//         const questionIndex = startQuestionIndex + i;
+//         const questionNumber = questionIndex + 1;
+
+//         html += `<div class="question">${questionNumber}: [Your question data here]</div>`;
+//       }
+
+//       html += '</div>';
+//     }
+
+//     this.renderer.setProperty(questionContainer, 'innerHTML', html);
+// }
+
 
   
   
@@ -360,6 +436,7 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
         chart: {
           type: 'pie',
           height: '300px', // Adjust the height as per your requirements
+          width:'450px'
         },
         plotOptions: {
           pie: {
@@ -413,6 +490,7 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
         chart: {
           type: 'pie',
           height: '300px', // Adjust the height as per your requirements
+          width:'450px'
         },
         plotOptions: {
           pie: {
@@ -448,6 +526,49 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   }
   
 
+  generateBarChart(subject: string, container: ElementRef) {
+    const yourMarksKey = 'Subject ' + subject + ' Total Marks';
+    const lowestMarksKey = 'Subject ' + subject + ' Peer Lowest Total Marks';
+    const averageMarksKey = 'Subject ' + subject + ' Peer Average Total Marks';
+    const highestMarksKey = 'Subject ' + subject + ' Peer Highest Total Marks';
+
+    const yourMarks = this.data?.resultData[yourMarksKey];
+    const lowestMarks = this.data?.subjectWiseMarks[lowestMarksKey];
+    const averageMarks = this.data?.subjectWiseMarks[averageMarksKey];
+    const highestMarks = this.data?.subjectWiseMarks[highestMarksKey];
+
+    if (yourMarks !== undefined && lowestMarks !== undefined && averageMarks !== undefined && highestMarks !== undefined) {
+      const options = {
+        series: [
+          { name: 'Your Marks', data: [yourMarks] },
+          { name: 'Lowest', data: [lowestMarks] },
+          { name: 'Average', data: [averageMarks] },
+          { name: 'Highest', data: [highestMarks] }
+        ],
+        chart: {
+          type: 'bar',
+          height: '300px' ,// Adjust the height as per your requirements,
+          width:'700px'
+
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false
+          }
+        },
+        xaxis: {
+          categories: [''] // Empty string to show only one category
+        },
+        legend: {
+          position: 'top'
+        }
+        // Add other chart options as per your requirements
+      };
+
+      const chart = new ApexCharts(container.nativeElement, options);
+      chart.render();
+    }
+  }
   
   
   
@@ -456,19 +577,47 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   downloadPage() {
     const doc = new jsPDF();
     const elementToCapture = this.elementRef.nativeElement.querySelector('.component-to-download');
-    html2canvas(elementToCapture, { useCORS: true }).then(canvas => {
+    const options = {
+      useCORS: true,
+      scale: 2 // Increase the scale value to capture higher resolution
+    };
+  
+    html2canvas(elementToCapture, options).then(canvas => {
       const imageData = canvas.toDataURL('image/png');
       const pageWidth = doc.internal.pageSize.getWidth();
-      const pageHeight = doc.internal.pageSize.getHeight();
-      const margin = 4;
+     const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 10;
       const imgWidth = pageWidth - (2 * margin);
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      const xPos = margin;
-      const yPos = margin;
-      doc.addImage(imageData, 'PNG', xPos, yPos, imgWidth, imgHeight);
+  
+      let remainingHeight = imgHeight;
+      let currentYPos = 0;
+      let currentPage = 1;
+  
+      while (remainingHeight > 0) {
+        const currentHeight = Math.min(remainingHeight, pageHeight - (2 * margin));
+  
+        doc.addPage();
+        doc.setPage(currentPage);
+  
+        const yPos = margin + currentYPos;
+        doc.addImage(imageData, 'PNG', margin, yPos, imgWidth, currentHeight);
+  
+        remainingHeight -= currentHeight;
+        currentYPos += currentHeight;
+        currentPage++;
+      }
+  
+      doc.deletePage(currentPage);
       doc.save('component.pdf');
     });
   }
+    
+  
+  
+  
+  
+  
 
   getSubjects(resultData: any): string[] {
     const subjects: string[] = [];

@@ -147,9 +147,9 @@
       <div class="col">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">{{ subject }}</h5>
+            <h5 class="card-title mb-3">{{ subject }} Subject Analysis : </h5>
 
-            <div class="flexx">
+            <div class="flexx mb-4 px-4">
 
               <div class="card-content-one">
                 <div class="flexx">
@@ -157,8 +157,8 @@
                   <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Total Questions'] }}</span>
                 </div>
                 <div class="flexx">
-                  <span class="left">Your Marks</span>
-                  <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Right'] }}</span>
+                  <span class="left">Your Total Marks</span>
+                  <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Total Marks'] }}</span>
                 </div>
                 <div class="flexx">
                   <span class="left">Correct</span>
@@ -174,7 +174,7 @@
                 </div>
                 <div class="flexx">
                   <span class="left">Percentage</span>
-                  <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Percentage'] }}</span>
+                  <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Percentage'] }} % </span>
                 </div>
                 <div class="flexx">
                   <span class="left">Rank</span>
@@ -183,11 +183,20 @@
               </div>
   
               <div class="card-content-two">
+                <span class="bold">Marks Analysis</span>
+                <div #subBarchartContainer></div>
+              </div>
+
+              </div>
+
+              <div class="flexx px-4">
+                
+              <div class="card-content-three">
                 <span class="bold">Your Performance Analysis</span>
                 <div #chartContainer></div>
               </div>
-
-              <div class="card-content-three">
+              
+              <div class="card-content-four">
                 <span class="bold">Peer Performance Analysis</span>
                 <div #peerChartContainer></div>
               </div>
@@ -205,7 +214,17 @@
   </div>
   
 
+  <h3 class="mt-4 mb-2">Question Analysis</h3>
+  <div class="question-container">
+        <div *ngFor="let questionNumber of getQuestionNumbers(); let i = index" 
+         [ngClass]="questionLogic[i]" class="question-box">
+      {{ questionNumber }}
+    </div>
+  </div>
+  
+  
 
+  
 
 </div>
 

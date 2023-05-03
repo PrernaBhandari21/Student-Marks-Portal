@@ -1,3 +1,6 @@
+*{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 .downloadBtn{
     text-align: right;
 }
@@ -28,12 +31,54 @@ span{
   .card-content-one{
     border: 1px solid lightblue;
     border-radius: 5px;
-    width: 180px;
+    width: 350px;
     padding: 10px;
   }
 
-  .card-content-two{
+  .card-content-one .flexx{
+    margin-top: 13px;
+}
+
+  .card-content-two,.card-content-three,.card-content-four{
     display: flex;
     align-items: center;
     flex-direction: column;
   }
+
+
+ 
+  .question-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .question-box {
+    flex: 0 0 calc(100% / 15 - 20px); /* Adjust the width based on the number of boxes you want in each row */
+    height: 30px;
+    border: 1px solid black;
+    text-align: center;
+    line-height: 30px;
+    margin: 5px;
+  }
+  
+  
+  .correct {
+    background-color: green;
+    color: white;
+    font-weight: 500;
+  }
+  
+  .wrong {
+    background-color: red;
+    color: white;
+    font-weight: 500;
+  }
+  
+  .blank {
+    /* Define your styling for blank answers */
+    background-color: rgb(221, 144, 0);
+    color: white;
+    font-weight: 500;
+  }
+  
+  
