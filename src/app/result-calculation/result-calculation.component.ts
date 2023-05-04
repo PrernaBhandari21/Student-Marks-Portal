@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { DataService } from '../services/data.service';
 
 
+
 @Component({
   selector: 'app-result-calculation',
   templateUrl: './result-calculation.component.html',
@@ -33,6 +34,7 @@ export class ResultCalculationComponent implements OnInit {
   peerAverageRightCount: any = {};
   peerAverageCounts: any = {};
   subjectWiseMarks: any = {};
+  topCandidates :any= [];
 
   constructor(private dialog: MatDialog,
     private elementRef: ElementRef,
@@ -47,6 +49,8 @@ export class ResultCalculationComponent implements OnInit {
     console.log("students_data", this.students_data);
 
     this.calcuateResult();
+
+    this.toppersList();
   }
 
   removeSNo() {
@@ -397,6 +401,47 @@ export class ResultCalculationComponent implements OnInit {
   }
   
   
+  toppersList() {
+    
+  
+    console.log("Top 5 Candidates:");
+    const sortedResults = this.results.sort((a, b) => b["Percentage"] - a["Percentage"]);
+  
+    for (let i = 0; i < 5 && i < sortedResults.length; i++) {
+      const student = sortedResults[i];
+      const rollNo = student["Roll No"];
+      const matchedStudent = this.students_data.find((s:any) => s["Roll No"] == rollNo);
+      console.log("matchedStudent",matchedStudent);
+  
+      if (matchedStudent) {
+        const candidateData :any = {
+          Rank: student["Rank"],
+          RollNo: rollNo,
+          Percentage: student["Percentage"],
+          TotalMarks: student["Total Marks"],
+          Name: matchedStudent["Student Name"]
+        };
+  
+        // Iterate over the student object to dynamically add subject-wise marks
+        for (const key in student) {
+          if (key.startsWith("Subject") && key.endsWith("Total Marks")) {
+            const subjectName = key.substring(8, key.indexOf(" Total Marks"));
+            const subjectTotalMarks = student[key];
+            const subjectField = `Subject ${subjectName} Total Marks`;
+            candidateData[subjectField] = subjectTotalMarks;
+          }
+        }
+  
+        this.topCandidates.push(candidateData);
+        console.log(candidateData);
+        console.log("-----");
+      }
+    }
+  
+    console.log("Top Candidates Object:", this.topCandidates);
+  }
+  
+  
   
 
 
@@ -532,7 +577,8 @@ export class ResultCalculationComponent implements OnInit {
         percentagesValue: this.percentagesValues,
         peerAverageCounts: this.peerAverageCounts,
         subjectWiseMarks : this.subjectWiseMarks,
-        answer_key : this.answer_key
+        answer_key : this.answer_key,
+        toppersList : this.topCandidates
       }
       this.dataService.setClickedRow(studentReportData);
       this.router.navigate(['/student-personal-report']);

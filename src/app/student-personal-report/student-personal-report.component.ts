@@ -3,6 +3,8 @@ import { DataService } from '../services/data.service';
 import html2canvas from 'html2canvas';
 import * as ApexCharts from 'apexcharts';
 import { jsPDF } from 'jspdf';
+import { MatTableDataSource } from '@angular/material/table';
+
 @Component({
   selector: 'app-student-personal-report',
   templateUrl: './student-personal-report.component.html',
@@ -16,6 +18,9 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   @ViewChildren('subBarchartContainer') subBarchartContainers!: QueryList<ElementRef>;
 
 
+  dataSource!: MatTableDataSource<any>;
+  displayedColumns: string[] = ['Rank', 'RollNo','Name', 'Percentage', 'TotalMarks'];
+  dynamicColumns: string[] = [];
 
 
   data: any;
@@ -24,6 +29,7 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   chartType: string = 'bar';
   totalNoOfQues: any;
   questionLogic: string[] = [];
+
 
   
 
@@ -47,6 +53,12 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
     this.createPeerAvgDonutChart();
     // this.showQuestions();
     this.analyzeQues();
+
+    //top candidates
+    this.dataSource = new MatTableDataSource(this.data.toppersList);
+    this.generateDynamicColumns();
+    this.moveColumnsToEnd(['TotalMarks', 'Percentage']);
+
 
     
 
@@ -74,6 +86,34 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   
     
   }
+  
+  generateDynamicColumns() {
+    this.data.toppersList.forEach((element:any) => {
+      for (const key in element) {
+        if (key.startsWith('Subject') && key.endsWith('Total Marks') && !this.dynamicColumns.includes(key)) {
+          this.dynamicColumns.push(key);
+          this.displayedColumns.push(key);
+        }
+      }
+    });
+  }
+
+  moveColumnsToEnd(columns: string[]) {
+    columns.forEach((column) => {
+      const index = this.displayedColumns.indexOf(column);
+      if (index > -1) {
+        this.displayedColumns.splice(index, 1);
+        this.displayedColumns.push(column);
+      }
+    });
+  }
+ 
+  
+  
+  
+  
+  
+  
   
 
   analyzeQues() {
