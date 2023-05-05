@@ -35,6 +35,8 @@ export class ResultCalculationComponent implements OnInit {
   peerAverageCounts: any = {};
   subjectWiseMarks: any = {};
   topCandidates :any= [];
+  resultObject:any = {};
+
 
   constructor(private dialog: MatDialog,
     private elementRef: ElementRef,
@@ -147,6 +149,8 @@ export class ResultCalculationComponent implements OnInit {
 
 
   calcuateResult() {
+
+    const questionStats :any = {}; // Object to store question statistics
     for (let i = 0; i < this.omr_response.length; i++) {
       // console.log(this.omr_response[i]["Roll No"]);
       let obj: any = {};
@@ -159,10 +163,15 @@ export class ResultCalculationComponent implements OnInit {
       let total_wrong_count = 0;
       let total_blank_count = 0;
 
+    
+
+
       //Adding Roll No in results array
       obj["Roll No"] = this.omr_response[i]["Roll No"];
 
       for (let j = 0; j < this.answer_key.length; j++) {
+
+
         let question = "Q" + (j + 1);
         let answer = this.omr_response[i][question];
         let correct_answer = this.answer_key[j].AnswerKey;
@@ -170,6 +179,15 @@ export class ResultCalculationComponent implements OnInit {
         let partial_marks = this.answer_key[j]["Partial Marks"];
         let negative_marks = this.answer_key[j]["Negative Marks"];
         let subject = this.answer_key[j].Subject;
+
+
+      if (!questionStats[question]) {
+        questionStats[question] = {
+          "Total Right": 0,
+          "Total Wrong": 0,
+          "Total Blank": 0
+        };
+      }
 
         // Adding values for headers like Q1, Q2....so on
         if (answer == correct_answer) {
@@ -204,12 +222,20 @@ export class ResultCalculationComponent implements OnInit {
           if (answer == correct_answer) {
             subject_wise_marks[subject]['Right'] += full_marks;
             subject_wise_count[subject]['Right'] += 1; // Increment right count
+
+            questionStats[question]["Total Right"]++;
+
           } else if (answer) {
             subject_wise_marks[subject]['Wrong'] -= negative_marks;
             subject_wise_count[subject]['Wrong'] += 1; // Increment wrong count
+            questionStats[question]["Total Wrong"]++;
+
           } else {
             subject_wise_marks[subject]['Blank'] += 1;
             subject_wise_count[subject]['Blank'] += 1; // Increment blank count
+
+            questionStats[question]["Total Blank"]++;
+
           }
 
           subject_wise_marks[subject]['Total'] = subject_wise_marks[subject]['Right'] + subject_wise_marks[subject]['Wrong'] + subject_wise_marks[subject]['Blank'];
@@ -258,6 +284,28 @@ export class ResultCalculationComponent implements OnInit {
       // console.log("Ek bache ka hogya............ab next");
       this.results.push(obj);
     }
+
+
+
+    // Calculate percentages and store in the result object
+  const totalStudents = this.omr_response.length;
+  for (const question in questionStats) {
+    const totalRight = questionStats[question]["Total Right"];
+    const totalWrong = questionStats[question]["Total Wrong"];
+    const totalBlank = questionStats[question]["Total Blank"];
+
+    const totalRightPercentage = (totalRight / totalStudents) * 100;
+    const totalWrongPercentage = (totalWrong / totalStudents) * 100;
+    const totalBlankPercentage = (totalBlank / totalStudents) * 100;
+
+    this.resultObject[`${question} Total Right`] = totalRightPercentage;
+    this.resultObject[`${question} Total Wrong`] = totalWrongPercentage;
+    this.resultObject[`${question} Total Blank`] = totalBlankPercentage;
+  }
+
+  console.log(this.resultObject);
+
+
 
     console.log("FINAL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.results);
 
@@ -567,6 +615,19 @@ export class ResultCalculationComponent implements OnInit {
     const rollNoResult = this.results.find(result => result["Roll No"] === parseInt(clickedRollNo));
     const studentData = this.students_data.find((student: { [x: string]: number; }) => student["Roll No"] === clickedRollNo);
 
+       // Filter out headers starting with "Q" followed by a numerical value for the specific roll number
+const filteredData = this.omr_response
+.filter((dataObj : any) => dataObj["Roll No"] == clickedRollNo) // Filter based on roll number
+.map((dataObj: { [x: string]: any; }) => {
+  const filteredObj: any = {};
+  for (const key in dataObj) {
+    if (key.startsWith("Q") && /\d/.test(key)) {
+      filteredObj[key] = dataObj[key];
+    }
+  }
+  return filteredObj;
+});
+
     if (rollNoResult){
       // Result found
       console.log("Result:", rollNoResult);
@@ -578,7 +639,9 @@ export class ResultCalculationComponent implements OnInit {
         peerAverageCounts: this.peerAverageCounts,
         subjectWiseMarks : this.subjectWiseMarks,
         answer_key : this.answer_key,
-        toppersList : this.topCandidates
+        toppersList : this.topCandidates,
+        questionWiseRWB : this.resultObject,
+        omrResponse : filteredData[0]
       }
       this.dataService.setClickedRow(studentReportData);
       this.router.navigate(['/student-personal-report']);

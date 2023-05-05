@@ -23,6 +23,8 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   dynamicColumns: string[] = [];
 
 
+
+
   data: any;
   chartOptions: any;
   chartData: any;
@@ -30,6 +32,19 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   totalNoOfQues: any;
   questionLogic: string[] = [];
 
+  quesWiseTableData : any ={};
+  quesdataSource!: MatTableDataSource<any>;
+  quesdisplayedColumns: string[] = [
+  'sNo',
+  'subject',
+  'answerMarked',
+  'answerKey',
+  'totalRightPercentage',
+  'totalWrongPercentage',
+  'totalBlankPercentage',
+];
+
+ 
 
   
 
@@ -59,8 +74,7 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
     this.generateDynamicColumns();
     this.moveColumnsToEnd(['TotalMarks', 'Percentage']);
 
-
-    
+    this.quesWiseAnalysisData()
 
   }
 
@@ -97,6 +111,93 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
       }
     });
   }
+
+  quesWiseAnalysisData(){
+    
+   this.quesWiseTableData ={
+    ansMarked : this.data.omrResponse,
+    peerComparison : this.data.questionWiseRWB,
+    answerKey : this.data.answer_key
+   }
+   console.log("quesWiseTableData : ",this.quesWiseTableData );
+
+   this.createTable();
+
+  }
+
+  createTable() {
+    if (
+      this.quesWiseTableData &&
+      typeof this.quesWiseTableData === 'object'
+    ) {
+      // Extract answer marked values
+      const answerMarked =
+        this.quesWiseTableData.ansMarked
+          ? Object.values(this.quesWiseTableData.ansMarked)
+          : [];
+      console.log(answerMarked);
+  
+      const answerKey =
+        this.quesWiseTableData.answerKey
+          ? this.quesWiseTableData.answerKey.map(
+              (item: any) => item.AnswerKey
+            )
+          : [];
+      console.log(this.quesWiseTableData.peerComparison);
+  
+      const totalRightPercentage = this.quesWiseTableData.peerComparison
+        ? Object.keys(this.quesWiseTableData.peerComparison)
+            .filter((key: string) => key.includes('Total Right'))
+            .map((key: string) => this.quesWiseTableData.peerComparison[key])
+        : [];
+      const totalWrongPercentage = this.quesWiseTableData.peerComparison
+        ? Object.keys(this.quesWiseTableData.peerComparison)
+            .filter((key: string) => key.includes('Total Wrong'))
+            .map((key: string) => this.quesWiseTableData.peerComparison[key])
+        : [];
+      const totalBlankPercentage = this.quesWiseTableData.peerComparison
+        ? Object.keys(this.quesWiseTableData.peerComparison)
+            .filter((key: string) => key.includes('Total Blank'))
+            .map((key: string) => this.quesWiseTableData.peerComparison[key])
+        : [];
+      console.log(totalRightPercentage);
+  
+      // Creating headers
+      const headers = [
+        'Subject',
+        'Answer Marked',
+        'Answer Key',
+        'Total Right Percentage',
+        'Total Wrong Percentage',
+        'Total Blank Percentage',
+      ];
+  
+      // Arranging the data
+      const tableData = answerMarked.map((_, i) => ({
+        subject:
+          this.quesWiseTableData.answerKey &&
+          this.quesWiseTableData.answerKey[i]
+            ? this.quesWiseTableData.answerKey[i].Subject
+            : '',
+        answerMarked: answerMarked[i],
+        answerKey: answerKey[i],
+        totalRightPercentage: totalRightPercentage[i],
+        totalWrongPercentage: totalWrongPercentage[i],
+        totalBlankPercentage: totalBlankPercentage[i],
+      }));
+  
+  
+      // Displaying the table data
+      console.log(headers);
+      console.log(tableData);
+      this.quesdataSource = new MatTableDataSource(tableData);
+
+    
+    } else {
+      console.error('Invalid or missing data.');
+    }
+  }
+  
 
   moveColumnsToEnd(columns: string[]) {
     columns.forEach((column) => {

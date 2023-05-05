@@ -9,53 +9,58 @@
     <h3 *ngIf='!data?.studentPersonalInfo["Roll No"]'>Result Analysis - Roll No : 120001</h3>
 
   <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
-          <div class="col">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title" *ngIf='data?.studentPersonalInfo["Student Name"]'>Student Name : {{data?.studentPersonalInfo["Student Name"] | uppercase}}</h5>
-                <h5 class="card-title" *ngIf='!data?.studentPersonalInfo["Student Name"]'>Student Name : {{"Prerna Bhandari" | uppercase}}</h5>
-                <div class="card-text">
-                      <p *ngIf='data?.studentPersonalInfo["Roll No"]'>
-                          Roll No. : {{data?.studentPersonalInfo["Roll No"]}}
-                      </p>
-
-                      <p *ngIf='data?.studentPersonalInfo["Fathers Name"]'>
-                          Father's Name : {{data?.studentPersonalInfo["Fathers Name"]}}
-                      </p>
-
-                      <p *ngIf='data?.studentPersonalInfo["Gender"]'>
-                          Gender : {{data?.studentPersonalInfo["Gender"]}}
-                      </p>
-
-                      <p *ngIf='data?.studentPersonalInfo["Category"]'>
-                          Category : {{data?.studentPersonalInfo["Category"]}}
-                      </p>
-
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Marks Analysis</h5>
-                <div class="card-text">
-
-                  <p *ngIf="data?.resultData['Total Marks']" class="flexx">
-                      <span class="left bold">Total Marks</span> <span class="right bold">{{ data?.resultData['Total Marks'] }}</span>
-                    </p>
-                    <ng-container *ngIf="data?.resultData">
-                      <div *ngFor="let key of objectKeys(data?.resultData)">
-                        <div *ngIf="key.includes('Subject') && key.includes('Total Marks')" class="flexx">
-                          <span class="left">{{ key }}</span> <span class="right">{{ data?.resultData[key] }}</span>
-                        </div>
-                      </div>
-                    </ng-container>
-
-              </div>
-            </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title" *ngIf="data?.studentPersonalInfo['Student Name']">Student Name : {{data?.studentPersonalInfo['Student Name'] | uppercase}}</h5>
+          <h5 class="card-title" *ngIf="!data?.studentPersonalInfo['Student Name']">Student Name : {{"Prerna Bhandari" | uppercase}}</h5>
+          <div class="card-text">
+            <p *ngIf="data?.studentPersonalInfo['Roll No']">
+              <span class="left">Roll No.</span>
+              <span class="right">{{data?.studentPersonalInfo['Roll No']}}</span>
+            </p>
+  
+            <p *ngIf="data?.studentPersonalInfo['Fathers Name']">
+              <span class="left">Father's Name</span>
+              <span class="right">{{data?.studentPersonalInfo['Fathers Name'] | titlecase}}</span>
+            </p>
+  
+            <p *ngIf="data?.studentPersonalInfo['Gender']">
+              <span class="left">Gender</span>
+              <span class="right">{{data?.studentPersonalInfo['Gender']}}</span>
+            </p>
+  
+            <p *ngIf="data?.studentPersonalInfo['Category']">
+              <span class="left">Category</span>
+              <span class="right">{{data?.studentPersonalInfo['Category']}}</span>
+            </p>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Marks Analysis</h5>
+          <div class="card-text">
+    
+            <p *ngIf="data?.resultData['Total Marks']">
+              <span class="left bold">Total Marks</span>
+              <span class="right bold">{{data?.resultData['Total Marks']}}</span>
+            </p>
+            <ng-container *ngIf="data?.resultData">
+              <div *ngFor="let key of objectKeys(data?.resultData)">
+                <div *ngIf="key.includes('Subject') && key.includes('Total Marks')" class="flexx">
+                  <span class="left">{{key}}</span>
+                  <span class="right">{{data?.resultData[key]}}</span>
+                </div>
+              </div>
+            </ng-container>
+    
+          </div>
+        </div>
+      </div>
+    </div>
     
           <div class="col">
             <div class="card">
@@ -279,6 +284,54 @@
   
 
 </div>
+
+<mat-table [dataSource]="quesdataSource">
+  <!-- Column definitions -->
+  <ng-container matColumnDef="sNo">
+    <mat-header-cell *matHeaderCellDef> S No. </mat-header-cell>
+    <mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="subject">
+    <mat-header-cell *matHeaderCellDef> Subject </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{ element.subject }} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="answerMarked">
+    <mat-header-cell *matHeaderCellDef> Answer Marked </mat-header-cell>
+    <mat-cell *matCellDef="let element"
+              [ngClass]="{
+                'correct-answer': element.answerMarked === element.answerKey,
+                'wrong-answer': element.answerMarked !== element.answerKey,
+                'blank-answer': element.answerMarked === ''
+              }">
+      {{ element.answerMarked }}
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="answerKey">
+    <mat-header-cell *matHeaderCellDef> Answer Key </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{ element.answerKey }} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="totalRightPercentage">
+    <mat-header-cell *matHeaderCellDef> Total Right Percentage </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{ element.totalRightPercentage }} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="totalWrongPercentage">
+    <mat-header-cell *matHeaderCellDef> Total Wrong Percentage </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{ element.totalWrongPercentage }} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="totalBlankPercentage">
+    <mat-header-cell *matHeaderCellDef> Total Blank Percentage </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{ element.totalBlankPercentage }} </mat-cell>
+  </ng-container>
+
+  <!-- Header row -->
+  <mat-header-row *matHeaderRowDef="quesdisplayedColumns"></mat-header-row>
+
+  <!-- Data rows -->
+  <mat-row *matRowDef="let row; columns: quesdisplayedColumns"></mat-row>
+</mat-table>
+
+
 
 
 

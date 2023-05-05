@@ -27,6 +27,40 @@ span{
 }
 
 
+
+/* Style for table like studutre  */
+
+
+.card-text {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.card-text p {
+  display: table-row;
+  border-bottom: 1px solid #ddd;
+}
+
+.card-text p:last-child {
+  border-bottom: none;
+}
+
+.card-text p span {
+  display: table-cell;
+  padding: 5px;
+}
+
+.card-text p span.left {
+  font-weight: bold;
+  text-align: left;
+}
+
+.card-text p span.right {
+  text-align: right;
+}
+/* ///// */
+
   
   .card-content-one{
     border: 1px solid lightblue;
@@ -108,3 +142,53 @@ span{
   .mat-elevation-z8 tr:hover {
     background-color: #ebebeb;
   }
+
+
+
+  /* Add the following CSS styles to your component's CSS file or the global styles file */
+
+.mat-table {
+  margin-top: 20px;
+  width: 98%;
+  border-collapse: collapse;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.mat-header-cell,
+.mat-cell {
+  padding: 8px;
+place-content: center;
+}
+
+.mat-header-row {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+.mat-row:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.mat-row:hover {
+  background-color: #eaeaea;
+}
+
+
+.wrong-answer {
+  background-color: red;
+  color: white;
+  font-weight: 500;
+}
+
+.correct-answer {
+  background-color: green;
+  color: white;
+  font-weight: 500;
+}
+
+.blank-answer {
+  background-color: rgb(181, 117, 0);
+  color: white;
+  font-weight: 500;
+}

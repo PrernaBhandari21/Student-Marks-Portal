@@ -26,6 +26,9 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import { StudentPersonalReportComponent } from './student-personal-report/student-personal-report.component';
 
+import { CdkTableModule } from '@angular/cdk/table';
+
+
 
 
 
@@ -57,6 +60,7 @@ import { StudentPersonalReportComponent } from './student-personal-report/studen
     MatCheckboxModule,
     MatRadioModule,
 
+    CdkTableModule
   ],
   providers: [ MultilevelMenuService,
      
