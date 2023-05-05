@@ -38,29 +38,35 @@
         </div>
       </div>
     </div>
+
+
     <div class="col">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Marks Analysis</h5>
-          <div class="card-text">
-    
-            <p *ngIf="data?.resultData['Total Marks']">
-              <span class="left bold">Total Marks</span>
-              <span class="right bold">{{data?.resultData['Total Marks']}}</span>
-            </p>
+          <div class="mt-3">
+            <div class="card-text">
+              <p *ngIf="data?.resultData['Total Marks']" style="  border-bottom: 1px solid #ddd;
+              ">
+                <span class="left bold">Total Marks</span>
+                <span class="right bold">{{data?.resultData['Total Marks']}}</span>
+              </p>
+            </div>
+           
             <ng-container *ngIf="data?.resultData">
-              <div *ngFor="let key of objectKeys(data?.resultData)">
-                <div *ngIf="key.includes('Subject') && key.includes('Total Marks')" class="flexx">
-                  <span class="left">{{key}}</span>
-                  <span class="right">{{data?.resultData[key]}}</span>
-                </div>
+              <div *ngFor="let key of objectKeys(data?.resultData)" class="card-text">
+                <p *ngIf="key.includes('Subject') && key.includes('Total Marks')" class="flexx" style="  border-bottom: 1px solid #ddd;
+                ">
+                  <span class="left">{{ key }}</span>
+                  <span class="right">{{ data?.resultData[key] }} </span>
+                </p>
               </div>
             </ng-container>
-    
           </div>
         </div>
       </div>
     </div>
+
     
           <div class="col">
             <div class="card">
@@ -80,24 +86,27 @@
                   The folllwing data displays the Subject-wise analysis including the rank and percentage scored by the student.
                 </p>
                 <div class="mt-3">
-                  <span class="bold">Percentage</span>
+                  <span class="bold" style="color: rgb(1, 1, 214);">Percentage</span>
                   <ng-container *ngIf="data?.resultData">
-                    <div *ngFor="let key of objectKeys(data?.resultData)">
-                      <div *ngIf="key.includes('Subject') && key.includes('Percentage')" class="flexx">
-                        <span class="left">{{ key }}</span> <span class="right">{{ data?.resultData[key] }} % </span>
-                      </div>
+                    <div *ngFor="let key of objectKeys(data?.resultData)" class="card-text">
+                      <p *ngIf="key.includes('Subject') && key.includes('Percentage')" class="flexx" style="  border-bottom: 1px solid #ddd;
+                      ">
+                        <span class="left">{{ key }}</span>
+                        <span class="right">{{ data?.resultData[key] }} % </span>
+                      </p>
                     </div>
                   </ng-container>
                 </div>
               
 
                 <div class="mt-3">
-                  <span class="bold">Rank</span>
+                  <span class="bold" style="color: rgb(1, 1, 214);">Rank</span>
                   <ng-container *ngIf="data?.resultData">
-                    <div *ngFor="let key of objectKeys(data?.resultData)">
-                      <div *ngIf="key.includes('Subject') && key.includes('Rank')" class="flexx">
+                    <div *ngFor="let key of objectKeys(data?.resultData)" class="card-text">
+                      <p *ngIf="key.includes('Subject') && key.includes('Rank')" class="flexx" style="  border-bottom: 1px solid #ddd;
+                      ">
                         <span class="left">{{ key }}</span> <span class="right">{{ data?.resultData[key] }}</span>
-                      </div>
+                      </p>
                     </div>
                   </ng-container>
                 </div>
@@ -106,6 +115,8 @@
               </div>
             </div>
           </div>
+
+          
   </div>
 
   <div class="mt-5">
@@ -238,6 +249,7 @@
                   <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Rank'] }}</span>
                 </div>
               </div>
+              
   
               <div class="card-content-two">
                 <span class="bold">Marks Analysis</span>

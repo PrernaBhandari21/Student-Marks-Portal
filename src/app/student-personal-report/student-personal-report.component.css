@@ -42,6 +42,10 @@ span{
   border-bottom: 1px solid #ddd;
 }
 
+.card-text p:hover{
+ background-color: lightyellow;
+}
+
 .card-text p:last-child {
   border-bottom: none;
 }
@@ -59,19 +63,46 @@ span{
 .card-text p span.right {
   text-align: right;
 }
+
 /* ///// */
 
   
-  .card-content-one{
-    border: 1px solid lightblue;
-    border-radius: 5px;
-    width: 350px;
-    padding: 10px;
-  }
-
-  .card-content-one .flexx{
-    margin-top: 13px;
+.card-content-one {
+  display: table;
+  width: 350px;
+  padding: 10px;
+  border: 1px solid lightblue;
+  border-collapse: collapse;
 }
+
+.card-content-one .flexx {
+  display: table-row;
+}
+
+.card-content-one .flexx:hover {
+  background-color: lightyellow;
+}
+
+.card-content-one .flexx span {
+  display: table-cell;
+  padding: 10px;
+  border-bottom: 1px solid lightblue;
+  /* border-right: 1px solid lightblue; */
+}
+
+.card-content-one .flexx span.left {
+  font-weight: bold;
+  text-align: left;
+}
+
+.card-content-one .flexx span.right {
+  text-align: right;
+}
+
+.card-content-one .flexx:last-child span {
+  border-bottom: none;
+}
+
 
   .card-content-two,.card-content-three,.card-content-four{
     display: flex;
@@ -127,7 +158,7 @@ span{
   .mat-elevation-z8 th,
   .mat-elevation-z8 td {
     padding: 8px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #ddd;
   }
 
