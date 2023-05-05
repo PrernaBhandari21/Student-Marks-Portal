@@ -18,11 +18,23 @@
     color: blue;
   }
 
-  .downloadBtns{
-    text-align: right;
-  }
+ 
 
   .downloadBtns button{
     margin-right: 20px;
+    margin: 10px;
+  }
+
+  .buttons{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .downloadBtns,.clearFilter{
+    display: inline;
+  }
+
+  .clearFilter button{
     margin: 10px;
   }

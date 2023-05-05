@@ -1,0 +1,9 @@
+.checkbox-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .checkbox-container mat-checkbox {
+    flex-basis: 50%;
+  }
+  

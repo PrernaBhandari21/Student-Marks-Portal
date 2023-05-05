@@ -27,6 +27,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import { StudentPersonalReportComponent } from './student-personal-report/student-personal-report.component';
 
 import { CdkTableModule } from '@angular/cdk/table';
+import { HeaderDialogComponent } from './header-dialog/header-dialog.component';
 
 
 
@@ -42,7 +43,8 @@ import { CdkTableModule } from '@angular/cdk/table';
     MarksListComponent,
     ResultCalculationComponent,
     SelectHeadersComponent,
-    StudentPersonalReportComponent
+    StudentPersonalReportComponent,
+    HeaderDialogComponent
   ],
   imports: [
     BrowserModule,

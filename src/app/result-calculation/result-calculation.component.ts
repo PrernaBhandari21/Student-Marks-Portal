@@ -6,6 +6,9 @@ import html2canvas from 'html2canvas';
 import autoTable from 'jspdf-autotable';
 import { Router } from '@angular/router';
 import { DataService } from '../services/data.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { HeaderDialogComponent } from '../header-dialog/header-dialog.component';
+
 
 
 
@@ -36,6 +39,7 @@ export class ResultCalculationComponent implements OnInit {
   subjectWiseMarks: any = {};
   topCandidates :any= [];
   resultObject:any = {};
+  tempDataSource : any;
 
 
   constructor(private dialog: MatDialog,
@@ -113,7 +117,12 @@ export class ResultCalculationComponent implements OnInit {
 
       this.headers = Object.keys(this.tableResultant);
 
-      this.dataSource = this.convertToDataSource();
+      this.dataSource = new MatTableDataSource(this.convertToDataSource());
+      this.tempDataSource = this.dataSource;
+      console.log("this.tempDataSource : ",this.tempDataSource);
+      console.log("DATA SOURCE : ",this.dataSource);
+
+
 
 
     
@@ -127,11 +136,15 @@ export class ResultCalculationComponent implements OnInit {
   }
 
   convertToDataSource() {
+    if (!this.tableResultant) {
+      return [];
+    }
+  
     const data = [];
     const properties = Object.keys(this.tableResultant);
     const randomProperty = properties[Math.floor(Math.random() * properties.length)];
     const length = this.tableResultant[randomProperty].length;
-
+  
     for (let i = 0; i < length; i++) {
       const row: any = {};
       for (const key in this.tableResultant) {
@@ -139,9 +152,10 @@ export class ResultCalculationComponent implements OnInit {
       }
       data.push(row);
     }
-
+  
     return data;
   }
+  
 
 
 
@@ -303,11 +317,11 @@ export class ResultCalculationComponent implements OnInit {
     this.resultObject[`${question} Total Blank`] = totalBlankPercentage;
   }
 
-  console.log(this.resultObject);
+  // console.log(this.resultObject);
 
 
 
-    console.log("FINAL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.results);
+    // console.log("FINAL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.results);
 
     this.calculateRankAndPercentage();
     this.calculatePeerAverageCount();
@@ -361,9 +375,9 @@ export class ResultCalculationComponent implements OnInit {
       averagePercentage: averagePercentage
     };
   
-    console.log("Lowest Percentage:", lowestPercentage);
-    console.log("Highest Percentage:", highestPercentage);
-    console.log("Average Percentage:", averagePercentage);
+    // console.log("Lowest Percentage:", lowestPercentage);
+    // console.log("Highest Percentage:", highestPercentage);
+    // console.log("Average Percentage:", averagePercentage);
   }
   
 
@@ -445,21 +459,21 @@ export class ResultCalculationComponent implements OnInit {
       this.subjectWiseMarks[`${subjectKey} Peer Highest Total Marks`] = peerHighestTotalMarks;
     }
   
-    console.log("Subject-wise Marks:", this.subjectWiseMarks);
+    // console.log("Subject-wise Marks:", this.subjectWiseMarks);
   }
   
   
   toppersList() {
     
   
-    console.log("Top 5 Candidates:");
+    // console.log("Top 5 Candidates:");
     const sortedResults = this.results.sort((a, b) => b["Percentage"] - a["Percentage"]);
   
     for (let i = 0; i < 5 && i < sortedResults.length; i++) {
       const student = sortedResults[i];
       const rollNo = student["Roll No"];
       const matchedStudent = this.students_data.find((s:any) => s["Roll No"] == rollNo);
-      console.log("matchedStudent",matchedStudent);
+      // console.log("matchedStudent",matchedStudent);
   
       if (matchedStudent) {
         const candidateData :any = {
@@ -481,8 +495,8 @@ export class ResultCalculationComponent implements OnInit {
         }
   
         this.topCandidates.push(candidateData);
-        console.log(candidateData);
-        console.log("-----");
+        // console.log(candidateData);
+        // console.log("-----");
       }
     }
   
@@ -608,7 +622,7 @@ export class ResultCalculationComponent implements OnInit {
 
   // personal student report 
   onRowClick(row: any) {
-    console.log('Clicked row:', row);
+    // console.log('Clicked row:', row);
 
     // Find the result for the clicked roll number
     const clickedRollNo = row["Roll No"]; // Convert the roll number to a number
@@ -630,8 +644,8 @@ const filteredData = this.omr_response
 
     if (rollNoResult){
       // Result found
-      console.log("Result:", rollNoResult);
-      console.log("Student Data : ", studentData);
+      // console.log("Result:", rollNoResult);
+      // console.log("Student Data : ", studentData);
       const studentReportData: any = {
         resultData: rollNoResult,
         studentPersonalInfo: studentData,
@@ -675,5 +689,47 @@ const filteredData = this.omr_response
     });
   }
 
+
+  //for filtering
+  onHeaderClick(header : any){
+    // console.log("header : ", header);
+    const headerValues = this.dataSource.data.map((element:any) => element[header]);
+
+  const requiredData = {
+    header: headerValues,
+    dataSource:this.dataSource
+  }
+  
+  console.log(requiredData);
+  }
+
+  openHeaderDialog(header: string): void {
+    const dialogRef = this.dialog.open(HeaderDialogComponent, {
+      data: {
+        header: header,
+        headerValues: this.dataSource.filteredData.map((element: any) => element[header]),
+        dataSource: this.dataSource
+      }
+    });
+  
+    dialogRef.afterClosed().subscribe(newDataSource => {
+      if (newDataSource) {
+        console.log("newDataSource: ", newDataSource);
+        this.dataSource = new MatTableDataSource(newDataSource.newDataSource);
+        // Perform any further actions with the selected values
+
+        console.log("DATA SOURCE ",this.dataSource );
+      }
+    });
+  }
+  
+
+  clearAllFilters(){
+    //recover dataSource data as it was earlier
+
+    this.dataSource = this.tempDataSource;
+    console.log("DATA SOURCE : ", this.dataSource);
+  }
+  
 
 }
