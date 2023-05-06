@@ -30,6 +30,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { HeaderDialogComponent } from './header-dialog/header-dialog.component';
 
 
+import {MatIconModule} from '@angular/material/icon';
 
 
 
@@ -61,7 +62,7 @@ import { HeaderDialogComponent } from './header-dialog/header-dialog.component';
     ReactiveFormsModule,
     MatCheckboxModule,
     MatRadioModule,
-
+    MatIconModule,
     CdkTableModule
   ],
   providers: [ MultilevelMenuService,

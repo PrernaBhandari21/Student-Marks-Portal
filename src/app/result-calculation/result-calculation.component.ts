@@ -41,6 +41,9 @@ export class ResultCalculationComponent implements OnInit {
   resultObject:any = {};
   tempDataSource : any;
 
+  sortDirection: { [key: string]: boolean } = {}; // create an object to keep track of the sorting order for each column
+
+
 
   constructor(private dialog: MatDialog,
     private elementRef: ElementRef,
@@ -58,6 +61,35 @@ export class ResultCalculationComponent implements OnInit {
 
     this.toppersList();
   }
+
+  sort(header: string) {
+    const data = this.dataSource.filteredData.slice();
+    const isNumeric = !isNaN(parseFloat(data[0][header])) && isFinite(data[0][header]);
+    
+    // toggle the sorting order for the current column
+    this.sortDirection[header] = !this.sortDirection[header];
+    
+    if (isNumeric) {
+      data.sort((a: { [x: string]: number; }, b: { [x: string]: number; }) => {
+        if (this.sortDirection[header]) {
+          return a[header] - b[header]; // sort in ascending order
+        } else {
+          return b[header] - a[header]; // sort in descending order
+        }
+      });
+    } else {
+      data.sort((a: { [x: string]: any; }, b: { [x: string]: string; }) => {
+        if (this.sortDirection[header]) {
+          return a[header].localeCompare(b[header]); // sort in ascending order
+        } else {
+          return b[header].localeCompare(a[header]); // sort in descending order
+        }
+      });
+    }
+    
+    this.dataSource.data = data;
+  }
+  
 
   removeSNo() {
     const filteredData = this.students_all_data.map((item: { [x: string]: any; hasOwnProperty: (arg0: string) => any; }) => {
@@ -703,13 +735,27 @@ const filteredData = this.omr_response
   console.log(requiredData);
   }
 
+
+  
+
   openHeaderDialog(header: string): void {
+
+    const data = {
+      header: header,
+      headerValues: this.dataSource.filteredData.map((element:any) => element[header]),
+      dataSource: this.dataSource
+    };
+
+    // if values are same , then show once !
+    
+    const uniqueHeaderValues = [...new Set(data.headerValues)];
+    const headerValues = uniqueHeaderValues.filter((value, index, array) => array.indexOf(value) === index);
+    
+    data.headerValues = headerValues;
+    
+
     const dialogRef = this.dialog.open(HeaderDialogComponent, {
-      data: {
-        header: header,
-        headerValues: this.dataSource.filteredData.map((element: any) => element[header]),
-        dataSource: this.dataSource
-      }
+      data: data
     });
   
     dialogRef.afterClosed().subscribe(newDataSource => {
