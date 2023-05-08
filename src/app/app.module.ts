@@ -31,6 +31,7 @@ import { HeaderDialogComponent } from './header-dialog/header-dialog.component';
 
 
 import {MatIconModule} from '@angular/material/icon';
+import { ExportAsModule } from 'ngx-export-as';
 
 
 
@@ -63,7 +64,8 @@ import {MatIconModule} from '@angular/material/icon';
     MatCheckboxModule,
     MatRadioModule,
     MatIconModule,
-    CdkTableModule
+    CdkTableModule,
+    ExportAsModule
   ],
   providers: [ MultilevelMenuService,
      

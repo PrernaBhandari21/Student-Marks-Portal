@@ -6,32 +6,39 @@
       <h5>Upload Required Documents *</h5>
   
       <form class="form-container">
-        <div class="form-row">
-            <div class="form-field">
-              <span>Upload Student Details (.csv)</span>
-              <!-- <button type="button" class="btn btn-primary">Import</button> -->
-              <input type="file" class="btn btn-primary" accept=".csv"  (change)="onFileSelected($event)">
 
-            </div>
-        </div>
-      
         <div class="form-row">
-            <div class="form-field">
+          <div class="form-field">
+            <span>Report Name</span>
+            <input type="text" id="reportName" name="reportName">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <span>Upload Student Details (.csv)</span>
+            <input id="studentDetailsFile" type="file" class="btn btn-primary" accept=".csv">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-field">
             <span>Upload Student Responses (.csv)</span>
-            <input type="file" class="btn btn-primary" accept=".csv"  (change)="onFileSelected($event)">
+            <input id="studentResponsesFile" type="file" class="btn btn-primary" accept=".csv">
           </div>
         </div>
-      
+        
         <div class="form-row">
-            <div class="form-field">
+          <div class="form-field">
             <span>Upload Answer Key (.csv)</span>
-            <input type="file" class="btn btn-primary" accept=".csv"  (change)="onFileSelected($event)">
+            <input id="answerKeyFile" type="file" class="btn btn-primary" accept=".csv">
           </div>
         </div>
-  
+        
         <div class="submitBtn">
-            <button type="button" class="btn btn-success mt-5">Submit</button>
+          <button type="button" class="btn btn-success mt-5" (click)="submitForm()">Submit</button>
         </div>
+        
   
       </form>
       
@@ -39,3 +46,6 @@
     </div>
   
   </div>
+
+
+ 

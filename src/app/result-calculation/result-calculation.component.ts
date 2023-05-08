@@ -564,7 +564,10 @@ export class ResultCalculationComponent implements OnInit {
 
     tableData.push(headerRow);
 
-    for (const element of this.dataSource) {
+    console.log("tableData",tableData);
+    console.log("this.dataSource : ",this.dataSource.filteredData);
+
+    for (const element of this.dataSource.filteredData) {
       const dataRow = [];
       for (const header of this.headers) {
         dataRow.push(element[header]);
@@ -588,7 +591,7 @@ export class ResultCalculationComponent implements OnInit {
     csvRows.push(headerRow);
 
     // Data rows
-    for (const element of this.dataSource) {
+    for (const element of this.dataSource.filteredData) {
       const dataRow = [];
       for (const header of this.headers) {
         const value = element[header];
