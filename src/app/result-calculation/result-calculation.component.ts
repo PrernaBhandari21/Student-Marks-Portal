@@ -20,9 +20,12 @@ import { HeaderDialogComponent } from '../header-dialog/header-dialog.component'
 })
 export class ResultCalculationComponent implements OnInit {
 
-  omr_response = require("../dummy-data/omr_response.json");
-  answer_key = require("../dummy-data/answer_key.json");
-  students_all_data = require("../dummy-data/students-data.json");
+  // omr_response = require("../dummy-data/omr_response.json");
+  // answer_key = require("../dummy-data/answer_key.json");
+  // students_all_data = require("../dummy-data/students-data.json");
+  omr_response:any;
+  answer_key:any;
+  students_all_data:any;
   results: any[] = [];
   tableResultant: any;
   tableHeaders: string[] = [];
@@ -51,15 +54,25 @@ export class ResultCalculationComponent implements OnInit {
     private dataService: DataService) { }
 
   async ngOnInit() {
+    await this.getReportData();
     this.removeSNo();
-
     console.log("omr_response ", this.omr_response);
     console.log("answer_key", this.answer_key);
     console.log("students_data", this.students_data);
-
     this.calcuateResult();
 
     this.toppersList();
+  }
+
+  async getReportData(){
+   const data = await this.dataService.getReportData();
+    console.log("dataaaaaaaaaa : ", data);
+
+    this.students_all_data = data.studentDetails;
+    this.answer_key = data.answerKey;
+    this.omr_response = data.studentResponses;
+
+
   }
 
   sort(header: string) {
@@ -297,7 +310,8 @@ export class ResultCalculationComponent implements OnInit {
         obj['Subject ' + subject + ' Right'] = subject_wise_marks[subject]['Right']; // Subject-wise right marks
         obj['Subject ' + subject + ' Wrong'] = subject_wise_marks[subject]['Wrong']; // Subject-wise wrong marks
         obj['Subject ' + subject + ' Blank'] = subject_wise_marks[subject]['Blank']; // Subject-wise blank marks
-        obj['Subject ' + subject + ' Total Marks'] = subject_wise_marks[subject]['Total']; // Subject-wise total marks
+        obj['Subject ' + subject + ' Total Marks'] =parseFloat(subject_wise_marks[subject]['Total']); // Subject-wise total marks
+        
 
         // Calculate Subject Percentage
         const subjectMaxMarks = this.answer_key.filter((item: { Subject: string; }) => item.Subject === subject)

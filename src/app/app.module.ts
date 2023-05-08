@@ -32,6 +32,7 @@ import { HeaderDialogComponent } from './header-dialog/header-dialog.component';
 
 import {MatIconModule} from '@angular/material/icon';
 import { ExportAsModule } from 'ngx-export-as';
+import { ExistingReportsListComponent } from './existing-reports-list/existing-reports-list.component';
 
 
 
@@ -46,7 +47,8 @@ import { ExportAsModule } from 'ngx-export-as';
     ResultCalculationComponent,
     SelectHeadersComponent,
     StudentPersonalReportComponent,
-    HeaderDialogComponent
+    HeaderDialogComponent,
+    ExistingReportsListComponent
   ],
   imports: [
     BrowserModule,
