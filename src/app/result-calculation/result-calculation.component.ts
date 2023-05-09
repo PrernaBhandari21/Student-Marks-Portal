@@ -566,21 +566,21 @@ export class ResultCalculationComponent implements OnInit {
 
 
   exportToPdf(): void {
-    // console.log("exportt..");
-    const doc = new jsPDF();
-
+    const doc = new jsPDF({
+      orientation: 'landscape', // or 'portrait'
+      unit: 'pt', // or 'mm', 'in', etc.
+      format: [792, 612], // adjust to your desired page size
+    });
+  
     const tableData = [];
     const headerRow = [];
-
+  
     for (const header of this.headers) {
       headerRow.push(header);
     }
-
+  
     tableData.push(headerRow);
-
-    console.log("tableData",tableData);
-    console.log("this.dataSource : ",this.dataSource.filteredData);
-
+  
     for (const element of this.dataSource.filteredData) {
       const dataRow = [];
       for (const header of this.headers) {
@@ -588,14 +588,27 @@ export class ResultCalculationComponent implements OnInit {
       }
       tableData.push(dataRow);
     }
-
+  
     autoTable(doc, {
       head: tableData.slice(0, 1),
       body: tableData.slice(1),
+      styles: {
+        fontSize: 12, // adjust to your desired font size
+        cellPadding: 3, // adjust to add padding between cells
+        lineColor: [200, 200, 200], // adjust to add a border between cells
+        lineWidth: 0.1, // adjust the thickness of the border
+      },
+      columnStyles: {
+        0: { cellWidth: 'auto' },
+        1: { cellWidth: 'auto' },
+        // repeat for each column in the table
+      },
     });
-
+  
     doc.save('table_data.pdf');
   }
+  
+  
 
   exportToCsv(): void {
     const csvRows = [];

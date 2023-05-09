@@ -21,6 +21,9 @@
     "@angular/platform-browser-dynamic": "^14.2.0",
     "@angular/router": "^14.2.0",
     "apexcharts": "^3.39.0",
+    "axios": "^1.4.0",
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
@@ -29,6 +32,7 @@
     "ngx-apexcharts": "^0.1.1",
     "ngx-export-as": "^1.15.1",
     "papaparse": "^5.4.1",
+    "pg": "^8.10.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
