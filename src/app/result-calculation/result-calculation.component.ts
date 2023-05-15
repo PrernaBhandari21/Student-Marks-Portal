@@ -20,12 +20,12 @@ import { HeaderDialogComponent } from '../header-dialog/header-dialog.component'
 })
 export class ResultCalculationComponent implements OnInit {
 
-  // omr_response = require("../dummy-data/omr_response.json");
-  // answer_key = require("../dummy-data/answer_key.json");
-  // students_all_data = require("../dummy-data/students-data.json");
-  omr_response:any;
-  answer_key:any;
-  students_all_data:any;
+  omr_response = require("../dummy-data/omr_response.json");
+  answer_key = require("../dummy-data/answer_key.json");
+  students_all_data = require("../dummy-data/students-data.json");
+  // omr_response:any;
+  // answer_key:any;
+  // students_all_data:any;
   results: any[] = [];
   tableResultant: any;
   tableHeaders: string[] = [];
@@ -54,7 +54,7 @@ export class ResultCalculationComponent implements OnInit {
     private dataService: DataService) { }
 
   async ngOnInit() {
-    await this.getReportData();
+    // await this.getReportData();
     this.removeSNo();
     console.log("omr_response ", this.omr_response);
     console.log("answer_key", this.answer_key);
@@ -179,6 +179,8 @@ export class ResultCalculationComponent implements OnInit {
 
 
   }
+
+  
 
   convertToDataSource() {
     if (!this.tableResultant) {
@@ -566,10 +568,13 @@ export class ResultCalculationComponent implements OnInit {
 
 
   exportToPdf(): void {
+    const totalHeaders = this.headers.length;
+    const orientation = totalHeaders <= 7 ? 'portrait' : 'landscape';
+  
     const doc = new jsPDF({
-      orientation: 'landscape', // or 'portrait'
-      unit: 'pt', // or 'mm', 'in', etc.
-      format: [792, 612], // adjust to your desired page size
+      orientation: orientation,
+      unit: 'pt',
+      format: [792, 612],
     });
   
     const tableData = [];
@@ -589,24 +594,32 @@ export class ResultCalculationComponent implements OnInit {
       tableData.push(dataRow);
     }
   
-    autoTable(doc, {
+    const tableConfig:any = {
       head: tableData.slice(0, 1),
       body: tableData.slice(1),
       styles: {
-        fontSize: 12, // adjust to your desired font size
-        cellPadding: 3, // adjust to add padding between cells
-        lineColor: [200, 200, 200], // adjust to add a border between cells
-        lineWidth: 0.1, // adjust the thickness of the border
+        fontSize: totalHeaders > 10 ? 10 : 12,
+        cellPadding: 3,
+        lineColor: [200, 200, 200],
+        lineWidth: 0.1,
       },
-      columnStyles: {
-        0: { cellWidth: 'auto' },
-        1: { cellWidth: 'auto' },
-        // repeat for each column in the table
-      },
-    });
+      columnStyles: {},
+    };
+  
+    if (totalHeaders > 7) {
+      tableConfig.styles.cellPadding = 2;
+      tableConfig.columnStyles = {
+        ...tableConfig.columnStyles,
+        // Adjust the cell width for each column as needed
+        // You can set a fixed width or calculate it dynamically based on content length
+      };
+    }
+  
+    autoTable(doc, tableConfig);
   
     doc.save('table_data.pdf');
   }
+  
   
   
 

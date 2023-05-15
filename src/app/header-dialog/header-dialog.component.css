@@ -7,3 +7,7 @@
     flex-basis: 50%;
   }
   
+  .checkbox-item {
+  display: block;
+  margin-bottom: 10px;
+}

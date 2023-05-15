@@ -1,15 +1,14 @@
 <h2 mat-dialog-title>{{ data.header | titlecase }}</h2>
 <mat-dialog-content>
   <div class="checkbox-container">
-    <mat-checkbox *ngFor="let value of data.headerValues" [(ngModel)]="checkboxValues[value]" [value]="value">
+    <mat-checkbox *ngFor="let value of data.headerValues" [(ngModel)]="checkboxValues[value]" [value]="value" class="checkbox-item">
       {{ value }}
     </mat-checkbox>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions style="justify-content: right;">
-    <div>   
-        <button type="button" class="btn btn-primary m-2" [mat-dialog-close]="getSelectedValues()" (click)="onOkClick()">Apply Filter</button>
-        <button type="button" class="btn btn-warning m-2" (click)="onCancelClick()">Cancel</button>
-    </div>
- 
+  <div>   
+    <button type="button" class="btn btn-primary m-2" [mat-dialog-close]="getSelectedValues()" (click)="onOkClick()">Apply Filter</button>
+    <button type="button" class="btn btn-warning m-2" (click)="onCancelClick()">Cancel</button>
+  </div>
 </mat-dialog-actions>

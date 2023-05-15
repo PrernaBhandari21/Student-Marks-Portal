@@ -1,42 +1,77 @@
 .custom-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
 
-  .custom-table th,
-  .custom-table td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
+.custom-table th,
+.custom-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
 
-  .custom-table th {
-    background-color: #f2f2f2;
-  }
+.custom-table th {
+  background-color: #f2f2f2;
+}
 
-  .link{
-    color: blue;
-  }
+.link {
+  color: blue;
+}
 
- 
+.downloadBtns button {
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
 
-  .downloadBtns button{
-    margin-right: 20px;
-    margin: 10px;
-  }
+.buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
 
-  .buttons{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
+.clearFilter,
+.downloadBtns {
+  display: flex;
+}
 
-  .downloadBtns,.clearFilter{
-    display: inline;
-  }
+.clearFilter button,
+.downloadBtns button {
+  margin: 0 10px;
+}
 
-  .clearFilter button{
-    margin: 10px;
-  }
+th {
+  font-weight: 500;
+  font-size: 14px;
+}
 
-  
+.component-to-download {
+  margin-top: 20px;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.header-title {
+  margin-right: 5px;
+}
+
+.fa-sort {
+  font-size: 14px;
+  color: gray;
+  transition: color 0.3s ease;
+  cursor: pointer;
+  margin-left: 3px;
+}
+
+.fa-sort:hover {
+  color: blue;
+}
+
+tr:hover {
+  background-color: #f2f2f2;
+}
