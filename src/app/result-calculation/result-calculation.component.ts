@@ -554,19 +554,6 @@ export class ResultCalculationComponent implements OnInit {
   
   
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   exportToPdf(): void {
     const totalHeaders = this.headers.length;
     const orientation = totalHeaders <= 7 ? 'portrait' : 'landscape';

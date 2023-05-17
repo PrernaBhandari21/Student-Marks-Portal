@@ -3,6 +3,7 @@ import * as Papa from 'papaparse';
 import { DataService } from '../services/data.service';
 import { Router } from '@angular/router';
 import axios from 'axios';
+import { NameService } from '../services/name.service';
 
 
 @Component({
@@ -14,7 +15,8 @@ export class CreateReportComponent implements OnInit {
 
   constructor(
     private dataService : DataService,
-    private route : Router
+    private route : Router,
+    private nameService : NameService
   ) { }
 
   ngOnInit(): void {
@@ -96,6 +98,9 @@ export class CreateReportComponent implements OnInit {
         console.log("report :  ",reportData);
 
         this.dataService.setReportData(reportData);
+
+        //setting name parameter !! SO THAT IT CAN BE USED WHILE GET !
+        this.nameService.setName(reportData.reportName);
 
         // Send reportData to server
         fetch('/api/reportData', {
