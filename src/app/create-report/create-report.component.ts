@@ -128,7 +128,7 @@ export class CreateReportComponent implements OnInit {
         // this.route.navigate(['result-calculation']);
 
         // this....
-        // this.route.navigateByUrl('result-calculation');
+        this.route.navigateByUrl('result-calculation');
 
         // Download report data as a JSON file
         // const jsonData = JSON.stringify(report, null, 2);
