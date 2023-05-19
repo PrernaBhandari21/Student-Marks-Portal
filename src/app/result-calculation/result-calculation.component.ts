@@ -20,12 +20,12 @@ import { HeaderDialogComponent } from '../header-dialog/header-dialog.component'
 })
 export class ResultCalculationComponent implements OnInit {
 
-  omr_response = require("../dummy-data/omr_response.json");
-  answer_key = require("../dummy-data/answer_key.json");
-  students_all_data = require("../dummy-data/students-data.json");
-  // omr_response:any;
-  // answer_key:any;
-  // students_all_data:any;
+  // omr_response = require("../dummy-data/omr_response.json");
+  // answer_key = require("../dummy-data/answer_key.json");
+  // students_all_data = require("../dummy-data/students-data.json");
+  omr_response:any;
+  answer_key:any;
+  students_all_data:any;
   results: any[] = [];
   tableResultant: any;
   tableHeaders: string[] = [];
@@ -54,7 +54,7 @@ export class ResultCalculationComponent implements OnInit {
     private dataService: DataService) { }
 
   async ngOnInit() {
-    // await this.getReportData();
+    await this.getReportData();
     this.removeSNo();
     console.log("omr_response ", this.omr_response);
     console.log("answer_key", this.answer_key);
