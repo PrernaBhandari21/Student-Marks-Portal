@@ -119,7 +119,7 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
     peerComparison : this.data.questionWiseRWB,
     answerKey : this.data.answer_key
    }
-   console.log("quesWiseTableData : ",this.quesWiseTableData );
+  //  console.log("quesWiseTableData : ",this.quesWiseTableData );
 
    this.createTable();
 
@@ -135,7 +135,7 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
         this.quesWiseTableData.ansMarked
           ? Object.values(this.quesWiseTableData.ansMarked)
           : [];
-      console.log(answerMarked);
+      // console.log(answerMarked);
   
       const answerKey =
         this.quesWiseTableData.answerKey
@@ -143,7 +143,7 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
               (item: any) => item.AnswerKey
             )
           : [];
-      console.log(this.quesWiseTableData.peerComparison);
+      // console.log(this.quesWiseTableData.peerComparison);
   
       const totalRightPercentage = this.quesWiseTableData.peerComparison
         ? Object.keys(this.quesWiseTableData.peerComparison)
@@ -160,7 +160,7 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
             .filter((key: string) => key.includes('Total Blank'))
             .map((key: string) => this.quesWiseTableData.peerComparison[key])
         : [];
-      console.log(totalRightPercentage);
+      // console.log(totalRightPercentage);
   
       // Creating headers
       const headers = [
@@ -188,8 +188,8 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   
   
       // Displaying the table data
-      console.log(headers);
-      console.log(tableData);
+      // console.log(headers);
+      // console.log(tableData);
       this.quesdataSource = new MatTableDataSource(tableData);
 
     
@@ -622,7 +622,7 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
     const peerWrong = this.data.peerAverageCounts[peerWrongKey];
     const peerBlank = this.data.peerAverageCounts[peerBlankKey];
 
-    console.log(peerRight);
+    // console.log(peerRight);
   
     if (peerRight !== undefined && peerWrong !== undefined && peerBlank !== undefined) {
       const options = {

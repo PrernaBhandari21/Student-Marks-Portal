@@ -20,12 +20,12 @@ import { HeaderDialogComponent } from '../header-dialog/header-dialog.component'
 })
 export class ResultCalculationComponent implements OnInit {
 
-  // omr_response = require("../dummy-data/omr_response.json");
-  // answer_key = require("../dummy-data/answer_key.json");
-  // students_all_data = require("../dummy-data/students-data.json");
-  omr_response:any;
-  answer_key:any;
-  students_all_data:any;
+  omr_response = require("../dummy-data/omr_response.json");
+  answer_key = require("../dummy-data/answer_key.json");
+  students_all_data = require("../dummy-data/students-data.json");
+  // omr_response:any;
+  // answer_key:any;
+  // students_all_data:any;
   results: any[] = [];
   tableResultant: any;
   tableHeaders: string[] = [];
@@ -54,7 +54,7 @@ export class ResultCalculationComponent implements OnInit {
     private dataService: DataService) { }
 
   async ngOnInit() {
-    await this.getReportData();
+    // await this.getReportData();
     this.removeSNo();
     console.log("omr_response ", this.omr_response);
     console.log("answer_key", this.answer_key);
@@ -163,9 +163,10 @@ export class ResultCalculationComponent implements OnInit {
       this.headers = Object.keys(this.tableResultant);
 
       this.dataSource = new MatTableDataSource(this.convertToDataSource());
+      console.log("this.dataSource : ",this.dataSource);
       this.tempDataSource = this.dataSource;
-      console.log("this.tempDataSource : ",this.tempDataSource);
-      console.log("DATA SOURCE : ",this.dataSource);
+      // console.log("this.tempDataSource : ",this.tempDataSource);
+      // console.log("DATA SOURCE : ",this.dataSource);
 
 
 
@@ -189,8 +190,7 @@ export class ResultCalculationComponent implements OnInit {
   
     const data = [];
     const properties = Object.keys(this.tableResultant);
-    const randomProperty = properties[Math.floor(Math.random() * properties.length)];
-    const length = this.tableResultant[randomProperty].length;
+    const length = this.tableResultant[properties[0]].length; // Get the length from one of the properties
   
     for (let i = 0; i < length; i++) {
       const row: any = {};
@@ -199,6 +199,9 @@ export class ResultCalculationComponent implements OnInit {
       }
       data.push(row);
     }
+  
+    // Sort the data based on the "Roll No" property
+    data.sort((a, b) => a["Roll No"] - b["Roll No"]);
   
     return data;
   }
@@ -344,8 +347,13 @@ export class ResultCalculationComponent implements OnInit {
       obj['Total Blank Count'] = total_blank_count;
 
       // console.log("Ek bache ka hogya............ab next");
-      this.results.push(obj);
+      // this.results.push(obj);
+      console.log("i =>",i);
+      this.results[i] = obj;
+      console.log(" obj , ",  obj);
     }
+
+    
 
 
 
@@ -369,19 +377,20 @@ export class ResultCalculationComponent implements OnInit {
 
 
 
-    // console.log("FINAL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.results);
+
+
+    console.log("FINAL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.results);
 
     this.calculateRankAndPercentage();
     this.calculatePeerAverageCount();
     this.calculateSubjectWiseMarks();
     // this.calculatePeerCountBySubject();
+
+    
   }
 
   calculateRankAndPercentage() {
     this.calculateMaximumTotalMarks();
-  
-    // Sort the students based on total marks in descending order
-    this.results.sort((a, b) => b["Total Marks"] - a["Total Marks"]);
   
     // Calculate the rank and percentage for each student
     const totalStudents = this.results.length;
@@ -393,8 +402,11 @@ export class ResultCalculationComponent implements OnInit {
     let currentRank = 0;
     let currentPercentageRank = 0;
   
+    // Sort the students based on total marks temporarily
+    const sortedResults = [...this.results].sort((a, b) => b["Total Marks"] - a["Total Marks"]);
+  
     for (let i = 0; i < totalStudents; i++) {
-      const student = this.results[i];
+      const student = sortedResults[i];
   
       if (student["Total Marks"] !== previousTotalMarks) {
         // Update the rank only if the total marks are different
@@ -402,15 +414,26 @@ export class ResultCalculationComponent implements OnInit {
         currentPercentageRank = i + 1;
       }
   
-      student["Rank"] = currentRank;
+      const resultIndex = this.results.findIndex((result) => result["Roll No"] === student["Roll No"]);
+      if (resultIndex !== -1) {
+        const result = this.results[resultIndex];
   
-      if (student["Total Marks"] < 0) {
-        student["Percentage"] = 0;
-      } else {
-        student["Percentage"] = (student["Total Marks"] / this.maximumTotalMarks) * 100;
-        totalPercentage += student["Percentage"];
-        lowestPercentage = Math.min(lowestPercentage, student["Percentage"]);
-        highestPercentage = Math.max(highestPercentage, student["Percentage"]);
+        // Calculate and store the rank and percentage in separate variables
+        const rank = currentRank;
+  
+        let percentage;
+        if (result["Total Marks"] < 0) {
+          percentage = 0;
+        } else {
+          percentage = (result["Total Marks"] / this.maximumTotalMarks) * 100;
+          totalPercentage += percentage;
+          lowestPercentage = Math.min(lowestPercentage, percentage);
+          highestPercentage = Math.max(highestPercentage, percentage);
+        }
+  
+        // Update the result object with the calculated values
+        result["Rank"] = rank;
+        result["Percentage"] = percentage;
       }
   
       previousTotalMarks = student["Total Marks"];
@@ -428,10 +451,9 @@ export class ResultCalculationComponent implements OnInit {
     // console.log("Average Percentage:", averagePercentage);
   }
   
-
   calculatePeerAverageCount() {
-    this.peerAverageCounts; // Object to store the peer average counts
-
+    const peerAverageCounts:any = {}; // Object to store the peer average counts
+  
     // Iterate over all students' results
     for (const student of this.results) {
       // Iterate over each subject in the student's result
@@ -441,37 +463,38 @@ export class ResultCalculationComponent implements OnInit {
           const rightCountKey = `Subject ${subjectName} Peer Right Count`;
           const wrongCountKey = `Subject ${subjectName} Peer Wrong Count`;
           const blankCountKey = `Subject ${subjectName} Peer Blank Count`;
-
-          if (!this.peerAverageCounts[rightCountKey]) {
-            this.peerAverageCounts[rightCountKey] = 0;
+  
+          if (!peerAverageCounts[rightCountKey]) {
+            peerAverageCounts[rightCountKey] = 0;
           }
-
-          if (!this.peerAverageCounts[wrongCountKey]) {
-            this.peerAverageCounts[wrongCountKey] = 0;
+  
+          if (!peerAverageCounts[wrongCountKey]) {
+            peerAverageCounts[wrongCountKey] = 0;
           }
-
-          if (!this.peerAverageCounts[blankCountKey]) {
-            this.peerAverageCounts[blankCountKey] = 0;
+  
+          if (!peerAverageCounts[blankCountKey]) {
+            peerAverageCounts[blankCountKey] = 0;
           }
-
-          this.peerAverageCounts[rightCountKey] += student[key] || 0; // Add the right count to the subject-wise total
-          this.peerAverageCounts[wrongCountKey] += student[key.replace("Right", "Wrong")] || 0; // Add the wrong count to the subject-wise total
-          this.peerAverageCounts[blankCountKey] += student[key.replace("Right", "Blank")] || 0; // Add the blank count to the subject-wise total
+  
+          peerAverageCounts[rightCountKey] += student[key] || 0; // Add the right count to the subject-wise total
+          peerAverageCounts[wrongCountKey] += student[key.replace("Right", "Wrong")] || 0; // Add the wrong count to the subject-wise total
+          peerAverageCounts[blankCountKey] += student[key.replace("Right", "Blank")] || 0; // Add the blank count to the subject-wise total
         }
       }
     }
-
+  
     // Calculate the average counts
-    for (const key in this.peerAverageCounts) {
-      if (this.peerAverageCounts.hasOwnProperty(key)) {
-        this.peerAverageCounts[key] /= this.results.length;
+    for (const key in peerAverageCounts) {
+      if (peerAverageCounts.hasOwnProperty(key)) {
+        peerAverageCounts[key] /= this.results.length;
       }
     }
-
-    console.log("Peer Average Count:", this.peerAverageCounts);
+  
+    // console.log("Peer Average Count:", peerAverageCounts);
   }
-
+  
   calculateSubjectWiseMarks() {
+    const subjectWiseMarks :any= {};
   
     // Iterate over all subjects in the answer key
     for (const answer of this.answer_key) {
@@ -501,30 +524,28 @@ export class ResultCalculationComponent implements OnInit {
   
       const peerAverageTotalMarks = peerTotalMarks / peerCount;
   
-      // Store the subject-wise marks in the result object
-      this.subjectWiseMarks[`${subjectKey} Peer Lowest Total Marks`] = peerLowestTotalMarks;
-      this.subjectWiseMarks[`${subjectKey} Peer Average Total Marks`] = peerAverageTotalMarks;
-      this.subjectWiseMarks[`${subjectKey} Peer Highest Total Marks`] = peerHighestTotalMarks;
+      // Store the subject-wise marks in the subjectWiseMarks object
+      subjectWiseMarks[`${subjectKey} Peer Lowest Total Marks`] = peerLowestTotalMarks;
+      subjectWiseMarks[`${subjectKey} Peer Average Total Marks`] = peerAverageTotalMarks;
+      subjectWiseMarks[`${subjectKey} Peer Highest Total Marks`] = peerHighestTotalMarks;
     }
   
-    // console.log("Subject-wise Marks:", this.subjectWiseMarks);
+    // console.log("Subject-wise Marks:", subjectWiseMarks);
   }
   
   
-  toppersList() {
-    
   
-    // console.log("Top 5 Candidates:");
-    const sortedResults = this.results.sort((a, b) => b["Percentage"] - a["Percentage"]);
+  toppersList() {
+    const sortedResults = [...this.results].sort((a, b) => b["Percentage"] - a["Percentage"]);
+    this.topCandidates = [];
   
     for (let i = 0; i < 5 && i < sortedResults.length; i++) {
       const student = sortedResults[i];
       const rollNo = student["Roll No"];
-      const matchedStudent = this.students_data.find((s:any) => s["Roll No"] == rollNo);
-      // console.log("matchedStudent",matchedStudent);
+      const matchedStudent = this.students_data.find((s: any) => s["Roll No"] == rollNo);
   
       if (matchedStudent) {
-        const candidateData :any = {
+        const candidateData: any = {
           Rank: student["Rank"],
           RollNo: rollNo,
           Percentage: student["Percentage"],
@@ -543,12 +564,10 @@ export class ResultCalculationComponent implements OnInit {
         }
   
         this.topCandidates.push(candidateData);
-        // console.log(candidateData);
-        // console.log("-----");
       }
     }
   
-    console.log("Top Candidates Object:", this.topCandidates);
+    // console.log("Top Candidates Object:", this.topCandidates);
   }
   
   
@@ -688,8 +707,11 @@ export class ResultCalculationComponent implements OnInit {
 
     // Find the result for the clicked roll number
     const clickedRollNo = row["Roll No"]; // Convert the roll number to a number
-    const rollNoResult = this.results.find(result => result["Roll No"] === parseInt(clickedRollNo));
-    const studentData = this.students_data.find((student: { [x: string]: number; }) => student["Roll No"] === clickedRollNo);
+    const rollNoResult = this.results.find(result => result["Roll No"] == parseInt(clickedRollNo));
+
+    console.log("rollNoResult",rollNoResult);
+
+    const studentData = this.students_data.find((student: { [x: string]: number; }) => student["Roll No"] == clickedRollNo);
 
        // Filter out headers starting with "Q" followed by a numerical value for the specific roll number
 const filteredData = this.omr_response
@@ -762,7 +784,7 @@ const filteredData = this.omr_response
     dataSource:this.dataSource
   }
   
-  console.log(requiredData);
+  // console.log(requiredData);
   }
 
 
@@ -790,11 +812,11 @@ const filteredData = this.omr_response
   
     dialogRef.afterClosed().subscribe(newDataSource => {
       if (newDataSource) {
-        console.log("newDataSource: ", newDataSource);
+        // console.log("newDataSource: ", newDataSource);
         this.dataSource = new MatTableDataSource(newDataSource.newDataSource);
         // Perform any further actions with the selected values
 
-        console.log("DATA SOURCE ",this.dataSource );
+        // console.log("DATA SOURCE ",this.dataSource );
       }
     });
   }
@@ -804,7 +826,7 @@ const filteredData = this.omr_response
     //recover dataSource data as it was earlier
 
     this.dataSource = this.tempDataSource;
-    console.log("DATA SOURCE : ", this.dataSource);
+    // console.log("DATA SOURCE : ", this.dataSource);
   }
   
 
