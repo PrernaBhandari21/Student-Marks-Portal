@@ -242,6 +242,7 @@ export class ResultCalculationComponent implements OnInit {
         let full_marks = this.answer_key[j].FullMarks;
         let partial_marks = this.answer_key[j]["Partial Marks"];
         let negative_marks = this.answer_key[j]["Negative Marks"];
+
         let subject = this.answer_key[j].Subject;
 
 
@@ -295,7 +296,7 @@ export class ResultCalculationComponent implements OnInit {
             questionStats[question]["Total Wrong"]++;
 
           } else {
-            subject_wise_marks[subject]['Blank'] += 1;
+            subject_wise_marks[subject]['Blank'] -= partial_marks;
             subject_wise_count[subject]['Blank'] += 1; // Increment blank count
 
             questionStats[question]["Total Blank"]++;
@@ -452,7 +453,7 @@ export class ResultCalculationComponent implements OnInit {
   }
   
   calculatePeerAverageCount() {
-    const peerAverageCounts:any = {}; // Object to store the peer average counts
+    const peerAverageCounts: any = {}; // Object to store the peer average counts
   
     // Iterate over all students' results
     for (const student of this.results) {
@@ -490,11 +491,13 @@ export class ResultCalculationComponent implements OnInit {
       }
     }
   
-    // console.log("Peer Average Count:", peerAverageCounts);
+    // Store the calculated peer average counts in the instance variable
+    this.peerAverageCounts = peerAverageCounts;
+    // console.log("Peer Average Count:", this.peerAverageCounts);
   }
   
   calculateSubjectWiseMarks() {
-    const subjectWiseMarks :any= {};
+    const subjectWiseMarks: any = {};
   
     // Iterate over all subjects in the answer key
     for (const answer of this.answer_key) {
@@ -530,8 +533,11 @@ export class ResultCalculationComponent implements OnInit {
       subjectWiseMarks[`${subjectKey} Peer Highest Total Marks`] = peerHighestTotalMarks;
     }
   
-    // console.log("Subject-wise Marks:", subjectWiseMarks);
+    // Store the calculated subject-wise marks in the instance variable
+    this.subjectWiseMarks = subjectWiseMarks;
+    // console.log("Subject-wise Marks:", this.subjectWiseMarks);
   }
+  
   
   
   

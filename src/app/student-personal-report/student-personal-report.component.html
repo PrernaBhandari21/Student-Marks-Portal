@@ -270,9 +270,7 @@
                 <div #peerChartContainer></div>
               </div>
               
-              
-              
-            </div>
+           </div>
 
             
 
@@ -314,7 +312,7 @@
               [ngClass]="{
                 'correct-answer': element.answerMarked === element.answerKey,
                 'wrong-answer': element.answerMarked !== element.answerKey,
-                'blank-answer': element.answerMarked === ''
+                'blank-answer': element.answerMarked === null
               }">
       {{ element.answerMarked }}
     </mat-cell>
