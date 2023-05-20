@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { DataService } from '../services/data.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { HeaderDialogComponent } from '../header-dialog/header-dialog.component';
+import { HttpClient } from '@angular/common/http';
+import { NameService } from '../services/name.service';
 
 
 
@@ -19,6 +21,7 @@ import { HeaderDialogComponent } from '../header-dialog/header-dialog.component'
 
 })
 export class ResultCalculationComponent implements OnInit {
+  reportData: any; // variable to store the retrieved data
 
   // omr_response = require("../dummy-data/omr_response.json");
   // answer_key = require("../dummy-data/answer_key.json");
@@ -51,29 +54,55 @@ export class ResultCalculationComponent implements OnInit {
   constructor(private dialog: MatDialog,
     private elementRef: ElementRef,
     private router: Router,
-    private dataService: DataService) { }
+    private dataService: DataService,
+    private http: HttpClient,
+    private nameService : NameService) { }
 
   async ngOnInit() {
     await this.getReportData();
-    this.removeSNo();
     console.log("omr_response ", this.omr_response);
     console.log("answer_key", this.answer_key);
     console.log("students_data", this.students_data);
+    this.removeSNo();
     this.calcuateResult();
 
     this.toppersList();
   }
 
   async getReportData(){
-   const data = await this.dataService.getReportData();
-    console.log("dataaaaaaaaaa : ", data);
 
-    this.students_all_data = data.studentDetails;
-    this.answer_key = data.answerKey;
-    this.omr_response = data.studentResponses;
+    //Gettin data without database !!
+  //  const data = await this.dataService.getReportData();
+  //   console.log("dataaaaaaaaaa : ", data);
 
+  //   this.students_all_data = data.studentDetails;
+  //   this.answer_key = data.answerKey;
+  //   this.omr_response = data.studentResponses;
 
+  const reportName = await this.nameService.getName();
+  console.log(reportName);
+
+  const url = `http://localhost:4200/api/reportData?name=${reportName}`;
+
+  try {
+    const data = await this.http.get(url).toPromise();
+    this.reportData = data;
+    console.log('Received report data:', this.reportData);
+
+    const finalDbData = this.reportData.receivedData[0];
+    console.log(finalDbData);
+    console.log("finalDbData.studentDetails", finalDbData.studentDetails);
+    console.log("finalDbData.answerKey", finalDbData.answerKey);
+    console.log("finalDbData.studentResponse", finalDbData.studentResponse);
+
+    this.students_all_data = finalDbData.studentDetails;
+    this.answer_key = finalDbData.answerKey;
+    this.omr_response = finalDbData.studentResponse;
+  } catch (error) {
+    console.error('Error retrieving report data:', error);
   }
+
+  }  
 
   sort(header: string) {
     const data = this.dataSource.filteredData.slice();

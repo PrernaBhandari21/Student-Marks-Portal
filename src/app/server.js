@@ -18,8 +18,9 @@ module.exports = {
 };
 
 //Parse Json Bodies
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//to parse too large data size
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
 
 client.connect((err) => {
@@ -44,7 +45,7 @@ app.post('/api/reportData', async (req, res) => {
 
     // Insert the data into the "reportData" table
     const insertQuery = 'INSERT INTO "reportData" (name, "studentDetails", "studentResponse", "answerKey") VALUES ($1, $2::jsonb, $3::jsonb, $4::jsonb)';
-    const insertValues = [data.reportName, JSON.stringify(data.studentDetails), JSON.stringify(data.studentResponse), JSON.stringify(data.answerKey)];
+    const insertValues = [data.reportName, JSON.stringify(data.studentDetails), JSON.stringify(data.studentResponses), JSON.stringify(data.answerKey)];
     const result = await client.query(insertQuery, insertValues);
 
     console.log("Data saved to the database:", data);
@@ -110,7 +111,7 @@ app.get('/api', (req, res) => {
     res.send('Welcome to my API server!');
 });
 
-const PORT = process.env.PORT || 400;
+const PORT = process.env.PORT || 4200;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

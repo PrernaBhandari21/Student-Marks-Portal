@@ -103,20 +103,30 @@ export class CreateReportComponent implements OnInit {
         this.nameService.setName(reportData.reportName);
 
         // Send reportData to server
-        fetch('/api/reportData', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(reportData)
+      // Send reportData to server
+fetch('/api/reportData', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(reportData)
+})
+  .then(response => {
+    console.log('Response from server:', response);
+    if (response.ok) {
+      // Successful operation
+      this.route.navigateByUrl('result-calculation');
+    } else {
+      // Handle error case
+      console.error('Error sending report data to server. Status:', response.status);
+      alert('Error sending report data to server. Please try again.');
+    }
+  })
+  .catch(error => {
+    console.error('Error sending report data to server:', error);
+    alert('Error sending report data to server. Please try again.');
+  });
 
-
-          }).then(response => {
-            console.log('Response from server:', response);
-            response.text().then(text => console.log('Response body:', text));
-          }).catch(error => {
-            console.error('Error sending report data to server:', error);
-          });
 
 
 
@@ -125,20 +135,10 @@ export class CreateReportComponent implements OnInit {
 
 
         // Navigate to next page
-        // this.route.navigate(['result-calculation']);
-
         // this....
-        this.route.navigateByUrl('result-calculation');
+        // this.route.navigateByUrl('result-calculation');
 
-        // Download report data as a JSON file
-        // const jsonData = JSON.stringify(report, null, 2);
-        // const blob = new Blob([jsonData], { type: 'application/json' });
-        // const link = document.createElement('a');
-        // link.href = URL.createObjectURL(blob);
-        // link.download = `${reportName}.json`;
-        // document.body.appendChild(link);
-        // link.click();
-        // document.body.removeChild(link);
+
 
     }).catch((error) => {
         console.error(error);

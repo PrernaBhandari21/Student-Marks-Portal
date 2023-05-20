@@ -33,6 +33,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { ExportAsModule } from 'ngx-export-as';
 import { ExistingReportsListComponent } from './existing-reports-list/existing-reports-list.component';
 
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import { ExistingReportsListComponent } from './existing-reports-list/existing-r
     MatRadioModule,
     MatIconModule,
     CdkTableModule,
-    ExportAsModule
+    ExportAsModule,
+    HttpClientModule
   ],
   providers: [ MultilevelMenuService,
      
