@@ -48,6 +48,7 @@ export class ResultCalculationComponent implements OnInit {
   tempDataSource : any;
 
   sortDirection: { [key: string]: boolean } = {}; // create an object to keep track of the sorting order for each column
+  reportName: any = '';
 
 
 
@@ -79,25 +80,17 @@ export class ResultCalculationComponent implements OnInit {
   //   this.answer_key = data.answerKey;
   //   this.omr_response = data.studentResponses;
 
-  const reportName = await this.nameService.getName();
-  console.log(reportName);
 
-  const url = `http://localhost:4200/api/reportData?name=${reportName}`;
+  this.reportData = this.dataService.getReportData();
+
 
   try {
-    const data = await this.http.get(url).toPromise();
-    this.reportData = data;
     console.log('Received report data:', this.reportData);
+    this.reportName = this.reportData.name;
 
-    const finalDbData = this.reportData.receivedData[0];
-    console.log(finalDbData);
-    console.log("finalDbData.studentDetails", finalDbData.studentDetails);
-    console.log("finalDbData.answerKey", finalDbData.answerKey);
-    console.log("finalDbData.studentResponse", finalDbData.studentResponse);
-
-    this.students_all_data = finalDbData.studentDetails;
-    this.answer_key = finalDbData.answerKey;
-    this.omr_response = finalDbData.studentResponse;
+    this.students_all_data = this.reportData.studentDetails;
+    this.answer_key = this.reportData.answerKey;
+    this.omr_response = this.reportData.studentResponse;
   } catch (error) {
     console.error('Error retrieving report data:', error);
   }

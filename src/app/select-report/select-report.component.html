@@ -1,0 +1,17 @@
+<h2 class="heading">Select the report for which you want to generate a result</h2>
+
+<mat-form-field>
+  <mat-label>Reports</mat-label>
+  <mat-select [(ngModel)]="selectedData">
+    <mat-option *ngFor="let data of reportData?.receivedData" [value]="data">{{ data?.name }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div style="display: flex; justify-content: right;">
+    <div  style="display: flex; justify-content: space-between;width: 35%">
+        <button class="btn btn-primary" (click)="showSelectedData()">View Result</button>
+
+        <button class="btn btn-danger" (click)="closePopup()">Cancel</button>
+        
+    </div>
+</div>

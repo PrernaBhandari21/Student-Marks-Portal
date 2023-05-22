@@ -4,6 +4,8 @@ import { DataService } from '../services/data.service';
 import { Router } from '@angular/router';
 import axios from 'axios';
 import { NameService } from '../services/name.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SelectReportComponent } from '../select-report/select-report.component';
 
 
 @Component({
@@ -16,7 +18,8 @@ export class CreateReportComponent implements OnInit {
   constructor(
     private dataService : DataService,
     private route : Router,
-    private nameService : NameService
+    private nameService : NameService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -115,7 +118,11 @@ fetch('/api/reportData', {
     console.log('Response from server:', response);
     if (response.ok) {
       // Successful operation
-      this.route.navigateByUrl('result-calculation');
+
+
+
+        alert("Report Generated Successfully ! Navigate to Existing Reports to view the result.")
+
     } else {
       // Handle error case
       console.error('Error sending report data to server. Status:', response.status);

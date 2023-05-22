@@ -34,6 +34,9 @@ import { ExportAsModule } from 'ngx-export-as';
 import { ExistingReportsListComponent } from './existing-reports-list/existing-reports-list.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { SelectReportComponent } from './select-report/select-report.component';
+import { MatSelectModule } from '@angular/material/select';
+
 
 
 @NgModule({
@@ -48,7 +51,8 @@ import { HttpClientModule } from '@angular/common/http';
     SelectHeadersComponent,
     StudentPersonalReportComponent,
     HeaderDialogComponent,
-    ExistingReportsListComponent
+    ExistingReportsListComponent,
+    SelectReportComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +72,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatIconModule,
     CdkTableModule,
     ExportAsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSelectModule
   ],
   providers: [ MultilevelMenuService,
      

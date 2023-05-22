@@ -5,6 +5,7 @@ import { CreateReportComponent } from './create-report/create-report.component';
 import { MarksListComponent } from './marks-list/marks-list.component';
 import { ResultCalculationComponent } from './result-calculation/result-calculation.component';
 import { StudentPersonalReportComponent } from './student-personal-report/student-personal-report.component';
+import { SelectReportComponent } from './select-report/select-report.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path : "student-personal-report",
     component: StudentPersonalReportComponent
+  },
+  {
+    path:"select-report",
+    component:SelectReportComponent
   }
 ];
 

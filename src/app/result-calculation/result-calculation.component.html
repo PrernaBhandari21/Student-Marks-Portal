@@ -1,4 +1,5 @@
-<h5><a class="link" (click)="openPopup()">Select Headers Here to Generate Custom Result.</a></h5>
+<h4>Generate Custom result for <span style="text-decoration: underline;">{{reportName}}</span></h4>
+<button (click)="openPopup()" class="btn btn-warning mt-4">Select Headers that you want to display on the table.</button>
 <div class="buttons">
   <div class="clearFilter">
     <button type="button" class="btn btn-primary" *ngIf="dataSource" (click)="clearAllFilters()">Clear All Filters</button>
@@ -22,7 +23,7 @@
       <th mat-header-cell *matHeaderCellDef>
         <div class="header-container">
           <span class="header-title" (click)="openHeaderDialog(header)">{{ header }}</span>
-          <i class="fa fa-sort" aria-hidden="true" (click)="sort(header)"></i>
+          <mat-icon  (click)="sort(header)">unfold_more</mat-icon>
         </div>
       </th>
       <td mat-cell *matCellDef="let element">{{ element[header] }}</td>

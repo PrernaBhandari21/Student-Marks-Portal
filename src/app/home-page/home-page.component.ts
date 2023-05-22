@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { SelectReportComponent } from '../select-report/select-report.component';
 
 @Component({
   selector: 'app-home-page',
@@ -9,7 +11,9 @@ import { Router } from '@angular/router';
 export class HomePageComponent implements OnInit {
 
   constructor(
-    private router : Router
+    private router : Router,
+    private dialog : MatDialog,
+    
   ) { }
 
   ngOnInit(): void {
@@ -20,6 +24,13 @@ export class HomePageComponent implements OnInit {
     console.log("opening create report component");
       this.router.navigate(['create-report']);
 
+  }
+
+  openSelectReport(){
+    const dialogRef = this.dialog.open(SelectReportComponent, {
+      width: '45%',
+
+      });
   }
 
 }
