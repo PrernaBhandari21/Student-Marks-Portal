@@ -3,7 +3,7 @@
 <div class="container">
   <div class="roww">
 
-    <!-- Student details !! -->
+    <!-- Student details -->
 
     <!-- <div class="col1">
       <h2 mat-dialog-title>Student Details</h2>
@@ -19,7 +19,6 @@
     <div class="col2">
       <h2 mat-dialog-title>OMR Response</h2>
       <div mat-dialog-content>
-        <!-- <h4>OMR Response Data Headers</h4> -->
         <form [formGroup]="form">
           <div *ngFor="let omrHeader of data.omrResponseHeaders">
             <mat-checkbox [formControlName]="omrHeader" (change)="onOMRCheckboxChange(omrHeader, $event.checked)">{{ omrHeader }}</mat-checkbox>
@@ -27,13 +26,10 @@
         </form>
       </div>
     </div>
-  </div>
 
-  <div class="roww">
     <div class="col1 col3">
       <h2 mat-dialog-title>Calculation Fields</h2>
       <div mat-dialog-content>
-        <!-- <h4>Students Data Headers</h4> -->
         <form [formGroup]="form">
           <div>
             <mat-radio-group formControlName="selectedField">
@@ -49,9 +45,28 @@
     </div>
   </div>
 
+  <!-- <div class="roww">
+    <div class="col1 col3">
+      <h2 mat-dialog-title>Calculation Fields</h2>
+      <div mat-dialog-content>
+        <form [formGroup]="form">
+          <div>
+            <mat-radio-group formControlName="selectedField">
+              <mat-radio-button (change)="onFieldsRadioButtonChange('Total Marks')" value="Total Marks">Total Marks</mat-radio-button>
+              <mat-radio-button (change)="onFieldsRadioButtonChange('Subject Wise Marks')" value="Subject Wise Marks">Subject Wise Marks</mat-radio-button>
+              <mat-radio-button (change)="onFieldsRadioButtonChange('Right Wrong Blank Count')" value="Right Wrong Marks">Right Wrong Marks</mat-radio-button>
+              <mat-radio-button (change)="onFieldsRadioButtonChange('Subject Wise Right Wrong Blank Count')" value="Subject Wise Right Wrong Marks">Subject Wise Right Wrong Marks</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </form>
+        
+      </div>
+    </div>
+  </div> -->
+
 </div>
 
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Close</button>
-  <button mat-button color="primary" (click)="onSave()">Save</button>
+  <button class="btn btn-primary" (click)="onSave()">Show Result</button>
 </div>
