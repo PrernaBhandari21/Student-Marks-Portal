@@ -26,10 +26,15 @@ export class SidemenuComponent implements OnInit {
 
     this.appitems=[
       {
-        label:"Home Page",
+        label:"About Us",
         link:"/",
+        icon:"label_important"
+      }, 
+     {
+        label:"Home Page",
+        link:"/dashboard",
         icon:"question_answer"
-      },
+      }, 
       {
         label:"Create Report",
         link:"/create-report",

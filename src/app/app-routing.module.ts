@@ -6,10 +6,15 @@ import { MarksListComponent } from './marks-list/marks-list.component';
 import { ResultCalculationComponent } from './result-calculation/result-calculation.component';
 import { StudentPersonalReportComponent } from './student-personal-report/student-personal-report.component';
 import { SelectReportComponent } from './select-report/select-report.component';
+import { AboutUsComponent } from './about-us/about-us.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path:"",
+    component:AboutUsComponent
+  },
+  {
+    path: 'dashboard',
     component: HomePageComponent
   },
   {

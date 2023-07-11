@@ -744,7 +744,8 @@ export class ResultCalculationComponent implements OnInit {
 
     console.log("rollNoResult",rollNoResult);
 
-    const studentData = this.students_data.find((student: { [x: string]: number; }) => student["RollNo"] == clickedRollNo);
+    //student data
+    // const studentData = this.students_data.find((student: { [x: string]: number; }) => student["RollNo"] == clickedRollNo);
 
        // Filter out headers starting with "Q" followed by a numerical value for the specific roll number
 const filteredData = this.omr_response
@@ -765,12 +766,12 @@ const filteredData = this.omr_response
       // console.log("Student Data : ", studentData);
       const studentReportData: any = {
         resultData: rollNoResult,
-        studentPersonalInfo: studentData,
+        // studentPersonalInfo: studentData,
         percentagesValue: this.percentagesValues,
         peerAverageCounts: this.peerAverageCounts,
         subjectWiseMarks : this.subjectWiseMarks,
         answer_key : this.answer_key,
-        toppersList : this.topCandidates,
+        // toppersList : this.topCandidates,
         questionWiseRWB : this.resultObject,
         omrResponse : filteredData[0]
       }

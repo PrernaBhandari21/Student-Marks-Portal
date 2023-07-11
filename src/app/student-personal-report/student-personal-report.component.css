@@ -127,24 +127,7 @@ span{
   }
   
   
-  .correct {
-    background-color: green;
-    color: white;
-    font-weight: 500;
-  }
   
-  .wrong {
-    background-color: red;
-    color: white;
-    font-weight: 500;
-  }
-  
-  .blank {
-    /* Define your styling for blank answers */
-    background-color: rgb(221, 144, 0);
-    color: white;
-    font-weight: 500;
-  }
   
   /* table */
   .mat-elevation-z8 {
@@ -220,6 +203,25 @@ place-content: center;
 
 .blank-answer {
   background-color: rgb(181, 117, 0);
+  color: white;
+  font-weight: 500;
+}
+
+.correct {
+  background-color: green;
+  color: white;
+  font-weight: 500;
+}
+
+.wrong {
+  background-color: red;
+  color: white;
+  font-weight: 500;
+}
+
+.blank {
+  /* Define your styling for blank answers */
+  background-color: rgb(221, 144, 0);
   color: white;
   font-weight: 500;
 }

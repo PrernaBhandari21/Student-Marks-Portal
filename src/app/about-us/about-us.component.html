@@ -1,0 +1,28 @@
+<!-- about-us.component.html -->
+
+<div class="about-us-container">
+    <h2>About Our Student Marks Portal</h2>
+  
+    <p>Welcome to our Student Marks Portal, a comprehensive platform designed to simplify the process of managing student marks and generating custom results. Our portal provides a user-friendly interface to upload CSV files containing student responses and answer keys, allowing you to generate accurate and personalized results effortlessly.</p>
+  
+    <p>Key Features:</p>
+    <ul>
+      <li>Easy CSV Upload: Simply upload CSV files with student responses and answer keys.</li>
+      <li>Custom Result Generation: Generate personalized results based on uploaded data.</li>
+      <li>Student Question Analysis: Gain insights into individual student performance and question-wise analysis.</li>
+    </ul>
+  
+    <h3>CSV File Download</h3>
+    <p>Below are dummy CSV files that demonstrate the required format for uploading:</p>
+    <ul class="downloadBtns">
+        <li><a href="../../assets/csv/Students_Response.csv" target="_blank" class="download-link">Download Students Response (Sample)</a></li>
+        <li><a href="../../assets/csv/Answer_Key.csv" target="_blank" class="download-link">Download Answer Key (Sample)</a></li>
+    </ul>
+  
+    <p>Feel free to reach out to us if you have any questions or need assistance with our Student Marks Portal. Happy analyzing!</p>
+
+    <div style="text-align: center;">
+        <button type="button" class="btn btn-warning" (click)="navigateToCreateReport()">Start Generating Result</button>
+    </div>
+
+</div>

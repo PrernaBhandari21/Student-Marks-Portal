@@ -19,7 +19,7 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
 
 
   dataSource!: MatTableDataSource<any>;
-  displayedColumns: string[] = ['Rank', 'RollNo','Name', 'Percentage', 'TotalMarks'];
+  // displayedColumns: string[] = ['Rank', 'RollNo','Name', 'Percentage', 'TotalMarks'];
   dynamicColumns: string[] = [];
 
 
@@ -39,9 +39,9 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   'subject',
   'answerMarked',
   'answerKey',
-  'totalRightPercentage',
-  'totalWrongPercentage',
-  'totalBlankPercentage',
+  // 'totalRightPercentage',
+  // 'totalWrongPercentage',
+  // 'totalBlankPercentage',
 ];
 
  
@@ -61,18 +61,17 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
     this.getStudentData();
 
     this.totalNoOfQues = this.data.answer_key.length;
-    // this.totalNoOfQues =23;
-    this.createPercentageChart();
-    this.createTotalQsDonutChart();
-    this.createRightCountDonutChart();
-    this.createPeerAvgDonutChart();
-    // this.showQuestions();
+    // this.createPercentageChart();
+    // this.createTotalQsDonutChart();
+    // this.createRightCountDonutChart();
+    // this.createPeerAvgDonutChart();
     this.analyzeQues();
 
     //top candidates
     this.dataSource = new MatTableDataSource(this.data.toppersList);
-    this.generateDynamicColumns();
-    this.moveColumnsToEnd(['TotalMarks', 'Percentage']);
+    // this.generateDynamicColumns();
+
+    // this.moveColumnsToEnd(['TotalMarks', 'Percentage']);
 
     this.quesWiseAnalysisData()
 
@@ -101,16 +100,16 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
     
   }
   
-  generateDynamicColumns() {
-    this.data.toppersList.forEach((element:any) => {
-      for (const key in element) {
-        if (key.startsWith('Subject') && key.endsWith('Total Marks') && !this.dynamicColumns.includes(key)) {
-          this.dynamicColumns.push(key);
-          this.displayedColumns.push(key);
-        }
-      }
-    });
-  }
+  // generateDynamicColumns() {
+  //   this.data.toppersList.forEach((element:any) => {
+  //     for (const key in element) {
+  //       if (key.startsWith('Subject') && key.endsWith('Total Marks') && !this.dynamicColumns.includes(key)) {
+  //         this.dynamicColumns.push(key);
+  //         this.displayedColumns.push(key);
+  //       }
+  //     }
+  //   });
+  // }
 
   quesWiseAnalysisData(){
     
@@ -199,15 +198,15 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   }
   
 
-  moveColumnsToEnd(columns: string[]) {
-    columns.forEach((column) => {
-      const index = this.displayedColumns.indexOf(column);
-      if (index > -1) {
-        this.displayedColumns.splice(index, 1);
-        this.displayedColumns.push(column);
-      }
-    });
-  }
+  // moveColumnsToEnd(columns: string[]) {
+  //   columns.forEach((column) => {
+  //     const index = this.displayedColumns.indexOf(column);
+  //     if (index > -1) {
+  //       this.displayedColumns.splice(index, 1);
+  //       this.displayedColumns.push(column);
+  //     }
+  //   });
+  // }
  
   
   
@@ -220,22 +219,29 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   analyzeQues() {
     this.questionLogic = []; // Clear the array before analyzing questions
   
+    console.log("this.data.answer_key.length", this.data.answer_key.length);
+
     for (let j = 0; j < this.data.answer_key.length; j++) {
-      let question = "Q" + (j + 1);
+      let question = "Ques " + (j + 1);
       let answer = this.data.resultData[question];
       let full_marks = this.data.answer_key[j].FullMarks;
       let partial_marks = this.data.answer_key[j]["Partial Marks"];
       let negative_marks = this.data.answer_key[j]["Negative Marks"];
       let subject = this.data.answer_key[j].Subject;
   
+      console.log(`answer ${j+1}`, answer );
       if (answer == full_marks) {
+        console.log("full_marks", full_marks);
         this.questionLogic.push('correct');
-      } else if (answer == -negative_marks) {
+      } else if (answer == negative_marks) {
+        console.log("negative_marks : ",negative_marks);
         this.questionLogic.push('wrong');
-      } else if (answer == 0) {
+      } else if (answer == 0 || null) {
         this.questionLogic.push('blank');
       }
     }
+
+    console.log(this.questionLogic);
   }
   
   
