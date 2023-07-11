@@ -32,6 +32,8 @@
     <!-- Add the 'sno' column to the header row definition -->
     <tr mat-header-row *matHeaderRowDef="getHeaderRowDef()"></tr>
     <!-- Add the 'sno' column to the data row definition -->
-    <tr mat-row *matRowDef="let row; columns: getRowDef();" (click)="onRowClick(row)"></tr>
+    <!-- <tr mat-row *matRowDef="let row; columns: getRowDef();" (click)="onRowClick(row)"></tr> -->
+    <tr mat-row *matRowDef="let row; columns: getRowDef();" ></tr>
+
   </table>
 </div>

@@ -46,7 +46,7 @@ export class CreateReportComponent implements OnInit {
   submitForm() {
     // Get form input elements
     const reportNameInput: HTMLInputElement = <HTMLInputElement>document.getElementById('reportName');
-    const studentDetailsInput: HTMLInputElement = <HTMLInputElement>document.getElementById('studentDetailsFile');
+    // const studentDetailsInput: HTMLInputElement = <HTMLInputElement>document.getElementById('studentDetailsFile');
     const studentResponsesInput: HTMLInputElement = <HTMLInputElement>document.getElementById('studentResponsesFile');
     const answerKeyInput: HTMLInputElement = <HTMLInputElement>document.getElementById('answerKeyFile');
   
@@ -54,7 +54,7 @@ export class CreateReportComponent implements OnInit {
     const reportName: string = reportNameInput.value;
   
     // Get student details file
-    const studentDetailsFile: File | null = studentDetailsInput.files?.[0] ?? null;
+    // const studentDetailsFile: File | null = studentDetailsInput.files?.[0] ?? null;
   
     // Get student responses file
     const studentResponsesFile: File | null = studentResponsesInput.files?.[0] ?? null;
@@ -86,14 +86,14 @@ export class CreateReportComponent implements OnInit {
 
     // Parse all files
     Promise.all([
-        parseFile(studentDetailsFile),
+        // parseFile(studentDetailsFile),
         parseFile(studentResponsesFile),
         parseFile(answerKeyFile)
-    ]).then(([studentDetails, studentResponses, answerKey]) => {
+    ]).then(([studentResponses, answerKey]) => {
         // Combine form values and parsed file contents into JSON object
         const reportData = {
             reportName: reportName,
-            studentDetails: studentDetails,
+            // studentDetails: studentDetails,
             studentResponses: studentResponses,
             answerKey: answerKey
         };
@@ -107,32 +107,32 @@ export class CreateReportComponent implements OnInit {
 
         // Send reportData to server
       // Send reportData to server
-fetch('/api/reportData', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(reportData)
-})
-  .then(response => {
-    console.log('Response from server:', response);
-    if (response.ok) {
-      // Successful operation
+// fetch('/api/reportData', {
+//   method: 'POST',
+//   headers: {
+//     'Content-Type': 'application/json'
+//   },
+//   body: JSON.stringify(reportData)
+// })
+//   .then(response => {
+//     console.log('Response from server:', response);
+//     if (response.ok) {
+//       // Successful operation
 
 
 
-        alert("Report Generated Successfully ! Navigate to Existing Reports to view the result.")
+//         alert("Report Generated Successfully ! Navigate to Existing Reports to view the result.")
 
-    } else {
-      // Handle error case
-      console.error('Error sending report data to server. Status:', response.status);
-      alert('Error sending report data to server. Please try again.');
-    }
-  })
-  .catch(error => {
-    console.error('Error sending report data to server:', error);
-    alert('Error sending report data to server. Please try again.');
-  });
+//     } else {
+//       // Handle error case
+//       console.error('Error sending report data to server. Status:', response.status);
+//       alert('Error sending report data to server. Please try again.');
+//     }
+//   })
+//   .catch(error => {
+//     console.error('Error sending report data to server:', error);
+//     alert('Error sending report data to server. Please try again.');
+//   });
 
 
 
@@ -143,7 +143,7 @@ fetch('/api/reportData', {
 
         // Navigate to next page
         // this....
-        // this.route.navigateByUrl('result-calculation');
+        this.route.navigateByUrl('result-calculation');
 
 
 

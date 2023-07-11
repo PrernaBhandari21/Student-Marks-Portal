@@ -2,17 +2,19 @@
 
 <div class="container">
   <div class="roww">
-    <div class="col1">
+
+    <!-- Student details !! -->
+
+    <!-- <div class="col1">
       <h2 mat-dialog-title>Student Details</h2>
       <div mat-dialog-content>
-        <!-- <h4>Students Data Headers</h4> -->
         <form [formGroup]="form">
           <div *ngFor="let studentHeader of data.studentsDataHeaders">
             <mat-checkbox [formControlName]="studentHeader" (change)="onStudentCheckboxChange(studentHeader, $event.checked)">{{ studentHeader }}</mat-checkbox>
           </div>
         </form>
       </div>
-    </div>
+    </div> -->
 
     <div class="col2">
       <h2 mat-dialog-title>OMR Response</h2>

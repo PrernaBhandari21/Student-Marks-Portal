@@ -63,37 +63,42 @@ export class ResultCalculationComponent implements OnInit {
     await this.getReportData();
     console.log("omr_response ", this.omr_response);
     console.log("answer_key", this.answer_key);
-    console.log("students_data", this.students_data);
-    this.removeSNo();
+    // console.log("students_data", this.students_data);
+
+    // this.removeSNo();
     this.calcuateResult();
 
-    this.toppersList();
+    // this.toppersList();
   }
 
   async getReportData(){
 
     //Gettin data without database !!
-  //  const data = await this.dataService.getReportData();
-  //   console.log("dataaaaaaaaaa : ", data);
+   const data = await this.dataService.getReportData();
+    console.log("dataaaaaaaaaa : ", data);
 
-  //   this.students_all_data = data.studentDetails;
-  //   this.answer_key = data.answerKey;
-  //   this.omr_response = data.studentResponses;
-
-
-  this.reportData = this.dataService.getReportData();
+    // this.students_all_data = data.studentDetails;
+    this.answer_key = data.answerKey;
+    this.omr_response = data.studentResponses;
 
 
-  try {
-    console.log('Received report data:', this.reportData);
-    this.reportName = this.reportData.name;
+  // this.reportData = await this.dataService.getReportData();
 
-    this.students_all_data = this.reportData.studentDetails;
-    this.answer_key = this.reportData.answerKey;
-    this.omr_response = this.reportData.studentResponse;
-  } catch (error) {
-    console.error('Error retrieving report data:', error);
-  }
+
+  // try {
+  //   console.log('Received report data:', this.reportData);
+  //   this.reportName = this.reportData.name;
+
+  //   if(this.reportData){
+  //     this.students_all_data = await this.reportData.studentDetails;
+  //     this.answer_key = await this.reportData.answerKey;
+  //     this.omr_response = await this.reportData.studentResponse;
+  //   }
+
+
+  // } catch (error) {
+  //   console.error('Error retrieving report data:', error);
+  // }
 
   }  
 
@@ -166,10 +171,10 @@ export class ResultCalculationComponent implements OnInit {
       data: {
         omrResponseData: filteredData,
         answerKeyData: this.answer_key,
-        studentsData: this.students_data,
+        // studentsData: this.students_data,
         omrResponseHeaders: Object.keys(filteredData[0]),
         answerKeyHeaders: Object.keys(this.answer_key[0]),
-        studentsDataHeaders: Object.keys(this.students_data[0]),
+        // studentsDataHeaders: Object.keys(this.students_data[0]),
         resultData: this.results,
         resultDataHeaders: Object.keys(this.results[0]),
       }
@@ -222,8 +227,8 @@ export class ResultCalculationComponent implements OnInit {
       data.push(row);
     }
   
-    // Sort the data based on the "Roll No" property
-    data.sort((a, b) => a["Roll No"] - b["Roll No"]);
+    // Sort the data based on the "RollNo" property
+    data.sort((a, b) => a["RollNo"] - b["RollNo"]);
   
     return data;
   }
@@ -238,7 +243,7 @@ export class ResultCalculationComponent implements OnInit {
 
     const questionStats :any = {}; // Object to store question statistics
     for (let i = 0; i < this.omr_response.length; i++) {
-      // console.log(this.omr_response[i]["Roll No"]);
+      // console.log(this.omr_response[i]["RollNo"]);
       let obj: any = {};
       let subject_wise_marks: any = {};
       let subject_wise_count: any = {}; // Add subject_wise_count object
@@ -252,13 +257,13 @@ export class ResultCalculationComponent implements OnInit {
     
 
 
-      //Adding Roll No in results array
-      obj["Roll No"] = this.omr_response[i]["Roll No"];
+      //Adding RollNo in results array
+      obj["RollNo"] = this.omr_response[i]["RollNo"];
 
       for (let j = 0; j < this.answer_key.length; j++) {
 
 
-        let question = "Q" + (j + 1);
+        let question = "Ques " + (j + 1);
         let answer = this.omr_response[i][question];
         let correct_answer = this.answer_key[j].AnswerKey;
         let full_marks = this.answer_key[j].FullMarks;
@@ -283,9 +288,9 @@ export class ResultCalculationComponent implements OnInit {
           total_marks += full_marks;
           total_right_count += 1;
         } else if (answer) {
-          obj[question] = -negative_marks;
-          total_wrong_marks -= negative_marks;
-          total_marks -= negative_marks;
+          obj[question] = negative_marks;
+          total_wrong_marks += negative_marks;
+          total_marks += negative_marks;
           total_wrong_count += 1;
         } else {
           obj[question] = 0;
@@ -313,7 +318,7 @@ export class ResultCalculationComponent implements OnInit {
             questionStats[question]["Total Right"]++;
 
           } else if (answer) {
-            subject_wise_marks[subject]['Wrong'] -= negative_marks;
+            subject_wise_marks[subject]['Wrong'] += negative_marks;
             subject_wise_count[subject]['Wrong'] += 1; // Increment wrong count
             questionStats[question]["Total Wrong"]++;
 
@@ -437,7 +442,7 @@ export class ResultCalculationComponent implements OnInit {
         currentPercentageRank = i + 1;
       }
   
-      const resultIndex = this.results.findIndex((result) => result["Roll No"] === student["Roll No"]);
+      const resultIndex = this.results.findIndex((result) => result["RollNo"] === student["RollNo"]);
       if (resultIndex !== -1) {
         const result = this.results[resultIndex];
   
@@ -569,8 +574,8 @@ export class ResultCalculationComponent implements OnInit {
   
     for (let i = 0; i < 5 && i < sortedResults.length; i++) {
       const student = sortedResults[i];
-      const rollNo = student["Roll No"];
-      const matchedStudent = this.students_data.find((s: any) => s["Roll No"] == rollNo);
+      const rollNo = student["RollNo"];
+      const matchedStudent = this.students_data.find((s: any) => s["RollNo"] == rollNo);
   
       if (matchedStudent) {
         const candidateData: any = {
@@ -734,16 +739,16 @@ export class ResultCalculationComponent implements OnInit {
     // console.log('Clicked row:', row);
 
     // Find the result for the clicked roll number
-    const clickedRollNo = row["Roll No"]; // Convert the roll number to a number
-    const rollNoResult = this.results.find(result => result["Roll No"] == parseInt(clickedRollNo));
+    const clickedRollNo = row["RollNo"]; // Convert the roll number to a number
+    const rollNoResult = this.results.find(result => result["RollNo"] == parseInt(clickedRollNo));
 
     console.log("rollNoResult",rollNoResult);
 
-    const studentData = this.students_data.find((student: { [x: string]: number; }) => student["Roll No"] == clickedRollNo);
+    const studentData = this.students_data.find((student: { [x: string]: number; }) => student["RollNo"] == clickedRollNo);
 
        // Filter out headers starting with "Q" followed by a numerical value for the specific roll number
 const filteredData = this.omr_response
-.filter((dataObj : any) => dataObj["Roll No"] == clickedRollNo) // Filter based on roll number
+.filter((dataObj : any) => dataObj["RollNo"] == clickedRollNo) // Filter based on roll number
 .map((dataObj: { [x: string]: any; }) => {
   const filteredObj: any = {};
   for (const key in dataObj) {
@@ -773,7 +778,7 @@ const filteredData = this.omr_response
       this.router.navigate(['/student-personal-report']);
     } else {
       // Result not found
-      alert("Report Not Found. Make sure you have selected Student's Roll No. !")
+      alert("Report Not Found. Make sure you have selected Student's RollNo. !")
     }
   }
 

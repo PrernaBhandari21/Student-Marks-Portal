@@ -28,9 +28,9 @@ export class SelectHeadersComponent implements OnInit {
   }
 
   createFormControls(): void {
-    this.data.studentsDataHeaders.forEach((header: any) => {
-      this.form.addControl(header, new FormControl(false));
-    });
+    // this.data.studentsDataHeaders.forEach((header: any) => {
+    //   this.form.addControl(header, new FormControl(false));
+    // });
     this.data.omrResponseHeaders.forEach((header: any) => {
       this.form.addControl(header, new FormControl(false));
     });
