@@ -202,7 +202,7 @@ place-content: center;
 }
 
 .blank-answer {
-  background-color: rgb(181, 117, 0);
+  background-color: orange;
   color: white;
   font-weight: 500;
 }
@@ -221,7 +221,7 @@ place-content: center;
 
 .blank {
   /* Define your styling for blank answers */
-  background-color: rgb(221, 144, 0);
+  background-color: orange;
   color: white;
   font-weight: 500;
 }

@@ -129,6 +129,9 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
       this.quesWiseTableData &&
       typeof this.quesWiseTableData === 'object'
     ) {
+
+      console.log(" this.quesWiseTableData : ", this.quesWiseTableData);
+
       // Extract answer marked values
       const answerMarked =
         this.quesWiseTableData.ansMarked
@@ -142,23 +145,24 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
               (item: any) => item.AnswerKey
             )
           : [];
+
       // console.log(this.quesWiseTableData.peerComparison);
   
-      const totalRightPercentage = this.quesWiseTableData.peerComparison
-        ? Object.keys(this.quesWiseTableData.peerComparison)
-            .filter((key: string) => key.includes('Total Right'))
-            .map((key: string) => this.quesWiseTableData.peerComparison[key])
-        : [];
-      const totalWrongPercentage = this.quesWiseTableData.peerComparison
-        ? Object.keys(this.quesWiseTableData.peerComparison)
-            .filter((key: string) => key.includes('Total Wrong'))
-            .map((key: string) => this.quesWiseTableData.peerComparison[key])
-        : [];
-      const totalBlankPercentage = this.quesWiseTableData.peerComparison
-        ? Object.keys(this.quesWiseTableData.peerComparison)
-            .filter((key: string) => key.includes('Total Blank'))
-            .map((key: string) => this.quesWiseTableData.peerComparison[key])
-        : [];
+      // const totalRightPercentage = this.quesWiseTableData.peerComparison
+      //   ? Object.keys(this.quesWiseTableData.peerComparison)
+      //       .filter((key: string) => key.includes('Total Right'))
+      //       .map((key: string) => this.quesWiseTableData.peerComparison[key])
+      //   : [];
+      // const totalWrongPercentage = this.quesWiseTableData.peerComparison
+      //   ? Object.keys(this.quesWiseTableData.peerComparison)
+      //       .filter((key: string) => key.includes('Total Wrong'))
+      //       .map((key: string) => this.quesWiseTableData.peerComparison[key])
+      //   : [];
+      // const totalBlankPercentage = this.quesWiseTableData.peerComparison
+      //   ? Object.keys(this.quesWiseTableData.peerComparison)
+      //       .filter((key: string) => key.includes('Total Blank'))
+      //       .map((key: string) => this.quesWiseTableData.peerComparison[key])
+      //   : [];
       // console.log(totalRightPercentage);
   
       // Creating headers
@@ -166,9 +170,9 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
         'Subject',
         'Answer Marked',
         'Answer Key',
-        'Total Right Percentage',
-        'Total Wrong Percentage',
-        'Total Blank Percentage',
+        // 'Total Right Percentage',
+        // 'Total Wrong Percentage',
+        // 'Total Blank Percentage',
       ];
   
       // Arranging the data
@@ -180,17 +184,16 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
             : '',
         answerMarked: answerMarked[i],
         answerKey: answerKey[i],
-        totalRightPercentage: totalRightPercentage[i],
-        totalWrongPercentage: totalWrongPercentage[i],
-        totalBlankPercentage: totalBlankPercentage[i],
+        // totalRightPercentage: totalRightPercentage[i],
+        // totalWrongPercentage: totalWrongPercentage[i],
+        // totalBlankPercentage: totalBlankPercentage[i],
       }));
   
   
-      // Displaying the table data
-      // console.log(headers);
-      // console.log(tableData);
+    
       this.quesdataSource = new MatTableDataSource(tableData);
 
+      console.log("this.quesdataSource : ",this.quesdataSource);
     
     } else {
       console.error('Invalid or missing data.');
@@ -214,35 +217,60 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
   
   
   
-  
-
   analyzeQues() {
     this.questionLogic = []; // Clear the array before analyzing questions
   
-    console.log("this.data.answer_key.length", this.data.answer_key.length);
-
     for (let j = 0; j < this.data.answer_key.length; j++) {
       let question = "Ques " + (j + 1);
-      let answer = this.data.resultData[question];
-      let full_marks = this.data.answer_key[j].FullMarks;
-      let partial_marks = this.data.answer_key[j]["Partial Marks"];
-      let negative_marks = this.data.answer_key[j]["Negative Marks"];
-      let subject = this.data.answer_key[j].Subject;
+      let answer = this.data.omrResponse[question];
+      let answerKey = this.data.answer_key[j].AnswerKey;
   
-      console.log(`answer ${j+1}`, answer );
-      if (answer == full_marks) {
-        console.log("full_marks", full_marks);
-        this.questionLogic.push('correct');
-      } else if (answer == negative_marks) {
-        console.log("negative_marks : ",negative_marks);
-        this.questionLogic.push('wrong');
-      } else if (answer == 0 || null) {
+      if (answer === null) {
+        console.log(answer);
+        console.log("Blank");
         this.questionLogic.push('blank');
+      } else if (answer === answerKey) {
+        console.log("Correct");
+        console.log("answer",answer);
+        console.log("answerKey",answerKey);
+        this.questionLogic.push('correct');
+      } else {
+        console.log("Wrong");
+        this.questionLogic.push('wrong');
       }
     }
-
+  
     console.log(this.questionLogic);
   }
+  
+
+  // analyzeQues() {
+  //   this.questionLogic = []; // Clear the array before analyzing questions
+  
+  //   console.log("this.data.answer_key.length", this.data.answer_key.length);
+
+  //   for (let j = 0; j < this.data.answer_key.length; j++) {
+  //     let question = "Ques " + (j + 1);
+  //     let answer = this.data.resultData[question];
+  //     let full_marks = this.data.answer_key[j].FullMarks;
+  //     let partial_marks = this.data.answer_key[j]["Partial Marks"];
+  //     let negative_marks = this.data.answer_key[j]["Negative Marks"];
+  //     let subject = this.data.answer_key[j].Subject;
+  
+  //     console.log(`answer ${j+1}`, answer );
+  //     if (answer == full_marks) {
+  //       console.log("full_marks", full_marks);
+  //       this.questionLogic.push('correct');
+  //     } else if (answer == negative_marks) {
+  //       console.log("negative_marks : ",negative_marks);
+  //       this.questionLogic.push('wrong');
+  //     } else if (answer == 0 || null) {
+  //       this.questionLogic.push('blank');
+  //     }
+  //   }
+
+  //   console.log(this.questionLogic);
+  // }
   
   
 

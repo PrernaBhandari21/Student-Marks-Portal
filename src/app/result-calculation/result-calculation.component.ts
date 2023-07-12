@@ -757,6 +757,8 @@ const filteredData = this.omr_response
       filteredObj[key] = dataObj[key];
     }
   }
+
+  console.log(filteredObj);
   return filteredObj;
 });
 
