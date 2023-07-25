@@ -7,6 +7,8 @@ import { ResultCalculationComponent } from './result-calculation/result-calculat
 import { StudentPersonalReportComponent } from './student-personal-report/student-personal-report.component';
 import { SelectReportComponent } from './select-report/select-report.component';
 import { AboutUsComponent } from './about-us/about-us.component';
+import { CreateStudentReportComponent } from './create-student-report/create-student-report.component';
+import { StudentResultCalculationComponent } from './student-result-calculation/student-result-calculation.component';
 
 const routes: Routes = [
   {
@@ -36,6 +38,14 @@ const routes: Routes = [
   {
     path:"select-report",
     component:SelectReportComponent
+  },
+  {
+    path:"create-student-report",
+    component:CreateStudentReportComponent
+  },
+  {
+    path:"student-result-calculation",
+    component:StudentResultCalculationComponent
   }
 ];
 

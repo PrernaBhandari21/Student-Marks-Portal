@@ -37,6 +37,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { SelectReportComponent } from './select-report/select-report.component';
 import { MatSelectModule } from '@angular/material/select';
 import { AboutUsComponent } from './about-us/about-us.component';
+import { CreateStudentReportComponent } from './create-student-report/create-student-report.component';
+import { StudentResultCalculationComponent } from './student-result-calculation/student-result-calculation.component';
+import { SelectStudentHeaderComponent } from './select-student-header/select-student-header.component';
 
 
 
@@ -54,7 +57,10 @@ import { AboutUsComponent } from './about-us/about-us.component';
     HeaderDialogComponent,
     ExistingReportsListComponent,
     SelectReportComponent,
-    AboutUsComponent
+    AboutUsComponent,
+    CreateStudentReportComponent,
+    StudentResultCalculationComponent,
+    SelectStudentHeaderComponent
   ],
   imports: [
     BrowserModule,

@@ -26,6 +26,10 @@ export class HomePageComponent implements OnInit {
 
   }
 
+  openCreateStudentReportComp(){
+    this.router.navigate(['create-student-report']);
+  }
+
   openSelectReport(){
     const dialogRef = this.dialog.open(SelectReportComponent, {
       width: '45%',
