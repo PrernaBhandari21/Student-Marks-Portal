@@ -1,0 +1,20 @@
+<div class="error-container">
+    <h2 style="color:red">Error</h2>
+<p>{{ errorMessage }}</p>
+<button class="btn btn-info" style="margin-bottom: 20px;" (click)="exportToExcel()">Export Excel</button>
+
+
+<table mat-table [dataSource]="tableData" class="mat-elevation-z8">
+
+    <!-- Define the columns for the mat-table -->
+    <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
+      <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+      <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
+    </ng-container>
+  
+    <!-- Add the mat-header-row and mat-row elements -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+</div>

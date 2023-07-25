@@ -41,6 +41,7 @@ import { CreateStudentReportComponent } from './create-student-report/create-stu
 import { StudentResultCalculationComponent } from './student-result-calculation/student-result-calculation.component';
 import { SelectStudentHeaderComponent } from './select-student-header/select-student-header.component';
 import { StudentCompleteReportComponent } from './student-complete-report/student-complete-report.component';
+import { ErrorPopupComponent } from './error-popup/error-popup.component';
 
 
 
@@ -62,7 +63,8 @@ import { StudentCompleteReportComponent } from './student-complete-report/studen
     CreateStudentReportComponent,
     StudentResultCalculationComponent,
     SelectStudentHeaderComponent,
-    StudentCompleteReportComponent
+    StudentCompleteReportComponent,
+    ErrorPopupComponent
   ],
   imports: [
     BrowserModule,

@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SelectReportComponent } from '../select-report/select-report.component';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { ErrorPopupComponent } from '../error-popup/error-popup.component';
 
 
 @Component({
@@ -44,7 +45,6 @@ export class CreateStudentReportComponent implements OnInit {
     });
   }
   
-  // Function to find duplicate RollNo rows in the parsed data
 findDuplicateRollNoRows(data: any[]): any[] {
   const duplicateRows: any[] = [];
   const rollNoSet = new Set(); // Use a Set to keep track of seen RollNo values
@@ -142,13 +142,13 @@ findNoNameRow(studentsData: any[]): any[] {
 
 
       if(findNoNameRowDetails.length > 0){
-        this.showErrorAndExportExcel(findNoNameRowDetails, 'No Name mentioned for Students . Download Excel for reference');
+        this.showErrorAndExportExcel(findNoNameRowDetails, 'No Name mentioned for Below Students : ');
         return;
       }
 
       // Show error popups and export duplicate rows to Excel files, if any
       if (duplicateRowsInDetails.length > 0) {
-        this.showErrorAndExportExcel(duplicateRowsInDetails, 'Duplicate RollNo found in Student Details. Download Excel with duplicate rows?');
+        this.showErrorAndExportExcel(duplicateRowsInDetails, 'Duplicate RollNo found in Student Details :');
         return;
       }
 
@@ -156,6 +156,29 @@ findNoNameRow(studentsData: any[]): any[] {
         this.showErrorAndExportExcel(duplicateRowsInResponses, 'Duplicate RollNo found in Student Responses. Download Excel with duplicate rows?');
         return;
       }
+
+
+       // Check if all RollNo values in studentResponses are present in studentDetails
+    const studentDetailsRollNos = new Set(studentDetails.map(row => row['RollNo']));
+    const missingRollNosInStudentDetails:any = [];
+
+    studentResponses.forEach(row => {
+      if (!studentDetailsRollNos.has(row['RollNo'])) {
+        missingRollNosInStudentDetails.push(row['RollNo']);
+      }
+    });
+
+    if (missingRollNosInStudentDetails.length > 0) {
+      // Filter out the rows from studentResponses that correspond to the missing RollNo values
+      const missingRowsInStudentResponses = studentResponses.filter(row => missingRollNosInStudentDetails.includes(row['RollNo']));
+
+      console.log("missingRowsInStudentResponses : ", missingRowsInStudentResponses);
+
+      const errorMessage = `Following RollNo(s) not found in Student Details.`;
+      this.showErrorAndExportExcel(missingRowsInStudentResponses, errorMessage);
+      return;
+    }
+
 
       // Data is valid, continue with navigation
       this.dataService.setReportData(reportData);
@@ -170,14 +193,18 @@ findNoNameRow(studentsData: any[]): any[] {
     
 }
 
-showErrorAndExportExcel(duplicateRows: any[], message: string) {
-  // Show error popup
-  const userConfirmed = window.confirm(message);
-
-  if (userConfirmed) {
-    // Export duplicate rows to an Excel file
-    this.exportToExcel(duplicateRows);
+showErrorAndExportExcel(excel_data: any[], message: string) {
+  const data =  {
+    excel_data: excel_data,
+    message: message,
   }
+
+
+  this.dialog.open(ErrorPopupComponent, {
+    data:data,
+    width:"80%"
+  });
+
 }
 
 exportToExcel(duplicateRows: any[]) {
