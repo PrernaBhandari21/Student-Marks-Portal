@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { SelectHeadersComponent } from '../select-headers/select-headers.component';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import autoTable from 'jspdf-autotable';
@@ -10,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { HeaderDialogComponent } from '../header-dialog/header-dialog.component';
 import { HttpClient } from '@angular/common/http';
 import { NameService } from '../services/name.service';
+import { SelectStudentHeaderComponent } from '../select-student-header/select-student-header.component';
 
 
 @Component({
@@ -24,6 +24,7 @@ export class StudentResultCalculationComponent implements OnInit {
   // omr_response = require("../dummy-data/omr_response.json");
   // answer_key = require("../dummy-data/answer_key.json");
   // students_all_data = require("../dummy-data/students-data.json");
+
   omr_response:any;
   answer_key:any;
   students_all_data:any;
@@ -61,12 +62,12 @@ export class StudentResultCalculationComponent implements OnInit {
     await this.getReportData();
     console.log("omr_response ", this.omr_response);
     console.log("answer_key", this.answer_key);
-    // console.log("students_data", this.students_data);
+    console.log("students_data", this.students_data);
 
-    // this.removeSNo();
+    this.removeSNo();
     this.calcuateResult();
 
-    // this.toppersList();
+    this.toppersList();
   }
 
   async getReportData(){
@@ -75,7 +76,7 @@ export class StudentResultCalculationComponent implements OnInit {
    const data = await this.dataService.getReportData();
     console.log("dataaaaaaaaaa : ", data);
 
-    // this.students_all_data = data.studentDetails;
+    this.students_all_data = data.studentDetails;
     this.answer_key = data.answerKey;
     this.omr_response = data.studentResponses;
 
@@ -163,16 +164,16 @@ export class StudentResultCalculationComponent implements OnInit {
     // console.log(filteredData);
 
 
-    const dialogRef = this.dialog.open(SelectHeadersComponent, {
+    const dialogRef = this.dialog.open(SelectStudentHeaderComponent, {
       width: '60%',
 
       data: {
         omrResponseData: filteredData,
         answerKeyData: this.answer_key,
-        // studentsData: this.students_data,
+        studentsData: this.students_data,
         omrResponseHeaders: Object.keys(filteredData[0]),
         answerKeyHeaders: Object.keys(this.answer_key[0]),
-        // studentsDataHeaders: Object.keys(this.students_data[0]),
+        studentsDataHeaders: Object.keys(this.students_data[0]),
         resultData: this.results,
         resultDataHeaders: Object.keys(this.results[0]),
       }
@@ -182,7 +183,7 @@ export class StudentResultCalculationComponent implements OnInit {
 
       this.tableResultant = result;
 
-      // console.log("this.tableResultant : ", this.tableResultant);
+      console.log("this.tableResultant : ", this.tableResultant);
 
 
       this.headers = Object.keys(this.tableResultant);
@@ -191,12 +192,7 @@ export class StudentResultCalculationComponent implements OnInit {
       console.log("this.dataSource : ",this.dataSource);
       this.tempDataSource = this.dataSource;
       // console.log("this.tempDataSource : ",this.tempDataSource);
-      // console.log("DATA SOURCE : ",this.dataSource);
-
-
-
-
-    
+      // console.log("DATA SOURCE : ",this.dataSource);   
 
 
     });
@@ -600,7 +596,7 @@ export class StudentResultCalculationComponent implements OnInit {
       }
     }
   
-    // console.log("Top Candidates Object:", this.topCandidates);
+    console.log("Top Candidates Object:", this.topCandidates);
   }
   
   
@@ -745,7 +741,7 @@ export class StudentResultCalculationComponent implements OnInit {
     console.log("rollNoResult",rollNoResult);
 
     //student data
-    // const studentData = this.students_data.find((student: { [x: string]: number; }) => student["RollNo"] == clickedRollNo);
+    const studentData = this.students_data.find((student: { [x: string]: number; }) => student["RollNo"] == clickedRollNo);
 
        // Filter out headers starting with "Q" followed by a numerical value for the specific roll number
 const filteredData = this.omr_response
@@ -764,21 +760,21 @@ const filteredData = this.omr_response
 
     if (rollNoResult){
       // Result found
-      // console.log("Result:", rollNoResult);
-      // console.log("Student Data : ", studentData);
+      console.log("Result:", rollNoResult);
+      console.log("Student Data : ", studentData);
       const studentReportData: any = {
         resultData: rollNoResult,
-        // studentPersonalInfo: studentData,
+        studentPersonalInfo: studentData,
         percentagesValue: this.percentagesValues,
         peerAverageCounts: this.peerAverageCounts,
         subjectWiseMarks : this.subjectWiseMarks,
         answer_key : this.answer_key,
-        // toppersList : this.topCandidates,
+        toppersList : this.topCandidates,
         questionWiseRWB : this.resultObject,
         omrResponse : filteredData[0]
       }
       this.dataService.setClickedRow(studentReportData);
-      this.router.navigate(['/student-personal-report']);
+      this.router.navigate(['/student-complete-report']);
     } else {
       // Result not found
       alert("Report Not Found. Make sure you have selected Student's RollNo. !")

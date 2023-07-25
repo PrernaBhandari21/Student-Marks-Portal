@@ -41,9 +41,9 @@ export class SidemenuComponent implements OnInit {
         icon:"group"
       },
       {
-        label:"Result Calculation",
-        link:"/result-calculation",
-        icon:"library_add"
+        label:"Complete Report",
+        link:"/create-student-report",
+        icon:"group"
       },
      
       

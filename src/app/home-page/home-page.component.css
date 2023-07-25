@@ -57,7 +57,8 @@
       }
       
       button{
-        width: 300px;
+        width: 450px;
         height: 150px;
         font-size: 32px;
+        padding: 20px;
       }

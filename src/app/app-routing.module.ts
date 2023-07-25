@@ -9,6 +9,7 @@ import { SelectReportComponent } from './select-report/select-report.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { CreateStudentReportComponent } from './create-student-report/create-student-report.component';
 import { StudentResultCalculationComponent } from './student-result-calculation/student-result-calculation.component';
+import { StudentCompleteReportComponent } from './student-complete-report/student-complete-report.component';
 
 const routes: Routes = [
   {
@@ -46,6 +47,10 @@ const routes: Routes = [
   {
     path:"student-result-calculation",
     component:StudentResultCalculationComponent
+  },
+  {
+    path:"student-complete-report",
+    component:StudentCompleteReportComponent
   }
 ];
 

@@ -1,0 +1,227 @@
+*{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.downloadBtn{
+    text-align: right;
+}
+
+.flexx{
+    display: flex;
+    justify-content: space-between;
+}
+
+p{
+    margin: 0;
+}
+
+span{
+    font-size: 16px;
+}
+
+.bold{
+    font-weight: 500;
+}
+
+.rightAlign{
+    text-align: right;
+}
+
+
+
+/* Style for table like studutre  */
+
+
+.card-text {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.card-text p {
+  display: table-row;
+  border-bottom: 1px solid #ddd;
+}
+
+.card-text p:hover{
+ background-color: lightyellow;
+}
+
+.card-text p:last-child {
+  border-bottom: none;
+}
+
+.card-text p span {
+  display: table-cell;
+  padding: 5px;
+}
+
+.card-text p span.left {
+  font-weight: bold;
+  text-align: left;
+}
+
+.card-text p span.right {
+  text-align: right;
+}
+
+/* ///// */
+
+  
+.card-content-one {
+  display: table;
+  width: 350px;
+  padding: 10px;
+  border: 1px solid lightblue;
+  border-collapse: collapse;
+}
+
+.card-content-one .flexx {
+  display: table-row;
+}
+
+.card-content-one .flexx:hover {
+  background-color: lightyellow;
+}
+
+.card-content-one .flexx span {
+  display: table-cell;
+  padding: 10px;
+  border-bottom: 1px solid lightblue;
+  /* border-right: 1px solid lightblue; */
+}
+
+.card-content-one .flexx span.left {
+  font-weight: bold;
+  text-align: left;
+}
+
+.card-content-one .flexx span.right {
+  text-align: right;
+}
+
+.card-content-one .flexx:last-child span {
+  border-bottom: none;
+}
+
+
+  .card-content-two,.card-content-three,.card-content-four{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+
+ 
+  .question-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .question-box {
+    flex: 0 0 calc(100% / 15 - 20px); /* Adjust the width based on the number of boxes you want in each row */
+    height: 30px;
+    border: 1px solid black;
+    text-align: center;
+    line-height: 30px;
+    margin: 5px;
+  }
+  
+  
+  
+  
+  /* table */
+  .mat-elevation-z8 {
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    width: 98%;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  .mat-elevation-z8 th,
+  .mat-elevation-z8 td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .mat-elevation-z8 th {
+    background-color: #f5f5f5;
+  }
+
+  .mat-elevation-z8 tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .mat-elevation-z8 tr:hover {
+    background-color: #ebebeb;
+  }
+
+
+
+  /* Add the following CSS styles to your component's CSS file or the global styles file */
+
+.mat-table {
+  margin-top: 20px;
+  width: 98%;
+  border-collapse: collapse;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.mat-header-cell,
+.mat-cell {
+  padding: 8px;
+place-content: center;
+}
+
+.mat-header-row {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+.mat-row:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.mat-row:hover {
+  background-color: #eaeaea;
+}
+
+
+.wrong-answer {
+  background-color: red;
+  color: white;
+  font-weight: 500;
+}
+
+.correct-answer {
+  background-color: green;
+  color: white;
+  font-weight: 500;
+}
+
+.blank-answer {
+  background-color: orange;
+  color: white;
+  font-weight: 500;
+}
+
+.correct {
+  background-color: green;
+  color: white;
+  font-weight: 500;
+}
+
+.wrong {
+  background-color: red;
+  color: white;
+  font-weight: 500;
+}
+
+.blank {
+  /* Define your styling for blank answers */
+  background-color: orange;
+  color: white;
+  font-weight: 500;
+}

@@ -40,6 +40,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
 import { CreateStudentReportComponent } from './create-student-report/create-student-report.component';
 import { StudentResultCalculationComponent } from './student-result-calculation/student-result-calculation.component';
 import { SelectStudentHeaderComponent } from './select-student-header/select-student-header.component';
+import { StudentCompleteReportComponent } from './student-complete-report/student-complete-report.component';
 
 
 
@@ -60,7 +61,8 @@ import { SelectStudentHeaderComponent } from './select-student-header/select-stu
     AboutUsComponent,
     CreateStudentReportComponent,
     StudentResultCalculationComponent,
-    SelectStudentHeaderComponent
+    SelectStudentHeaderComponent,
+    StudentCompleteReportComponent
   ],
   imports: [
     BrowserModule,
