@@ -48,11 +48,19 @@
         <h5 class="card-title">Marks Analysis</h5>
         <div class="mt-3">
           <div class="card-text">
+            <p *ngIf="data?.resultData['Total Marks Obtained']" style="  border-bottom: 1px solid #ddd;
+            ">
+              <span class="left bold">Total Marks Obtained</span>
+              <span class="right bold">{{data?.resultData['Total Marks Obtained']}}</span>
+            </p>
+
             <p *ngIf="data?.resultData['Total Marks']" style="  border-bottom: 1px solid #ddd;
             ">
               <span class="left bold">Total Marks</span>
-              <span class="right bold">{{data?.resultData['Total Marks']}}</span>
+              <span class="right">{{data?.resultData['Total Marks']}}</span>
             </p>
+
+           
           </div>
          
           <ng-container *ngIf="data?.resultData">
@@ -226,7 +234,7 @@
               </div>
               <div class="flexx">
                 <span class="left">Your Total Marks</span>
-                <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Total Marks'] }}</span>
+                <span class="right bold">{{ data?.resultData['Subject ' + subject + ' Total Marks Obtained'] }}</span>
               </div>
               <div class="flexx">
                 <span class="left">Correct</span>

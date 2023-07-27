@@ -124,16 +124,18 @@ export class SelectStudentHeaderComponent implements OnInit {
 
 
   totalMarksCommonData() {
+    const obtainedMarksHeader = "Total Marks Obtained"
     const totalMarksHeader = "Total Marks";
-    const rank = "Rank";
+        const rank = "Rank";
     const percentage = "Percentage"
 
+    const obtainedMarks = this.data.resultData.map((omr: any) => omr[obtainedMarksHeader]);
     const totalMarks = this.data.resultData.map((omr: any) => omr[totalMarksHeader]);
     const allRank = this.data.resultData.map((omr: any) => omr[rank]);
     const allPercentage = this.data.resultData.map((omr: any) => omr[percentage]);
 
 
-
+    this.fieldsDataResultant[obtainedMarksHeader] = obtainedMarks;
     this.fieldsDataResultant[totalMarksHeader] = totalMarks;
     this.fieldsDataResultant[rank] = allRank
     this.fieldsDataResultant[percentage] = allPercentage

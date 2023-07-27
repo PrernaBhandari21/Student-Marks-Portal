@@ -10,6 +10,7 @@ import { HeaderDialogComponent } from '../header-dialog/header-dialog.component'
 import { HttpClient } from '@angular/common/http';
 import { NameService } from '../services/name.service';
 import { SelectStudentHeaderComponent } from '../select-student-header/select-student-header.component';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -48,6 +49,7 @@ export class StudentResultCalculationComponent implements OnInit {
 
   sortDirection: { [key: string]: boolean } = {}; // create an object to keep track of the sorting order for each column
   reportName: any = '';
+  subjects: any;
 
 
 
@@ -79,6 +81,7 @@ export class StudentResultCalculationComponent implements OnInit {
     this.students_all_data = data.studentDetails;
     this.answer_key = data.answerKey;
     this.omr_response = data.studentResponses;
+    
 
 
   // this.reportData = await this.dataService.getReportData();
@@ -248,7 +251,11 @@ export class StudentResultCalculationComponent implements OnInit {
       let total_blank_count = 0;
 
     
-
+      // Calculate the TotalOutOf marks for all questions
+      let totalOutOfMarks = 0;
+      for (let question of this.answer_key) {
+        totalOutOfMarks += question.FullMarks;
+      }
 
       //Adding RollNo in results array
       obj["RollNo"] = this.omr_response[i]["RollNo"];
@@ -267,6 +274,9 @@ export class StudentResultCalculationComponent implements OnInit {
         let negative_marks = this.answer_key[j]["Negative Marks"];
 
         let subject = this.answer_key[j].Subject;
+
+        this.subjects =  this.answer_key[j].Subject;
+       
 
 
       if (!questionStats[question]) {
@@ -330,6 +340,23 @@ export class StudentResultCalculationComponent implements OnInit {
         }
       }
 
+
+
+      // Create a variable to store the total marks for each subject
+      let subject_wise_total_marks: { [key: string]: number } = {};
+
+      // Iterate through the answer_key to calculate the total marks for each subject
+      for (let question of this.answer_key) {
+        const subject = question.Subject;
+        if (subject_wise_total_marks[subject]) {
+          subject_wise_total_marks[subject] += question.FullMarks;
+        } else {
+          subject_wise_total_marks[subject] = question.FullMarks;
+        }
+      }
+
+
+
       //Adding subject-wise marks and count to the object
       for (let subject in subject_wise_marks) {
         obj['Subject ' + subject + ' Right Count'] = subject_wise_count[subject]['Right']; // Subject-wise right count
@@ -339,36 +366,42 @@ export class StudentResultCalculationComponent implements OnInit {
         obj['Subject ' + subject + ' Right'] = subject_wise_marks[subject]['Right']; // Subject-wise right marks
         obj['Subject ' + subject + ' Wrong'] = subject_wise_marks[subject]['Wrong']; // Subject-wise wrong marks
         obj['Subject ' + subject + ' Blank'] = subject_wise_marks[subject]['Blank']; // Subject-wise blank marks
-        obj['Subject ' + subject + ' Total Marks'] =parseFloat(subject_wise_marks[subject]['Total']); // Subject-wise total marks
+        obj['Subject ' + subject + ' Total Marks Obtained'] =parseFloat(subject_wise_marks[subject]['Total']); // Subject-wise total marks
         
+        // Add the TotalOutOf marks to the object
+        obj['Subject ' + subject + ' Total Marks'] = subject_wise_total_marks[subject];
 
         // Calculate Subject Percentage
-        const subjectMaxMarks = this.answer_key.filter((item: { Subject: string; }) => item.Subject === subject)
-          .reduce((total: any, item: { FullMarks: any; }) => total + item.FullMarks, 0);
-        const subjectRightMarks = subject_wise_marks[subject]['Right'];
-        const subjectPercentage = (subjectRightMarks / subjectMaxMarks) * 100;
-        obj['Subject ' + subject + ' Percentage'] = subjectPercentage;
-
+       
+        const subjectPercentage = (obj['Subject ' + subject + ' Total Marks Obtained'] / obj['Subject ' + subject + ' Total Marks'] ) *100;
+        (subjectPercentage>0)? obj['Subject ' + subject + ' Percentage'] = subjectPercentage:obj['Subject ' + subject + ' Percentage'] = 0;
+       
         // Calculate Total Questions in Subject
         const subjectTotalQuestions = this.answer_key.filter((item: { Subject: string; }) => item.Subject === subject).length;
         obj['Subject ' + subject + ' Total Questions'] = subjectTotalQuestions;
 
         // Calculate Subject Rank
-        const ranks = this.results.map((result: any) => result['Subject ' + subject + ' Percentage']);
-        const subjectRank = ranks.filter((rank: number) => rank >= subjectPercentage).length + 1;
-        obj['Subject ' + subject + ' Rank'] = subjectRank;
+        // const ranks = this.results.map((result: any) => result['Subject ' + subject + ' Percentage']);
+        // console.log("RANKS RANKS RANKS .............RANKS RANKS RANKS.............");
+        // console.log(ranks);
+        // const subjectRank = ranks.filter((rank: number) => rank >= subjectPercentage).length + 1;
+        // console.log("subjectRank : ", subjectRank);
+        // obj['Subject ' + subject + ' Rank'] = subjectRank;
 
       }
 
       //Adding total right, wrong, and blank marks to the object
       obj['Total Right Marks'] = total_right_marks;
       obj['Total Wrong Marks'] = total_wrong_marks;
-      obj['Total Marks'] = total_marks;
+      obj['Total Marks Obtained'] = total_marks; // total marks obtained by the student
 
       //Putting total count of right, wrong, and blank
       obj['Total Right Count'] = total_right_count;
       obj['Total Wrong Count'] = total_wrong_count;
       obj['Total Blank Count'] = total_blank_count;
+
+       // Calculate totalMarks (Out of marks)
+      obj['Total Marks'] = totalOutOfMarks;
 
       // console.log("Done for 1 student............ab next");
       // this.results.push(obj);
@@ -404,7 +437,7 @@ export class StudentResultCalculationComponent implements OnInit {
 
 
     console.log("FINAL>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", this.results);
-
+    this.calculateSubjectWiseRank();
     this.calculateRankAndPercentage();
     this.calculatePeerAverageCount();
     this.calculateSubjectWiseMarks();
@@ -412,6 +445,40 @@ export class StudentResultCalculationComponent implements OnInit {
 
     
   }
+
+  calculateSubjectWiseRank() {
+    // Loop through each subject in the answer key
+    for (let i = 0; i < this.answer_key.length; i++) {
+      const subject = this.answer_key[i].Subject;
+  
+      // Create a temporary array to store the students' percentages for this subject
+      const subjectPercentages = [];
+  
+      // Loop through each student's result
+      for (let studentResult of this.results) {
+        // Extract the student's percentage for the current subject
+        const subjectPercentage = studentResult['Subject ' + subject + ' Percentage'];
+  
+        // Add the percentage to the temporary array
+        subjectPercentages.push(subjectPercentage);
+      }
+  
+      // Sort the subject percentages in descending order to calculate ranks
+      const sortedPercentages = subjectPercentages.slice().sort((a, b) => b - a);
+  
+      // Loop through each student's result again to calculate their rank for the subject
+      for (let studentResult of this.results) {
+        const subjectPercentage = studentResult['Subject ' + subject + ' Percentage'];
+  
+        // Find the index of the student's percentage in the sorted array
+        const subjectRank = sortedPercentages.indexOf(subjectPercentage) + 1;
+  
+        // Update the student's result object with the calculated rank for the subject
+        studentResult['Subject ' + subject + ' Rank'] = subjectRank;
+      }
+    }
+  }
+  
 
   calculateRankAndPercentage() {
     this.calculateMaximumTotalMarks();
@@ -426,14 +493,14 @@ export class StudentResultCalculationComponent implements OnInit {
     let currentRank = 0;
     let currentPercentageRank = 0;
   
-    // Sort the students based on total marks temporarily
-    const sortedResults = [...this.results].sort((a, b) => b["Total Marks"] - a["Total Marks"]);
+    // Sort the students based on total marks obtained temporarily
+    const sortedResults = [...this.results].sort((a, b) => b["Total Marks Obtained"] - a["Total Marks Obtained"]);
   
     for (let i = 0; i < totalStudents; i++) {
       const student = sortedResults[i];
   
-      if (student["Total Marks"] !== previousTotalMarks) {
-        // Update the rank only if the total marks are different
+      if (student["Total Marks Obtained"] !== previousTotalMarks) {
+        // Update the rank only if the total marks obtained are different
         currentRank = i + 1;
         currentPercentageRank = i + 1;
       }
@@ -446,10 +513,10 @@ export class StudentResultCalculationComponent implements OnInit {
         const rank = currentRank;
   
         let percentage;
-        if (result["Total Marks"] < 0) {
+        if (result["Total Marks Obtained"] < 0) {
           percentage = 0;
         } else {
-          percentage = (result["Total Marks"] / this.maximumTotalMarks) * 100;
+          percentage = (result["Total Marks Obtained"] / this.maximumTotalMarks) * 100;
           totalPercentage += percentage;
           lowestPercentage = Math.min(lowestPercentage, percentage);
           highestPercentage = Math.max(highestPercentage, percentage);
@@ -460,7 +527,11 @@ export class StudentResultCalculationComponent implements OnInit {
         result["Percentage"] = percentage;
       }
   
-      previousTotalMarks = student["Total Marks"];
+      previousTotalMarks = student["Total Marks Obtained"];
+
+
+
+      
     }
   
     const averagePercentage = totalPercentage / totalStudents;
@@ -534,7 +605,7 @@ export class StudentResultCalculationComponent implements OnInit {
       let peerCount = 0;
   
       for (const student of this.results) {
-        const totalMarks = student[`${subjectKey} Total Marks`] || 0;
+        const totalMarks = student[`${subjectKey} Total Marks Obtained`] || 0;
   
         if (totalMarks < peerLowestTotalMarks) {
           peerLowestTotalMarks = totalMarks;
@@ -578,16 +649,16 @@ export class StudentResultCalculationComponent implements OnInit {
           Rank: student["Rank"],
           RollNo: rollNo,
           Percentage: student["Percentage"],
-          TotalMarks: student["Total Marks"],
+          TotalMarks: student["Total Marks Obtained"],
           Name: matchedStudent["Student Name"]
         };
   
         // Iterate over the student object to dynamically add subject-wise marks
         for (const key in student) {
-          if (key.startsWith("Subject") && key.endsWith("Total Marks")) {
-            const subjectName = key.substring(8, key.indexOf(" Total Marks"));
+          if (key.startsWith("Subject") && key.endsWith("Total Marks Obtained")) {
+            const subjectName = key.substring(8, key.indexOf(" Total Marks Obtained"));
             const subjectTotalMarks = student[key];
-            const subjectField = `Subject ${subjectName} Total Marks`;
+            const subjectField = `Subject ${subjectName} Total Marks Obtained`;
             candidateData[subjectField] = subjectTotalMarks;
           }
         }

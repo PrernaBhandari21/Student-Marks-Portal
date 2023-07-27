@@ -682,7 +682,7 @@ export class StudentCompleteReportComponent implements OnInit {
   
 
   generateBarChart(subject: string, container: ElementRef) {
-    const yourMarksKey = 'Subject ' + subject + ' Total Marks';
+    const yourMarksKey = 'Subject ' + subject + ' Total Marks Obtained';
     const lowestMarksKey = 'Subject ' + subject + ' Peer Lowest Total Marks';
     const averageMarksKey = 'Subject ' + subject + ' Peer Average Total Marks';
     const highestMarksKey = 'Subject ' + subject + ' Peer Highest Total Marks';
