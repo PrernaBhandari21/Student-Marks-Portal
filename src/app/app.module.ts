@@ -42,6 +42,9 @@ import { StudentResultCalculationComponent } from './student-result-calculation/
 import { SelectStudentHeaderComponent } from './select-student-header/select-student-header.component';
 import { StudentCompleteReportComponent } from './student-complete-report/student-complete-report.component';
 import { ErrorPopupComponent } from './error-popup/error-popup.component';
+import { CreatePaperWiseReportComponent } from './paper-wise/create-paper-wise-report/create-paper-wise-report.component';
+import { PaperWiseResultCalculationComponent } from './paper-wise/paper-wise-result-calculation/paper-wise-result-calculation.component';
+import { PaperWiseStudentReportComponent } from './paper-wise/paper-wise-student-report/paper-wise-student-report.component';
 
 
 
@@ -64,7 +67,10 @@ import { ErrorPopupComponent } from './error-popup/error-popup.component';
     StudentResultCalculationComponent,
     SelectStudentHeaderComponent,
     StudentCompleteReportComponent,
-    ErrorPopupComponent
+    ErrorPopupComponent,
+    CreatePaperWiseReportComponent,
+    PaperWiseResultCalculationComponent,
+    PaperWiseStudentReportComponent
   ],
   imports: [
     BrowserModule,

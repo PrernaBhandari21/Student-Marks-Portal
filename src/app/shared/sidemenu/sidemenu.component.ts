@@ -45,6 +45,11 @@ export class SidemenuComponent implements OnInit {
         link:"/create-student-report",
         icon:"group"
       },
+      {
+        label:"Paper-Wise",
+        link:"/create-paper-wise-report",
+        icon:"group"
+      },
      
       
       

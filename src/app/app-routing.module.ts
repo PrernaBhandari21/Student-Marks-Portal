@@ -10,6 +10,9 @@ import { AboutUsComponent } from './about-us/about-us.component';
 import { CreateStudentReportComponent } from './create-student-report/create-student-report.component';
 import { StudentResultCalculationComponent } from './student-result-calculation/student-result-calculation.component';
 import { StudentCompleteReportComponent } from './student-complete-report/student-complete-report.component';
+import { CreatePaperWiseReportComponent } from './paper-wise/create-paper-wise-report/create-paper-wise-report.component';
+import { PaperWiseResultCalculationComponent } from './paper-wise/paper-wise-result-calculation/paper-wise-result-calculation.component';
+import { PaperWiseStudentReportComponent } from './paper-wise/paper-wise-student-report/paper-wise-student-report.component';
 
 const routes: Routes = [
   {
@@ -51,7 +54,20 @@ const routes: Routes = [
   {
     path:"student-complete-report",
     component:StudentCompleteReportComponent
-  }
+  },
+  {
+    path:"create-paper-wise-report",
+    component:CreatePaperWiseReportComponent  
+  },
+  {
+    path:"paper-wise-result-calculation",
+    component:PaperWiseResultCalculationComponent 
+  },
+  {
+    path:"paper-wise-student-report",
+    component:PaperWiseStudentReportComponent
+  },
+
 ];
 
 @NgModule({

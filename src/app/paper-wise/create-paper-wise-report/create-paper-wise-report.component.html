@@ -1,0 +1,53 @@
+
+<div class="main__content">
+    <h1 class="heading">Generate Complete Report</h1>
+  
+    <div class="form">
+  
+      <h5>Upload Required Documents *</h5>
+      <p style="margin-left: 10px;"><i>Note :</i> Format of CSV Files must be same as mentioned in the About Page</p>
+  
+      <form class="form-container" >
+
+        <div class="form-row">
+          <div class="form-field">
+            <span>Report Name</span>
+            <input type="text" class="form-control" id="reportName" style="width: 323px;" name="reportName" placeholder="Enter report name">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <span>Upload Student Details (.csv)</span>
+            <input id="studentDetailsFile" type="file" class="btn btn-primary" accept=".csv">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-field">
+            <span>Upload Student Responses (.csv)</span>
+            <input id="studentResponsesFile" type="file" class="btn btn-primary" accept=".csv">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-field">
+            <span>Upload Answer Key (.csv)</span>
+            <input id="answerKeyFile" type="file" class="btn btn-primary" accept=".csv">
+          </div>
+        </div>
+        
+        <div class="submitBtn">
+          <button type="button" class="btn btn-success mt-5" (click)="submitForm()">Submit</button>
+        </div>
+        
+  
+      </form>
+      
+      
+    </div>
+  
+  </div>
+
+
+ 
