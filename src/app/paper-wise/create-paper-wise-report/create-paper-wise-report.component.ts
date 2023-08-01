@@ -29,8 +29,11 @@ export class CreatePaperWiseReportComponent implements OnInit {
 
   reportName!: string;
   studentDetails!: string;
-  studentResponses!: string;
-  answerKey!: string;
+  studentResponsesForPaperA!: string;
+  studentResponsesForPaperB!: string;
+  answerKeyForPaperA!: string;
+  answerKeyForPaperB!: string;
+  // FeedBack1!: string;
 
 
   onFileSelected(event: any) {
@@ -76,20 +79,32 @@ findNoNameRow(studentsData: any[]): any[] {
     // Get form input elements
     const reportNameInput: HTMLInputElement = <HTMLInputElement>document.getElementById('reportName');
     const studentDetailsInput: HTMLInputElement = <HTMLInputElement>document.getElementById('studentDetailsFile');
-    const studentResponsesInput: HTMLInputElement = <HTMLInputElement>document.getElementById('studentResponsesFile');
-    const answerKeyInput: HTMLInputElement = <HTMLInputElement>document.getElementById('answerKeyFile');
-  
+    const studentResponsesInputForPaperA: HTMLInputElement = <HTMLInputElement>document.getElementById('studentResponsesFileForPaperA');
+    const studentResponsesInputForPaperB: HTMLInputElement = <HTMLInputElement>document.getElementById('studentResponsesFileForPaperB');
+    const answerKeyInputForPaperA: HTMLInputElement = <HTMLInputElement>document.getElementById('answerKeyFileForPaperA');
+    const answerKeyInputForPaperB: HTMLInputElement = <HTMLInputElement>document.getElementById('answerKeyFileForPaperB');
+    // const FeedBack1Input: HTMLInputElement = <HTMLInputElement>document.getElementById('FeedBack1File');
+     
     // Get report name
     const reportName: string = reportNameInput.value;
   
     // Get student details file
     const studentDetailsFile: File | null = studentDetailsInput.files?.[0] ?? null;
   
-    // Get student responses file
-    const studentResponsesFile: File | null = studentResponsesInput.files?.[0] ?? null;
+    // Get student responses file for Paper A
+    const studentResponsesFileForPaperA: File | null = studentResponsesInputForPaperA.files?.[0] ?? null;
+    // Get student responses file for Paper B
+    const studentResponsesFileForPaperB: File | null = studentResponsesInputForPaperB.files?.[0] ?? null;
   
-    // Get answer key file
-    const answerKeyFile: File | null = answerKeyInput.files?.[0] ?? null;
+    // Get answer key file for paper A
+    const answerKeyFileForPaperA: File | null = answerKeyInputForPaperA.files?.[0] ?? null;
+
+    // Get answer key file for Paper B
+    const answerKeyFileForPaperB: File | null = answerKeyInputForPaperB.files?.[0] ?? null;
+
+    // Get Feedback
+    // const FeedBack1File: File | null = FeedBack1Input.files?.[0] ?? null;
+
   
     // Parse file contents to JSON using Papa Parse
     const parseFile = (file: File | null): Promise<any[]> => {
@@ -115,16 +130,22 @@ findNoNameRow(studentsData: any[]): any[] {
   // Parse all files
   Promise.all([
     parseFile(studentDetailsFile),
-    parseFile(studentResponsesFile),
-    parseFile(answerKeyFile)
+    parseFile(studentResponsesFileForPaperA),
+    parseFile(studentResponsesFileForPaperB),
+    parseFile(answerKeyFileForPaperA),
+    parseFile(answerKeyFileForPaperB),
+    // parseFile(FeedBack1File)
   ])
-    .then(([studentDetails, studentResponses, answerKey]) => {
+    .then(([studentDetails, studentResponsesFileForPaperA,studentResponsesFileForPaperB,answerKeyFileForPaperA,answerKeyFileForPaperB]) => {
       // Combine form values and parsed file contents into JSON object
       const reportData = {
         reportName: reportName,
         studentDetails: studentDetails,
-        studentResponses: studentResponses,
-        answerKey: answerKey
+        studentResponsesFileForPaperA: studentResponsesFileForPaperA,
+        studentResponsesFileForPaperB: studentResponsesFileForPaperB,
+        answerKeyFileForPaperA: answerKeyFileForPaperA,
+        answerKeyFileForPaperB: answerKeyFileForPaperB,
+        // FeedBack1File:FeedBack1File
       };
 
       console.log("report: ", reportData);
@@ -135,8 +156,11 @@ findNoNameRow(studentsData: any[]): any[] {
       // Check for duplicate RollNo in studentDetails
       const duplicateRowsInDetails = this.findDuplicateRollNoRows(studentDetails);
 
-      // Check for duplicate RollNo in studentResponses
-      const duplicateRowsInResponses = this.findDuplicateRollNoRows(studentResponses);
+      // Check for duplicate RollNo in studentResponses for paper A
+      const duplicateRowsInResponsesForPaperA = this.findDuplicateRollNoRows(studentResponsesFileForPaperA);
+
+      // Check for duplicate RollNo in studentResponses for paper B
+      const duplicateRowsInResponsesForPaperB = this.findDuplicateRollNoRows(studentResponsesFileForPaperB);
 
 
       if(findNoNameRowDetails.length > 0){
@@ -150,8 +174,12 @@ findNoNameRow(studentsData: any[]): any[] {
         return;
       }
 
-      if (duplicateRowsInResponses.length > 0) {
-        this.showErrorAndExportExcel(duplicateRowsInResponses, 'Duplicate RollNo found in Student Responses. Download Excel with duplicate rows?');
+      if (duplicateRowsInResponsesForPaperA.length > 0) {
+        this.showErrorAndExportExcel(duplicateRowsInResponsesForPaperA, 'Duplicate RollNo found in Student Responses. Download Excel with duplicate rows?');
+        return;
+      }
+      if (duplicateRowsInResponsesForPaperB.length > 0) {
+        this.showErrorAndExportExcel(duplicateRowsInResponsesForPaperB, 'Duplicate RollNo found in Student Responses. Download Excel with duplicate rows?');
         return;
       }
 
@@ -160,23 +188,41 @@ findNoNameRow(studentsData: any[]): any[] {
     const studentDetailsRollNos = new Set(studentDetails.map(row => row['RollNo']));
     const missingRollNosInStudentDetails:any = [];
 
-    studentResponses.forEach(row => {
+    studentResponsesFileForPaperA.forEach(row => {
       if (!studentDetailsRollNos.has(row['RollNo'])) {
         missingRollNosInStudentDetails.push(row['RollNo']);
       }
-    });
+    }
+    );
+
+    studentResponsesFileForPaperB.forEach(row => {
+      if (!studentDetailsRollNos.has(row['RollNo'])) {
+        missingRollNosInStudentDetails.push(row['RollNo']);
+      }
+    }
+    );
 
     if (missingRollNosInStudentDetails.length > 0) {
-      // Filter out the rows from studentResponses that correspond to the missing RollNo values
-      const missingRowsInStudentResponses = studentResponses.filter(row => missingRollNosInStudentDetails.includes(row['RollNo']));
+      // Filter out the rows from studentResponses for paper A that correspond to the missing RollNo values
+      const missingRowsInStudentResponsesForPaperA = studentResponsesFileForPaperA.filter(row => missingRollNosInStudentDetails.includes(row['RollNo']));
 
-      console.log("missingRowsInStudentResponses : ", missingRowsInStudentResponses);
+      console.log("missingRowsInStudentResponses : ", missingRowsInStudentResponsesForPaperA);
+
+      // Filter out the rows from studentResponses For Paper B that correspond to the missing RollNo values
+      const missingRowsInStudentResponsesForPaperB = studentResponsesFileForPaperB.filter(row => missingRollNosInStudentDetails.includes(row['RollNo']));
+
+      console.log("missingRowsInStudentResponses : ", missingRowsInStudentResponsesForPaperB);
 
       const errorMessage = `Following RollNo(s) not found in Student Details.`;
-      this.showErrorAndExportExcel(missingRowsInStudentResponses, errorMessage);
+      this.showErrorAndExportExcel(missingRowsInStudentResponsesForPaperA, errorMessage);
+      this.showErrorAndExportExcel(missingRowsInStudentResponsesForPaperB, errorMessage);
       return;
     }
 
+    // Data is valid, continue with navigation
+    this.dataService.setReportData(reportData);
+    this.nameService.setName(reportData.reportName);
+    this.route.navigateByUrl('paper-wise-result-calculation');
 
   
 

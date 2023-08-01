@@ -1,4 +1,3 @@
-
 <div class="main__content">
     <h1 class="heading">Generate Complete Report</h1>
   
@@ -25,17 +24,38 @@
         
         <div class="form-row">
           <div class="form-field">
-            <span>Upload Student Responses (.csv)</span>
-            <input id="studentResponsesFile" type="file" class="btn btn-primary" accept=".csv">
+            <span>Upload Student Response for Paper A (.csv)</span>
+            <input id="studentResponsesFileForPaperA" type="file" class="btn btn-primary" accept=".csv">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <span>Upload Student Response for Paper B (.csv)</span>
+            <input id="studentResponsesFileForPaperB" type="file" class="btn btn-primary" accept=".csv">
           </div>
         </div>
         
         <div class="form-row">
           <div class="form-field">
-            <span>Upload Answer Key (.csv)</span>
-            <input id="answerKeyFile" type="file" class="btn btn-primary" accept=".csv">
+            <span>Upload Answer Key For Paper A (.csv)</span>
+            <input id="answerKeyFileForPaperA" type="file" class="btn btn-primary" accept=".csv">
           </div>
         </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <span>Upload Answer Key For Paper B (.csv)</span>
+            <input id="answerKeyFileForPaperA" type="file" class="btn btn-primary" accept=".csv">
+          </div>
+        </div>
+
+        <!-- <div class="form-row">
+          <div class="form-field">
+            <span>Feedback(.csv)</span>
+            <input id="FeedBack1File" type="file" class="btn btn-primary" accept=".csv">
+          </div>
+        </div> -->
         
         <div class="submitBtn">
           <button type="button" class="btn btn-success mt-5" (click)="submitForm()">Submit</button>
