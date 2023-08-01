@@ -90,17 +90,22 @@ findNoNameRow(studentsData: any[]): any[] {
   
     // Get student details file
     const studentDetailsFile: File | null = studentDetailsInput.files?.[0] ?? null;
-  
+  console.log("studentDetailsFile : ", studentDetailsFile);
+
     // Get student responses file for Paper A
     const studentResponsesFileForPaperA: File | null = studentResponsesInputForPaperA.files?.[0] ?? null;
+    console.log("studentResponsesFileForPaperA : ", studentResponsesFileForPaperA);
     // Get student responses file for Paper B
     const studentResponsesFileForPaperB: File | null = studentResponsesInputForPaperB.files?.[0] ?? null;
+    console.log("studentResponsesFileForPaperB : ",studentResponsesFileForPaperB);
   
     // Get answer key file for paper A
     const answerKeyFileForPaperA: File | null = answerKeyInputForPaperA.files?.[0] ?? null;
+    console.log("answerKeyFileForPaperA", answerKeyFileForPaperA);
 
     // Get answer key file for Paper B
     const answerKeyFileForPaperB: File | null = answerKeyInputForPaperB.files?.[0] ?? null;
+    console.log("answerKeyFileForPaperB : ", answerKeyFileForPaperB);
 
     // Get Feedback
     // const FeedBack1File: File | null = FeedBack1Input.files?.[0] ?? null;
@@ -150,76 +155,7 @@ findNoNameRow(studentsData: any[]): any[] {
 
       console.log("report: ", reportData);
 
-      // check for cases where student name is null !!
-      const findNoNameRowDetails = this.findNoNameRow(studentDetails);
-
-      // Check for duplicate RollNo in studentDetails
-      const duplicateRowsInDetails = this.findDuplicateRollNoRows(studentDetails);
-
-      // Check for duplicate RollNo in studentResponses for paper A
-      const duplicateRowsInResponsesForPaperA = this.findDuplicateRollNoRows(studentResponsesFileForPaperA);
-
-      // Check for duplicate RollNo in studentResponses for paper B
-      const duplicateRowsInResponsesForPaperB = this.findDuplicateRollNoRows(studentResponsesFileForPaperB);
-
-
-      if(findNoNameRowDetails.length > 0){
-        this.showErrorAndExportExcel(findNoNameRowDetails, 'No Name mentioned for Below Students : ');
-        return;
-      }
-
-      // Show error popups and export duplicate rows to Excel files, if any
-      if (duplicateRowsInDetails.length > 0) {
-        this.showErrorAndExportExcel(duplicateRowsInDetails, 'Duplicate RollNo found in Student Details :');
-        return;
-      }
-
-      if (duplicateRowsInResponsesForPaperA.length > 0) {
-        this.showErrorAndExportExcel(duplicateRowsInResponsesForPaperA, 'Duplicate RollNo found in Student Responses. Download Excel with duplicate rows?');
-        return;
-      }
-      if (duplicateRowsInResponsesForPaperB.length > 0) {
-        this.showErrorAndExportExcel(duplicateRowsInResponsesForPaperB, 'Duplicate RollNo found in Student Responses. Download Excel with duplicate rows?');
-        return;
-      }
-
-
-       // Check if all RollNo values in studentResponses are present in studentDetails
-    const studentDetailsRollNos = new Set(studentDetails.map(row => row['RollNo']));
-    const missingRollNosInStudentDetails:any = [];
-
-    studentResponsesFileForPaperA.forEach(row => {
-      if (!studentDetailsRollNos.has(row['RollNo'])) {
-        missingRollNosInStudentDetails.push(row['RollNo']);
-      }
-    }
-    );
-
-    studentResponsesFileForPaperB.forEach(row => {
-      if (!studentDetailsRollNos.has(row['RollNo'])) {
-        missingRollNosInStudentDetails.push(row['RollNo']);
-      }
-    }
-    );
-
-    if (missingRollNosInStudentDetails.length > 0) {
-      // Filter out the rows from studentResponses for paper A that correspond to the missing RollNo values
-      const missingRowsInStudentResponsesForPaperA = studentResponsesFileForPaperA.filter(row => missingRollNosInStudentDetails.includes(row['RollNo']));
-
-      console.log("missingRowsInStudentResponses : ", missingRowsInStudentResponsesForPaperA);
-
-      // Filter out the rows from studentResponses For Paper B that correspond to the missing RollNo values
-      const missingRowsInStudentResponsesForPaperB = studentResponsesFileForPaperB.filter(row => missingRollNosInStudentDetails.includes(row['RollNo']));
-
-      console.log("missingRowsInStudentResponses : ", missingRowsInStudentResponsesForPaperB);
-
-      const errorMessage = `Following RollNo(s) not found in Student Details.`;
-      this.showErrorAndExportExcel(missingRowsInStudentResponsesForPaperA, errorMessage);
-      this.showErrorAndExportExcel(missingRowsInStudentResponsesForPaperB, errorMessage);
-      return;
-    }
-
-    // Data is valid, continue with navigation
+     
     this.dataService.setReportData(reportData);
     this.nameService.setName(reportData.reportName);
     this.route.navigateByUrl('paper-wise-result-calculation');

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-paper-wise-result-calculation',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaperWiseResultCalculationComponent implements OnInit {
 
-  constructor() { }
+  constructor(private dataService : DataService) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    await this.getPaperWiseData();
+  }
+
+  getPaperWiseData(){
+    const reportData = this.dataService.getReportData();
+    console.log("Got reportData : ", reportData);
   }
 
 }
