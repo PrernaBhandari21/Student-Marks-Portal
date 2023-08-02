@@ -35,6 +35,9 @@ export class PaperWiseResultCalculationComponent implements OnInit {
   sortDirection: { [key: string]: boolean } = {};
   reportName: any = '';
   studentsWithResults: any[] = []; // Array to hold students with their results
+  studentsData: any;
+  answerKeyForPaperA: any;
+  studentRespForPaperA: any;
 
   constructor(private dataService: DataService) {}
 
@@ -43,32 +46,20 @@ export class PaperWiseResultCalculationComponent implements OnInit {
   }
 
   async getPaperWiseData() {
-    const reportData = await this.dataService.reportData();
-    const studentsData: Student[] = reportData['Student Data'];
-    const questionPaperData: QuestionPaper[] = reportData['Question Paper A'];
-    const dataPaperData: DataPaper[] = reportData['Data Paper A for checking Answer'];
-    const subjectMasterData: SubjectMaster[] = reportData['Subject Master'];
+    const reportData = await this.dataService.getReportData();
+    this.studentsData= reportData['studentDetails'];
+    this.answerKeyForPaperA = reportData['answerKeyFileForPaperA'];
+    this.studentRespForPaperA = reportData['studentResponsesFileForPaperA'];
+    
+    
+    console.log("Data received for generating reult ----------");
+    console.log("this.studentsData :", this.studentsData);
+    console.log("this.answerKeyForPaperA : ",this.answerKeyForPaperA);
+    console.log("this.studentRespForPaperA : ", this.studentRespForPaperA);
+
   
-    // Processing logic to map student data with their results
-    this.studentsWithResults = studentsData.map((student: Student) => {
-      const resultData = dataPaperData.find((data: DataPaper) => data.RollNo === student.RollNo);
   
-      // Check if resultData is defined before accessing its properties
-      const subjectName = resultData?.Question ? questionPaperData.find((q: QuestionPaper) => q.Key === resultData.Question)?.SubjectName || '' : '';
-      const topics = subjectMasterData.find((subject: SubjectMaster) => subject.SubjectName === subjectName)?.Topics || '';
-      const totalMarks = resultData?.TotalMarks || 0;
-      const percentage = resultData?.Percentage || 0;
   
-      return {
-        ...student,
-        SubjectName: subjectName,
-        Topics: topics,
-        TotalMarks: totalMarks,
-        Percentage: percentage
-      };
-    });
-  
-    console.log("Mapped Students with Results: ", this.studentsWithResults);
   }
   
 }
