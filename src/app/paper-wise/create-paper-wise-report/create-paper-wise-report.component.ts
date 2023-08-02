@@ -33,7 +33,7 @@ export class CreatePaperWiseReportComponent implements OnInit {
   studentResponsesForPaperB!: string;
   answerKeyForPaperA!: string;
   answerKeyForPaperB!: string;
-  // FeedBack1!: string;
+  FeedBack1!: string;
 
 
   onFileSelected(event: any) {
@@ -83,7 +83,7 @@ findNoNameRow(studentsData: any[]): any[] {
     const studentResponsesInputForPaperB: HTMLInputElement = <HTMLInputElement>document.getElementById('studentResponsesFileForPaperB');
     const answerKeyInputForPaperA: HTMLInputElement = <HTMLInputElement>document.getElementById('answerKeyFileForPaperA');
     const answerKeyInputForPaperB: HTMLInputElement = <HTMLInputElement>document.getElementById('answerKeyFileForPaperB');
-    // const FeedBack1Input: HTMLInputElement = <HTMLInputElement>document.getElementById('FeedBack1File');
+    const FeedBack1Input: HTMLInputElement = <HTMLInputElement>document.getElementById('FeedBack1File');
      
     // Get report name
     const reportName: string = reportNameInput.value;
@@ -108,7 +108,7 @@ findNoNameRow(studentsData: any[]): any[] {
     console.log("answerKeyFileForPaperB : ", answerKeyFileForPaperB);
 
     // Get Feedback
-    // const FeedBack1File: File | null = FeedBack1Input.files?.[0] ?? null;
+    const FeedBack1File: File | null = FeedBack1Input.files?.[0] ?? null;
 
   
     // Parse file contents to JSON using Papa Parse
@@ -139,9 +139,9 @@ findNoNameRow(studentsData: any[]): any[] {
     parseFile(studentResponsesFileForPaperB),
     parseFile(answerKeyFileForPaperA),
     parseFile(answerKeyFileForPaperB),
-    // parseFile(FeedBack1File)
+    parseFile(FeedBack1File)
   ])
-    .then(([studentDetails, studentResponsesFileForPaperA,studentResponsesFileForPaperB,answerKeyFileForPaperA,answerKeyFileForPaperB]) => {
+    .then(([studentDetails, studentResponsesFileForPaperA,studentResponsesFileForPaperB,answerKeyFileForPaperA,answerKeyFileForPaperB,FeedBack1File]) => {
       // Combine form values and parsed file contents into JSON object
       const reportData = {
         reportName: reportName,
@@ -150,7 +150,7 @@ findNoNameRow(studentsData: any[]): any[] {
         studentResponsesFileForPaperB: studentResponsesFileForPaperB,
         answerKeyFileForPaperA: answerKeyFileForPaperA,
         answerKeyFileForPaperB: answerKeyFileForPaperB,
-        // FeedBack1File:FeedBack1File
+        FeedBack1File:FeedBack1File
       };
 
       console.log("report: ", reportData);

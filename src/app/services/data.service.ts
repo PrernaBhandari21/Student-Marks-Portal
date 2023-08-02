@@ -4,6 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DataService {
+  getPaperWiseData() {
+    throw new Error('Method not implemented.');
+  }
   clickedRow: any;
   reportData: any;
 

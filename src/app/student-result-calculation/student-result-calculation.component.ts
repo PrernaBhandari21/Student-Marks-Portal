@@ -51,8 +51,6 @@ export class StudentResultCalculationComponent implements OnInit {
   reportName: any = '';
   subjects: any;
 
-
-
   constructor(private dialog: MatDialog,
     private elementRef: ElementRef,
     private router: Router,
