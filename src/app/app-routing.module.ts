@@ -13,12 +13,17 @@ import { StudentCompleteReportComponent } from './student-complete-report/studen
 import { CreatePaperWiseReportComponent } from './paper-wise/create-paper-wise-report/create-paper-wise-report.component';
 import { PaperWiseResultCalculationComponent } from './paper-wise/paper-wise-result-calculation/paper-wise-result-calculation.component';
 import { PaperWiseStudentReportComponent } from './paper-wise/paper-wise-student-report/paper-wise-student-report.component';
+import { LoginPageComponent } from './shared/login-page/login-page.component';
 
 const routes: Routes = [
   {
     path:"",
-    component:AboutUsComponent
+    component:LoginPageComponent
   },
+  // {
+  //   path:"",
+  //   component:AboutUsComponent
+  // },
   {
     path: 'dashboard',
     component: HomePageComponent
