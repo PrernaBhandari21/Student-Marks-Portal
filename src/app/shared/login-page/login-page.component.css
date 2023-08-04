@@ -1,20 +1,28 @@
-.login__container{
-    width: 100%;
-    height: 65%;
-    padding-left: 5%;
-    padding-right: 5%;
-    display: flex;
+@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
+
+h1{
+    margin-top: 20px;
+    font-family: 'Rye', cursive;
 }
 
-.loginImg__Container img{
-    width: 91%;
+.login__container{
+    width: 100%;
+    height: 75%;
+    display: flex;
+    margin-top: 50px;
+}
+
+img{
+    width: 75%;
+    margin-left: -3%;
 }
 
 
 .login__form{
-    width: 50%;
     border: 2px solid white;
     padding: 15px;
     background: linear-gradient(90deg, rgba(238,174,202,1) 0%, rgba(186,188,191,1) 100%, rgba(148,187,233,1) 100%, rgba(148,187,233,1) 100%);    border-radius: 10px;
-
+    height: 80%;
+    width: 25%;
+    margin-top: 80px;
 }

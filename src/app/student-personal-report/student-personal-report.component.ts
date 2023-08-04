@@ -319,7 +319,6 @@ export class StudentPersonalReportComponent implements OnInit, AfterViewInit   {
 
   getStudentData() {
     this.data = this.dataService.getClickedRow();
-    console.log("FINALLY THE STUDENT DATA IS : ", this.data);    
   }
 
   createPercentageChart() {

@@ -1,27 +1,24 @@
 <div class="login__container">
 
-    <div class="loginImg__Container">
-      <img src="https://img.freepik.com/free-photo/computer-security-with-login-password-padlock_107791-16191.jpg?w=900&t=st=1687173663~exp=1687174263~hmac=caa5b6b45fee0964afd24ffc02ece8abe9efaa0a49cf24d012918ea30af72767" alt="">
-    </div>
+    <!-- <div class="loginImg__Container"> -->
+      <!-- <img src="https://img.freepik.com/free-photo/computer-security-with-login-password-padlock_107791-16191.jpg?w=900&t=st=1687173663~exp=1687174263~hmac=caa5b6b45fee0964afd24ffc02ece8abe9efaa0a49cf24d012918ea30af72767" alt=""> -->
+      <img src="../../../assets/images/result-portal.jpg" alt="Result-Portal-Img">
+    <!-- </div> -->
 
 
     <div class="row justify-content-center mt-5 login__form">
       <div class="col-md-12">
-        <h1 class="text-center mb-4">Login</h1>
+        <h1 class="text-center mb-5">Login</h1>
         <form (ngSubmit)="onSubmit()" class="login-form">
-          <div class="form-group">
+          <div class="form-group mt-3 mb-3">
             <label for="username">Enter Username</label>
             <input type="text" class="form-control mt-1" id="username" placeholder="Username" [(ngModel)]="username" [ngModelOptions]="{standalone: true}">
           </div>
-          <div class="form-group mt-3">
+          <div class="form-group mt-3 ">
             <label for="password">Enter Password</label>
             <input type="password" class="form-control mt-1" id="password" placeholder="Password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}">
           </div>
-          <button type="submit" class="btn btn-primary btn-block mt-4">Login</button>
-
-          <div>
-            <p class="mt-2">Don't have an account? <a routerLink="/register">Register Here</a></p>
-          </div>
+          <button type="submit" class="btn btn-primary btn-block mt-5">Login</button>
         </form>
       </div>
     </div>

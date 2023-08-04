@@ -299,7 +299,6 @@ export class StudentCompleteReportComponent implements OnInit {
 
   getStudentData() {
     this.data = this.dataService.getClickedRow();
-    console.log("FINALLY THE STUDENT DATA IS : ", this.data);    
   }
 
   createPercentageChart() {

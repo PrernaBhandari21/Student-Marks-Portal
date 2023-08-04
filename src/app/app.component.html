@@ -1,15 +1,7 @@
-<!-- Header -->
+
 <app-header></app-header>
 
-
-
-
-<!-- Main Content -->
-
-
-
-
-<mat-sidenav-container class="example-container" style="height: 90vh;">
+<mat-sidenav-container class="example-container" style="height: 90vh;" *ngIf="showHeaderSidemenu">
   <mat-sidenav #sidenav mode="side" opened="true" class="example-sidenav" >
     <div style="height: 90vh;">
       <app-sidemenu>
@@ -21,11 +13,13 @@
     <div style="height: 100%;padding-top: 60px; padding-bottom: 30px; padding-inline: 30px;">
       <router-outlet></router-outlet>
     </div>
-    <!-- TEST -->
+
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-
+<ng-container *ngIf="!showHeaderSidemenu">
+  <router-outlet></router-outlet>
+</ng-container>
 
 
 

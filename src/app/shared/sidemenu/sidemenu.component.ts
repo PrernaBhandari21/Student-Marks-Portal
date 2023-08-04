@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidemenu',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sidemenu.component.css']
 })
 export class SidemenuComponent implements OnInit {
+
+  constructor(private router : Router){}
 
   appitems : any= [];
 
@@ -19,8 +22,6 @@ export class SidemenuComponent implements OnInit {
     useDividers: false,
     collapseOnSelect: true,
   };
-
-  constructor() { }
 
   ngOnInit(): void {
 
@@ -50,7 +51,14 @@ export class SidemenuComponent implements OnInit {
         link:"/create-paper-wise-report",
         icon:"group"
       },
-     
+			{
+			  label: "Logout",
+			  link: "/",
+			  icon: "logout",
+			  onSelected: async () => {
+				await this.router.navigate(['']);
+			  }
+			}
       
       
     ]

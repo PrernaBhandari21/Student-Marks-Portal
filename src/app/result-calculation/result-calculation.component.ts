@@ -61,8 +61,7 @@ export class ResultCalculationComponent implements OnInit {
 
   async ngOnInit() {
     await this.getReportData();
-    console.log("omr_response ", this.omr_response);
-    console.log("answer_key", this.answer_key);
+    
     // console.log("students_data", this.students_data);
 
     // this.removeSNo();

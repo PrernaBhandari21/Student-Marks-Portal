@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { SelectReportComponent } from '../select-report/select-report.component';
+// import { SelectReportComponent } from '../select-report/select-report.component';
 
 @Component({
   selector: 'app-home-page',
@@ -30,11 +30,11 @@ export class HomePageComponent implements OnInit {
     this.router.navigate(['create-student-report']);
   }
 
-  openSelectReport(){
-    const dialogRef = this.dialog.open(SelectReportComponent, {
-      width: '45%',
+  // openSelectReport(){
+  //   const dialogRef = this.dialog.open(SelectReportComponent, {
+  //     width: '45%',
 
-      });
-  }
+  //     });
+  // }
 
 }

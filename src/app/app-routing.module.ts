@@ -17,13 +17,13 @@ import { LoginPageComponent } from './shared/login-page/login-page.component';
 
 const routes: Routes = [
   {
-    path:"",
-    component:LoginPageComponent
+    path:'',
+    component:LoginPageComponent,
+    data: { showHeaderSidemenu: false } },
+  {
+    path:"about-us",
+    component:AboutUsComponent
   },
-  // {
-  //   path:"",
-  //   component:AboutUsComponent
-  // },
   {
     path: 'dashboard',
     component: HomePageComponent
