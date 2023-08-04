@@ -44,6 +44,8 @@ export class PaperWiseResultCalculationComponent implements OnInit {
   resultPaperB: any[] = [];
   maximumTotalMarks: any;
   percentagesValues: any;
+  combinedResults:any[]=[];  
+
 
   constructor(private dataService: DataService) {}
 
@@ -56,7 +58,9 @@ export class PaperWiseResultCalculationComponent implements OnInit {
     if(this.answerKeyForPaperB.length){
     this.calcuateResultOfPaperB(this.answerKeyForPaperB, this.studentRespForPaperB);
     }
-   
+     // Merge the results of Paper A and Paper B into combinedResults
+  this.combinedResults = [...this.resultPaperA, ...this.resultPaperB];
+  console.log("Combined result is",this.combinedResults);
 
   }
 
