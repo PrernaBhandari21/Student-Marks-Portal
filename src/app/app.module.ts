@@ -46,6 +46,7 @@ import { CreatePaperWiseReportComponent } from './paper-wise/create-paper-wise-r
 import { PaperWiseResultCalculationComponent } from './paper-wise/paper-wise-result-calculation/paper-wise-result-calculation.component';
 import { PaperWiseStudentReportComponent } from './paper-wise/paper-wise-student-report/paper-wise-student-report.component';
 import { LoginPageComponent } from './shared/login-page/login-page.component';
+import { SelectPaperWiseHeadersComponent } from './paper-wise/select-paper-wise-headers/select-paper-wise-headers.component';
 
 
 
@@ -72,7 +73,8 @@ import { LoginPageComponent } from './shared/login-page/login-page.component';
     CreatePaperWiseReportComponent,
     PaperWiseResultCalculationComponent,
     PaperWiseStudentReportComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    SelectPaperWiseHeadersComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+
 @Component({
   selector: 'app-select-student-header',
   templateUrl: './select-student-header.component.html',
@@ -15,8 +16,7 @@ export class SelectStudentHeaderComponent implements OnInit {
   omrDataResultant: { [header: string]: any[] } = {};
   fieldsDataResultant: { [header: string]: any[] } = {};
 
-
-
+  
   constructor(public dialogRef: MatDialogRef<SelectStudentHeaderComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder: FormBuilder

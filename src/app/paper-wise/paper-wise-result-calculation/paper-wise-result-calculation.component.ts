@@ -1,31 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
-
-interface Student {
-  RollNo: number;
-  // Add other properties for Student data here...
-}
-
-interface QuestionPaper {
-  Key: string;
-  SubjectName: string;
-  // Add other properties for Question Paper data here...
-}
-
-interface DataPaper {
-  RollNo: number;
-  Question: string;
-  TotalMarks: number;
-  Percentage: number;
-  // Add other properties for Data Paper data here...
-}
-
-interface SubjectMaster {
-  SubjectName: string;
-  Topics: string;
-  // Add other properties for Subject Master data here...
-}
-
+import { SelectPaperWiseHeadersComponent } from '../select-paper-wise-headers/select-paper-wise-headers.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-paper-wise-result-calculation',
   templateUrl: './paper-wise-result-calculation.component.html',
@@ -44,10 +20,10 @@ export class PaperWiseResultCalculationComponent implements OnInit {
   resultPaperB: any[] = [];
   maximumTotalMarks: any;
   percentagesValues: any;
-  combinedResults:any[]=[];  
+  combinedResult: any[] = [];
 
-
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService,
+    private dialog : MatDialog) {}
 
   async ngOnInit() {
     await this.getPaperWiseData();
@@ -58,10 +34,57 @@ export class PaperWiseResultCalculationComponent implements OnInit {
     if(this.answerKeyForPaperB.length){
     this.calcuateResultOfPaperB(this.answerKeyForPaperB, this.studentRespForPaperB);
     }
-     // Merge the results of Paper A and Paper B into combinedResults
-  this.combinedResults = [...this.resultPaperA, ...this.resultPaperB];
-  console.log("Combined result is",this.combinedResults);
+   
+    this.generateCombinedResult();
+    
 
+  }
+
+  generateCombinedResult(){
+    const combinedArray = [...this.resultPaperA, ...this.resultPaperB];
+    // this.combinedResult =[...this.resultPaperA, ...this.resultPaperB];
+    console.log("combinedArray is ====> ",combinedArray);
+
+
+    // Group results by RollNo
+  const groupedResults = combinedArray.reduce((acc, curr) => {
+    const rollNo = curr.RollNo;
+    if (!acc[rollNo]) {
+      acc[rollNo] = [];
+    }
+    acc[rollNo].push(curr);
+    return acc;
+  }, {});
+
+  // Calculate total marks for each RollNo
+  for (const rollNo in groupedResults) {
+    const results = groupedResults[rollNo];
+    const totalMarksObtained = results.reduce((sum: any, result: any) => sum + result['Total Marks Obtained'], 0);
+    const totalMarks = results.reduce((sum : any, result : any) => sum + result['Total Marks'], 0);
+    const totalRightCount = results.reduce((sum : any, result : any) => sum + result['Total Right Count'], 0);
+    const totalWrongCount = results.reduce((sum : any, result : any) => sum + result['Total Wrong Count'], 0);
+    const totalBlankCount = results.reduce((sum : any, result : any) => sum + result['Total Blank Count'], 0);
+    const totalRightMarks = results.reduce((sum : any, result : any) => sum + result['Total Right Marks'], 0);
+    const totalWrongMarks = results.reduce((sum : any, result : any) => sum + result['Total Wrong Marks'], 0);
+
+
+
+    this.combinedResult.push({
+      RollNo: parseInt(rollNo),
+      'Total Marks Obtained': totalMarksObtained,
+      'Total Marks': totalMarks,
+      'Total Right Count':totalRightCount ,
+      'Total Wrong Count': totalWrongCount,
+      'Total Blank Count' :totalBlankCount,
+      'Total Right Marks':totalRightMarks ,
+      'Total Wrong Marks' :totalWrongMarks 
+    });
+  }
+
+  console.log("combinedResult is ====> ", this.combinedResult);
+
+  this.calculateOverallRankAndPercentage();
+  return this.combinedResult;
   }
 
   async getPaperWiseData() {
@@ -72,17 +95,11 @@ export class PaperWiseResultCalculationComponent implements OnInit {
     this.answerKeyForPaperB = reportData['answerKeyFileForPaperB'];
     this.studentRespForPaperB = reportData['studentResponsesFileForPaperB'];
 
-    console.log("Data received for generating result ----------");
-    console.log("this.studentsData :", this.studentsData);
-    console.log("this.answerKeyForPaperA : ", this.answerKeyForPaperA);
-    console.log("this.studentRespForPaperA : ", this.studentRespForPaperA);
-    console.log("this.answerKeyForPaperB : ", this.answerKeyForPaperB);
-    console.log("this.studentRespForPaperB : ", this.studentRespForPaperB);
+
   }
 
   calcuateResultOfPaperA(answerKey: any[], studentResponses: any[]) {
-    console.log("calculating for answerKey : ", answerKey);
-    console.log("calculating for studentResponses : ", studentResponses);
+   
 
     for (let i = 0; i < studentResponses.length; i++) {
       let obj: any = {};
@@ -111,7 +128,7 @@ export class PaperWiseResultCalculationComponent implements OnInit {
 
         // Adding values for headers like Q1, Q2....so on
         if (answer == correct_answer) {
-          console.log("Correct_Answer")
+         
           obj[question] = full_marks;
           total_marks += full_marks;
           total_right_marks += full_marks;
@@ -144,16 +161,13 @@ export class PaperWiseResultCalculationComponent implements OnInit {
 
     
       this.resultPaperA[i] = obj;
-      console.log("Done for 1 student : , ",  obj);
     }
 
     this.calculateRankAndPercentageForPaperA(answerKey);
   }
 
   calcuateResultOfPaperB(answerKey: any[], studentResponses: any[]) {
-    console.log("calculating for answerKey : ", answerKey);
-    console.log("calculating for studentResponses : ", studentResponses);
-
+   
     for (let i = 0; i < studentResponses.length; i++) {
       let obj: any = {};
       let total_marks = 0;
@@ -181,7 +195,6 @@ export class PaperWiseResultCalculationComponent implements OnInit {
 
         // Adding values for headers like Q1, Q2....so on
         if (answer == correct_answer) {
-          console.log("Correct_Answer")
           obj[question] = full_marks;
           total_marks += full_marks;
           total_right_marks += full_marks;
@@ -214,7 +227,6 @@ export class PaperWiseResultCalculationComponent implements OnInit {
 
     
       this.resultPaperB[i] = obj;
-      console.log("Done for 1 student : , ",  obj);
     }
 
     this.calculateRankAndPercentageForPaperB(answerKey);
@@ -260,9 +272,7 @@ export class PaperWiseResultCalculationComponent implements OnInit {
 
         // Update the result object with the calculated values
         result["Rank"] = rank;
-        console.log("Rank is", rank);
         result["Percentage"] = percentage;
-        console.log("Percentage is", percentage);
       }
 
       previousTotalMarks = student["Total Marks Obtained"];
@@ -275,10 +285,7 @@ export class PaperWiseResultCalculationComponent implements OnInit {
       averagePercentage: averagePercentage,
     };
 
-    console.log("Lowest Percentage:", lowestPercentage);
-    console.log("Highest Percentage:", highestPercentage);
-    console.log("Average Percentage:", averagePercentage);
-    console.log("FINAL RESULT   FOR PAPER A....................... : ", this.resultPaperA);
+    
   }
 
 
@@ -322,9 +329,7 @@ export class PaperWiseResultCalculationComponent implements OnInit {
 
         // Update the result object with the calculated values
         result["Rank"] = rank;
-        console.log("Rank is", rank);
         result["Percentage"] = percentage;
-        console.log("Percentage is", percentage);
       }
 
       previousTotalMarks = student["Total Marks Obtained"];
@@ -337,16 +342,78 @@ export class PaperWiseResultCalculationComponent implements OnInit {
       averagePercentage: averagePercentage,
     };
 
-    console.log("Lowest Percentage:", lowestPercentage);
-    console.log("Highest Percentage:", highestPercentage);
-    console.log("Average Percentage:", averagePercentage);
-    console.log("FINAL RESULT   FOR PAPER B....................... : ", this.resultPaperB);
+    
   }
+
+  calculateOverallRankAndPercentage() {
+    const totalStudents = this.combinedResult.length;
+    let totalPercentage = 0;
+    let lowestPercentage = Infinity;
+    let highestPercentage = -Infinity;
+  
+    let previousTotalMarks = null;
+    let currentRank = 0;
+  
+    // Sort the students based on total marks obtained temporarily
+    const sortedResults = [...this.combinedResult].sort((a, b) => b["Total Marks Obtained"] - a["Total Marks Obtained"]);
+  
+    for (let i = 0; i < totalStudents; i++) {
+      const student = sortedResults[i];
+  
+      if (student["Total Marks Obtained"] !== previousTotalMarks) {
+        // Update the rank only if the total marks obtained are different
+        currentRank = i + 1;
+      }
+  
+      // Calculate and store the rank and percentage in separate variables
+      const rank = currentRank;
+      let percentage = (student["Total Marks Obtained"] / student["Total Marks"]) * 100;
+      percentage = Math.max(percentage, 0); // Make sure percentage is at least 0
+      totalPercentage += percentage;
+      lowestPercentage = Math.min(lowestPercentage, percentage);
+      highestPercentage = Math.max(highestPercentage, percentage);
+  
+      // Update the result object with the calculated values
+      student["Rank"] = rank;
+      student["Percentage"] = percentage;
+  
+      previousTotalMarks = student["Total Marks Obtained"];
+    }
+  
+    const averagePercentage = totalPercentage / totalStudents;
+    this.percentagesValues = {
+      lowestPercentage: lowestPercentage,
+      highestPercentage: highestPercentage,
+      averagePercentage: averagePercentage,
+    };
+  }
+  
 
   calculateMaximumTotalMarks(answerKey: any[]) {
     return answerKey.reduce((totalMarks: number, question: any) => {
-      console.log('question["FullMarks"] : ', question["FullMarks"]);
+   
       return totalMarks + question["FullMarks"];
     }, 0);
+  }
+
+  openPopup(): void {
+
+    const dialogRef = this.dialog.open(SelectPaperWiseHeadersComponent, {
+      width: '60%',
+
+      data: {
+     
+        studentsData: this.studentsData,
+        studentsDataHeaders: Object.keys(this.studentsData[0]),
+        combinedResult : this.combinedResult,
+        combinedResultHeaders : Object.keys(this.combinedResult[0])
+      }
+    });
+
+   
+
+
+
+
   }
 }
