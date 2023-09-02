@@ -1,17 +1,40 @@
-<div class="col1">
-    <h2 mat-dialog-title>Student Details</h2>
+<h4>Select Headers that you want to display on the table!</h4>
+
+<div class="container">
+  <div class="roww">
+
+    <!-- Student details -->
+
+    <div class="col1">
+      <h2 mat-dialog-title>Student Details</h2>
+      <div mat-dialog-content>
+        <form [formGroup]="form">
+          <div *ngFor="let studentHeader of data.studentsDataHeaders">
+            <mat-checkbox [formControlName]="studentHeader" (change)="onStudentCheckboxChange(studentHeader, $event.checked)">{{ studentHeader }}</mat-checkbox>
+          </div>
+        </form>
+      </div>
+    </div>
+   
+  </div>
+
+  <div class="roww">
+    <h2 mat-dialog-title>Calculation Fields</h2>
     <div mat-dialog-content>
       <form [formGroup]="form">
-        <div *ngFor="let studentHeader of data.studentsDataHeaders">
-          <mat-checkbox [formControlName]="studentHeader" (change)="onStudentCheckboxChange(studentHeader, $event.checked)">{{ studentHeader }}</mat-checkbox>
+        <div>
+          <mat-radio-group formControlName="selectedField">
+            <mat-radio-button (change)="onFieldsRadioButtonChange('Total Marks')" value="Total Marks">Total Marks</mat-radio-button>
+          </mat-radio-group>
         </div>
       </form>
+      
     </div>
   </div>
 
+</div>
 
-
-  <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">Close</button>
-    <button class="btn btn-primary" (click)="onSave()">Show Result</button>
-  </div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Close</button>
+  <button class="btn btn-primary" (click)="onSave()">Show Result</button>
+</div>

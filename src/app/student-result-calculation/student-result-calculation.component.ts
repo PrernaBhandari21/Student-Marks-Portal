@@ -229,11 +229,6 @@ export class StudentResultCalculationComponent implements OnInit {
   }
   
 
-
-
-
-
-
   calcuateResult() {
 
     const questionStats :any = {}; // Object to store question statistics
@@ -428,7 +423,7 @@ export class StudentResultCalculationComponent implements OnInit {
     this.resultObject[`${question} Total Blank`] = totalBlankPercentage;
   }
 
-  // console.log(this.resultObject);
+   console.log("resultObject",this.resultObject);
 
 
 
@@ -627,7 +622,7 @@ export class StudentResultCalculationComponent implements OnInit {
   
     // Store the calculated subject-wise marks in the instance variable
     this.subjectWiseMarks = subjectWiseMarks;
-    // console.log("Subject-wise Marks:", this.subjectWiseMarks);
+     //console.log("Subject-wise Marks:", this.subjectWiseMarks);
   }
   
   

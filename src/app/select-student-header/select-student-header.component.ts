@@ -81,8 +81,6 @@ export class SelectStudentHeaderComponent implements OnInit {
         const headerData = this.data.resultData.map((omr: any) => omr[headerVal]);
         console.log("headerData", headerData);
         this.fieldsDataResultant[headerVal] = headerData;
-
-
       }
       this.totalMarksCommonData();
 
@@ -100,9 +98,6 @@ export class SelectStudentHeaderComponent implements OnInit {
         const headerData = this.data.resultData.map((omr: any) => omr[headerVal]);
         console.log("headerData", headerData);
         this.fieldsDataResultant[headerVal] = headerData;
-
-
-
       }
 
       this.totalRWBCount();
@@ -126,7 +121,7 @@ export class SelectStudentHeaderComponent implements OnInit {
   totalMarksCommonData() {
     const obtainedMarksHeader = "Total Marks Obtained"
     const totalMarksHeader = "Total Marks";
-        const rank = "Rank";
+    const rank = "Rank";
     const percentage = "Percentage"
 
     const obtainedMarks = this.data.resultData.map((omr: any) => omr[obtainedMarksHeader]);

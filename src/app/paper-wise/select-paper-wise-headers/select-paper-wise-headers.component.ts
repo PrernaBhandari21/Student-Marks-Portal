@@ -8,8 +8,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./select-paper-wise-headers.component.css']
 })
 export class SelectPaperWiseHeadersComponent implements OnInit {
+  form: FormGroup;
+  selectedHeaders: string[] = [];
   studentDataResultant: { [header: string]: any[] } = {};
   resultant: { [header: string]: any[] } = {};
+  fieldsDataResultant: { [header: string]: any[] } = {};
 
   constructor(public dialogRef: MatDialogRef<SelectPaperWiseHeadersComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -34,7 +37,7 @@ export class SelectPaperWiseHeadersComponent implements OnInit {
   }
 
 
-  form!: FormGroup;
+//  form!: FormGroup;
 
   
   ngOnInit(): void {
@@ -51,6 +54,38 @@ export class SelectPaperWiseHeadersComponent implements OnInit {
       delete this.studentDataResultant[header];
     }
   }
+
+  onFieldsRadioButtonChange(header: string): void {
+    console.log("header", header);
+    let common_data: any;
+
+    this.fieldsDataResultant = {};
+    if (header == 'Total Marks') {
+      this.totalMarksCommonData();
+    }
+    console.log("this.fieldsDataResultant", this.fieldsDataResultant);
+
+
+  }
+
+  totalMarksCommonData() {
+    const obtainedMarksHeader = "Total Marks Obtained"
+    const totalMarksHeader = "Total Marks";
+    const rank = "Rank";
+    const percentage = "Percentage"
+
+    const obtainedMarks = this.data.combinedResult.map((omr: any) => omr[obtainedMarksHeader]);
+    const totalMarks = this.data.combinedResult.map((omr: any) => omr[totalMarksHeader]);
+    const allRank = this.data.combinedResult.map((omr: any) => omr[rank]);
+    const allPercentage = this.data.combinedResult.map((omr: any) => omr[percentage]);
+
+
+    this.fieldsDataResultant[obtainedMarksHeader] = obtainedMarks;
+    this.fieldsDataResultant[totalMarksHeader] = totalMarks;
+    this.fieldsDataResultant[rank] = allRank
+    this.fieldsDataResultant[percentage] = allPercentage
+  }
+  
 
 
   onSave(): void {
