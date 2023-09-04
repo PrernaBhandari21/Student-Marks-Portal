@@ -389,13 +389,14 @@ export class PaperWiseResultCalculationComponent implements OnInit {
   
     // Store the calculated topic-wise marks in the instance variable
     this.topicWiseMarks = topicWiseMarks;
-     //console.log("Topic-wise Marks A:", this.topicWiseMarks);
+     console.log("Topic-wise Marks A:", this.topicWiseMarks);
   }
 
   calculateTopicWiseRankForPaperA() {
     // Loop through each topic in the answer key
     for (let i = 0; i < this.answerKeyForPaperA.length; i++) {
       const topic = this.answerKeyForPaperA[i].Topic;
+      console.log("topic A : ",topic);
   
       // Create a temporary array to store the students' percentages for this topic
       const topicPercentages = [];
@@ -405,15 +406,18 @@ export class PaperWiseResultCalculationComponent implements OnInit {
         // Extract the student's percentage for the current topic
         const topicPercentage = studentResult['Topic ' + topic + ' Percentage'];
   
+                
+
+
         // Add the percentage to the temporary array
         topicPercentages.push(topicPercentage);
       }
   
       // Sort the topic percentages in descending order to calculate ranks
       const sortedPercentages = topicPercentages.slice().sort((a, b) => b - a);
-  
+      let studentResult;
       // Loop through each student's result again to calculate their rank for the topic
-      for (let studentResult of this.resultPaperA) {
+      for (studentResult of this.resultPaperA) {
         const topicPercentage = studentResult['Topic ' + topic + ' Percentage'];
   
         // Find the index of the student's percentage in the sorted array
@@ -423,6 +427,8 @@ export class PaperWiseResultCalculationComponent implements OnInit {
         studentResult['Topic ' + topic + ' Rank'] = topicRank;
         //console.log("rank",topicRank);
       }
+
+      console.log("studentResult A: ",studentResult);
     }
   }
 
@@ -472,6 +478,8 @@ export class PaperWiseResultCalculationComponent implements OnInit {
 
 
   calcuateResultOfPaperB(answerKey: any[], studentResponses: any[]) {
+
+    
 
     const questionStats :any = {}; // Object to store question statistics
    
@@ -760,6 +768,8 @@ export class PaperWiseResultCalculationComponent implements OnInit {
     // Loop through each topic in the answer key
     for (let i = 0; i < this.answerKeyForPaperB.length; i++) {
       const topic = this.answerKeyForPaperB[i].Topic;
+
+      console.log("topic B",topic);
   
       // Create a temporary array to store the students' percentages for this topic
       const topicPercentages = [];
@@ -768,6 +778,8 @@ export class PaperWiseResultCalculationComponent implements OnInit {
       for (let studentResult of this.resultPaperB) {
         // Extract the student's percentage for the current topic
         const topicPercentage = studentResult['Topic ' + topic + ' Percentage'];
+
+        console.log("topicPercentage B : ", topicPercentage);
   
         // Add the percentage to the temporary array
         topicPercentages.push(topicPercentage);
@@ -775,9 +787,10 @@ export class PaperWiseResultCalculationComponent implements OnInit {
   
       // Sort the topic percentages in descending order to calculate ranks
       const sortedPercentages = topicPercentages.slice().sort((a, b) => b - a);
-  
+      
+      let studentResult;
       // Loop through each student's result again to calculate their rank for the topic
-      for (let studentResult of this.resultPaperB) {
+      for (studentResult of this.resultPaperB) {
         const topicPercentage = studentResult['Topic ' + topic + ' Percentage'];
   
         // Find the index of the student's percentage in the sorted array
@@ -787,6 +800,8 @@ export class PaperWiseResultCalculationComponent implements OnInit {
         studentResult['Topic ' + topic + ' Rank'] = topicRank;
         //console.log("rank",topicRank);
       }
+
+      console.log("studentResult B :",studentResult);
     }
   }
 
