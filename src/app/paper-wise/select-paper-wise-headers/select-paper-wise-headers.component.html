@@ -19,18 +19,38 @@
   </div>
 
   <div class="roww">
+  <div class="col2">
     <h2 mat-dialog-title>Calculation Fields</h2>
     <div mat-dialog-content>
       <form [formGroup]="form">
         <div>
           <mat-radio-group formControlName="selectedField">
             <mat-radio-button (change)="onFieldsRadioButtonChange('Total Marks')" value="Total Marks">Total Marks</mat-radio-button>
+
+            <mat-radio-button (change)="onFieldsRadioButtonChange('Paper A Marks')" value="Paper A Marks">Paper A Marks</mat-radio-button>
+
+            <mat-radio-button (change)="onFieldsRadioButtonChange('Paper B Marks')" value="Paper BMarks">Paper B Marks</mat-radio-button>
+
+            <mat-radio-button (change)="onFieldsRadioButtonChange('Paper A Topic Wise Marks')" value="Paper A Topic Wise Marks">Paper A Topic Wise Marks</mat-radio-button>
+
+            <mat-radio-button (change)="onFieldsRadioButtonChange('Paper B Topic Wise Marks')" value="Paper B Topic Wise Marks">Paper B Topic Wise Marks</mat-radio-button>
+  
+            <mat-radio-button (change)="onFieldsRadioButtonChange('Paper A Right Wrong Blank Count')" value="Paper A Right Wrong Blank Count'">Paper A Right Wrong Blank Count</mat-radio-button>
+
+            <mat-radio-button (change)="onFieldsRadioButtonChange('Paper B Right Wrong Blank Count')" value="Paper B Right Wrong Blank Count'">Paper B Right Wrong Blank Count</mat-radio-button>
+
+            <mat-radio-button (change)="onFieldsRadioButtonChange('Paper A Topic Wise Right Wrong Blank Count')" value="Paper A Topic Wise Right Wrong Blank Count">Paper A Topic Wise Right Wrong Blank Count</mat-radio-button>
+
+            <mat-radio-button (change)="onFieldsRadioButtonChange('Paper B Topic Wise Right Wrong Blank Count')" value="Paper B Topic Wise Right Wrong Blank Count">Paper B Topic Wise Right Wrong Blank Count</mat-radio-button>
+
+            <mat-radio-button (change)="onFieldsRadioButtonChange('Total Right Wrong Blank Count')" value="Total Right Wrong Blank Count">Total Right Wrong Blank Count</mat-radio-button>
           </mat-radio-group>
         </div>
       </form>
       
     </div>
   </div>
+</div>
 
 </div>
 

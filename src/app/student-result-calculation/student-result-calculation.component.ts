@@ -580,7 +580,7 @@ export class StudentResultCalculationComponent implements OnInit {
   
     // Store the calculated peer average counts in the instance variable
     this.peerAverageCounts = peerAverageCounts;
-    // console.log("Peer Average Count:", this.peerAverageCounts);
+    //console.log("Peer Average Count:", this.peerAverageCounts);
   }
   
   calculateSubjectWiseMarks() {
@@ -618,11 +618,12 @@ export class StudentResultCalculationComponent implements OnInit {
       subjectWiseMarks[`${subjectKey} Peer Lowest Total Marks`] = peerLowestTotalMarks;
       subjectWiseMarks[`${subjectKey} Peer Average Total Marks`] = peerAverageTotalMarks;
       subjectWiseMarks[`${subjectKey} Peer Highest Total Marks`] = peerHighestTotalMarks;
+      console.log()
     }
   
     // Store the calculated subject-wise marks in the instance variable
     this.subjectWiseMarks = subjectWiseMarks;
-     //console.log("Subject-wise Marks:", this.subjectWiseMarks);
+    //console.log("Subject-wise Marks:", this.subjectWiseMarks);
   }
   
   
