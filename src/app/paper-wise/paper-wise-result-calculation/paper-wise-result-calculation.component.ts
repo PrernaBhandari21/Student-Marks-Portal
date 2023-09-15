@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
 import { SelectPaperWiseHeadersComponent } from '../select-paper-wise-headers/select-paper-wise-headers.component';
 import { MatDialog } from '@angular/material/dialog';
+import { HeaderDialogComponent } from 'src/app/header-dialog/header-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import autoTable from 'jspdf-autotable';
 @Component({
   selector: 'app-paper-wise-result-calculation',
   templateUrl: './paper-wise-result-calculation.component.html',
@@ -28,10 +33,14 @@ export class PaperWiseResultCalculationComponent implements OnInit {
   resultObject:any = {};
   topicWiseMarks: any = {};
   peerAverageCounts: any;
-  
-   
+  tableResultant: any;
+  headers:string[]=[];
+  dataSource: any;
+  tempDataSource:any;
+
 
   constructor(private dataService: DataService,
+    private elementRef: ElementRef,
     private dialog : MatDialog) {}
 
   async ngOnInit() {
@@ -43,7 +52,9 @@ export class PaperWiseResultCalculationComponent implements OnInit {
     if(this.answerKeyForPaperB.length){
     this.calcuateResultOfPaperB(this.answerKeyForPaperB, this.studentRespForPaperB);
     }
-   
+    
+
+    
     this.generateCombinedResult();
 
   }
@@ -882,23 +893,285 @@ export class PaperWiseResultCalculationComponent implements OnInit {
     }, 0);
   }
 
-  openPopup(): void {
 
-    const dialogRef = this.dialog.open(SelectPaperWiseHeadersComponent, {
-      width: '60%',
+  
+  sort(header: string) {
+    const data = this.dataSource.filteredData.slice();
+    const isNumeric = !isNaN(parseFloat(data[0][header])) && isFinite(data[0][header]);
+    
+    // toggle the sorting order for the current column
+    this.sortDirection[header] = !this.sortDirection[header];
+    
+    if (isNumeric) {
+      data.sort((a: { [x: string]: number; }, b: { [x: string]: number; }) => {
+        if (this.sortDirection[header]) {
+          return a[header] - b[header]; // sort in ascending order
+        } else {
+          return b[header] - a[header]; // sort in descending order
+        }
+      });
+    } else {
+      data.sort((a: { [x: string]: any; }, b: { [x: string]: string; }) => {
+        if (this.sortDirection[header]) {
+          return a[header].localeCompare(b[header]); // sort in ascending order
+        } else {
+          return b[header].localeCompare(a[header]); // sort in descending order
+        }
+      });
+    }
+    
+    this.dataSource.data = data;
+  }
+  
 
-      data: {
-     
-        studentsData: this.studentsData,
-        studentsDataHeaders: Object.keys(this.studentsData[0]),
-        combinedResult : this.combinedResult,
-        combinedResultHeaders : Object.keys(this.combinedResult[0]),
-        resultPaperAHeaders : Object.keys(this.resultPaperA[0]),
-        resultPaperA: this.resultPaperA, // Pass resultPaperA here
-        resultPaperBHeaders : Object.keys(this.resultPaperB[0]),
-        resultPaperB: this.resultPaperB, // Pass resultPaperB here
+   openPopup(studentRespForPaperA: any, studentRespForPaperB: any): void {
+  // Combine the response data for both papers into a single array
+  const combinedResponseData = [...studentRespForPaperA, ...studentRespForPaperB];
+
+  // Filter out headers starting with "Question" followed by a numerical value
+  const filteredData = combinedResponseData.map((dataObj: { [x: string]: any; }) => {
+    const filteredObj: any = {};
+    for (const key in dataObj) {
+      if (!(key.startsWith("Question") && /\d/.test(key))) {
+        filteredObj[key] = dataObj[key];
       }
-    });
+    }
+    return filteredObj;
+  });
 
-  } 
+  const dialogRef = this.dialog.open(SelectPaperWiseHeadersComponent, {
+    width: '60%',
+    data: {
+      studentsData: this.studentsData,
+      studentsDataHeaders: Object.keys(this.studentsData[0]),
+      combinedResult: this.combinedResult,
+      combinedResultHeaders: Object.keys(this.combinedResult[0]),
+      resultPaperAHeaders: Object.keys(this.resultPaperA[0]),
+      resultPaperA: this.resultPaperA, // Pass resultPaperA here
+      resultPaperBHeaders: Object.keys(this.resultPaperB[0]),
+      resultPaperB: this.resultPaperB, // Pass resultPaperB here
+      filteredData: filteredData, // Pass filteredData here
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    this.tableResultant = result;
+    console.log("this.tableResultant : ", this.tableResultant);
+    this.headers = Object.keys(this.tableResultant);
+    this.dataSource = new MatTableDataSource(this.convertToDataSource());
+    console.log("this.dataSource : ", this.dataSource);
+    this.tempDataSource = this.dataSource;
+  });
+}
+
+  convertToDataSource() {
+    if (!this.tableResultant) {
+      return [];
+    }
+  
+    const data = [];
+    const properties = Object.keys(this.tableResultant);
+    const length = this.tableResultant[properties[0]].length; // Get the length from one of the properties
+  
+    for (let i = 0; i < length; i++) {
+      const row: any = {};
+      for (const key in this.tableResultant) {
+        row[key] = this.tableResultant[key][i];
+      }
+      data.push(row);
+    }
+  
+    // Sort the data based on the "RollNo" property
+    data.sort((a, b) => a["RollNo"] - b["RollNo"]);
+  
+    return data;
+  }
+  exportToPdf(): void {
+    const totalHeaders = this.headers.length;
+    const orientation = totalHeaders <= 7 ? 'portrait' : 'landscape';
+  
+    const doc = new jsPDF({
+      orientation: orientation,
+      unit: 'pt',
+      format: [792, 612],
+    });
+  
+    const tableData = [];
+    const headerRow = [];
+  
+    for (const header of this.headers) {
+      headerRow.push(header);
+    }
+  
+    tableData.push(headerRow);
+  
+    for (const element of this.dataSource.filteredData) {
+      const dataRow = [];
+      for (const header of this.headers) {
+        dataRow.push(element[header]);
+      }
+      tableData.push(dataRow);
+    }
+  
+    const tableConfig:any = {
+      head: tableData.slice(0, 1),
+      body: tableData.slice(1),
+      styles: {
+        fontSize: totalHeaders > 10 ? 10 : 12,
+        cellPadding: 3,
+        lineColor: [200, 200, 200],
+        lineWidth: 0.1,
+      },
+      columnStyles: {},
+    };
+  
+    if (totalHeaders > 7) {
+      tableConfig.styles.cellPadding = 2;
+      tableConfig.columnStyles = {
+        ...tableConfig.columnStyles,
+        // Adjust the cell width for each column as needed
+        // You can set a fixed width or calculate it dynamically based on content length
+      };
+    }
+  
+    autoTable(doc, tableConfig);
+  
+    doc.save('table_data.pdf');
+  }
+  
+  
+  
+
+  exportToCsv(): void {
+    const csvRows = [];
+
+    // Header row
+    const headerRow = this.headers.join(',');
+    csvRows.push(headerRow);
+
+    // Data rows
+    for (const element of this.dataSource.filteredData) {
+      const dataRow = [];
+      for (const header of this.headers) {
+        const value = element[header];
+        const csvValue = value !== null && value !== undefined ? value.toString() : '';
+        dataRow.push(csvValue);
+      }
+      const csvRow = dataRow.join(',');
+      csvRows.push(csvRow);
+    }
+
+    // Generate CSV content
+    const csvContent = csvRows.join('\n');
+
+    // Create a Blob object and a temporary link element
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    // Set link properties
+    link.href = url;
+    link.download = 'table_data.csv';
+
+    // Append the link to the document and trigger the download
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
+
+
+//Adding S No manually !
+getHeaderRowDef(): string[] {
+  return ['sno', ...this.headers];
+}
+
+getRowDef(): string[] {
+  return ['sno', ...this.headers];
+}
+
+onRowClick(row: any) {
+  
+}
+
+
+ 
+//Download whole page !
+downloadPage() {
+  const doc = new jsPDF();
+
+  const elementToCapture = this.elementRef.nativeElement.querySelector('.component-to-download');
+
+  html2canvas(elementToCapture, { useCORS: true }).then(canvas => {
+    const imageData = canvas.toDataURL('image/png');
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 4;
+
+    const imgWidth = pageWidth - (2 * margin);
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    const xPos = margin;
+    const yPos = margin;
+
+    doc.addImage(imageData, 'PNG', xPos, yPos, imgWidth, imgHeight);
+    doc.save('component.pdf');
+  });
+}
+
+//for filtering
+onHeaderClick(header : any){
+  // console.log("header : ", header);
+  const headerValues = this.dataSource.data.map((element:any) => element[header]);
+
+const requiredData = {
+  header: headerValues,
+  dataSource:this.dataSource
+}
+
+// console.log(requiredData);
+}
+
+openHeaderDialog(header: string): void {
+
+  const data = {
+    header: header,
+    headerValues: this.dataSource.filteredData.map((element:any) => element[header]),
+    dataSource: this.dataSource
+  };
+
+  // if values are same , then show once !
+  
+  const uniqueHeaderValues = [...new Set(data.headerValues)];
+  const headerValues = uniqueHeaderValues.filter((value, index, array) => array.indexOf(value) === index);
+  
+  data.headerValues = headerValues;
+  
+
+  const dialogRef = this.dialog.open(HeaderDialogComponent, {
+    data: data
+  });
+
+  dialogRef.afterClosed().subscribe(newDataSource => {
+    if (newDataSource) {
+      // console.log("newDataSource: ", newDataSource);
+      this.dataSource = new MatTableDataSource(newDataSource.newDataSource);
+      // Perform any further actions with the selected values
+
+      // console.log("DATA SOURCE ",this.dataSource );
+    }
+  });
+}
+
+
+clearAllFilters(){
+  //recover dataSource data as it was earlier
+
+  this.dataSource = this.tempDataSource;
+  // console.log("DATA SOURCE : ", this.dataSource);
+}
+
 }

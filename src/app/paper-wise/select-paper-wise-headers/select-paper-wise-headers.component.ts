@@ -36,7 +36,6 @@ export class SelectPaperWiseHeadersComponent implements OnInit {
     });
   }
 
-
 //  form!: FormGroup;
 
   
@@ -268,15 +267,19 @@ export class SelectPaperWiseHeadersComponent implements OnInit {
     this.fieldsDataResultant[percentage] = allPercentage
   }
   
-
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
   onSave(): void {
     // this.resultant =
 
     console.log("studentDataResultant", this.studentDataResultant);
+    console.log(",this.resultPaperA" ,this.resultPaperA);
+    console.log(",this.resultPaperB" ,this.resultPaperB);
 
     // Merge multiple objects
-    this.resultant = Object.assign({}, this.studentDataResultant);
+    this.resultant = Object.assign({}, this.studentDataResultant, this.fieldsDataResultant,this.resultPaperA,this.resultPaperB);
 
     console.log("this.resultant", this.resultant);
 
@@ -285,8 +288,6 @@ export class SelectPaperWiseHeadersComponent implements OnInit {
 
   }
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
+  
 
 }

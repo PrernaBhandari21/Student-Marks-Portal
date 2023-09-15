@@ -173,5 +173,4 @@ export class SelectHeadersComponent implements OnInit {
     // Perform further actions with the resultant data
     this.dialogRef.close(this.resultant);
   }
-
 }
