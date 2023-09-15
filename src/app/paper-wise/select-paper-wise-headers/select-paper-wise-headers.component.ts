@@ -279,7 +279,7 @@ export class SelectPaperWiseHeadersComponent implements OnInit {
     console.log(",this.resultPaperB" ,this.resultPaperB);
 
     // Merge multiple objects
-    this.resultant = Object.assign({}, this.studentDataResultant, this.fieldsDataResultant,this.resultPaperA,this.resultPaperB);
+    this.resultant = Object.assign({}, this.studentDataResultant, this.fieldsDataResultant);
 
     console.log("this.resultant", this.resultant);
 
